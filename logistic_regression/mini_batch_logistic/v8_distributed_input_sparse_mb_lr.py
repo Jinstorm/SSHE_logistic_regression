@@ -51,7 +51,7 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 from scipy.sparse import csr_matrix, lil_matrix, coo_matrix
-
+PATH_DATA = 'E:\\zbz\\code\\vscode_python\\hetero_sshe_logistic_regression\\data' # '../../data/'
 class LogisticRegression:
     """
     logistic回归
@@ -747,7 +747,7 @@ def read_distributed_encoded_data():
     dataset_file_name = 'splice'  
     train_file_name = 'splice_train.txt' 
     test_file_name = 'splice_test'
-    main_path = '/Users/zbz/code/vscodemac_python/hetero_sshe_logistic_regression/data/'
+    main_path = PATH_DATA
 
     # dataset_file_name = 'a6a'
     # train_file_name = 'a6a.txt'
@@ -784,7 +784,7 @@ def read_distributed_encoded_data():
     train_file_name2 = 'X2_encoded_train37.txt'
     test_file_name1 = 'X1_encoded_test37.txt'
     test_file_name2 = 'X2_encoded_test37.txt'
-    main_path = '/Users/zbz/code/vscodemac_python/hetero_sshe_logistic_regression/data/'
+    main_path = PATH_DATA
     X_train1 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name1), delimiter=',') #, dtype = float)
     X_train2 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name2), delimiter=',') #, dtype = float)
     X_test1 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name1), delimiter=',') #, dtype = float)

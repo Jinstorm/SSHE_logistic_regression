@@ -198,14 +198,14 @@ class PaillierEncrypt(Encrypt):
 
     def encrypt(self, value):
         if self.public_key is not None:
-            # return self.public_key.encrypt(value)
+            return self.public_key.encrypt(value)
             return value
         else:
             return None
 
     def decrypt(self, value):
         if self.privacy_key is not None:
-            # return self.privacy_key.decrypt(value)
+            return self.privacy_key.decrypt(value)
             return value
         else:
             return None

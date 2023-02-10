@@ -599,11 +599,12 @@ class LogisticRegression:
         filename = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime(time.time()))
         name = filename + ".txt"
         file = open(name, mode='w+') #  写入记录
-        time_start_training = time.time()
+        # time_start_training = time.time()
         ############################
         
         print("training model...")
         while self.n_iteration < self.max_iter:
+            time_start_training = time.time()
             loss_list = []
             batch_labels = None
             # distributed
@@ -614,7 +615,7 @@ class LogisticRegression:
                 print("batch ", test)
 
                 ############################
-                file.write("batch " + str(test) + "\n")
+                # file.write("batch " + str(test) + "\n")
                 ############################
 
                 test += 1
@@ -696,6 +697,9 @@ class LogisticRegression:
                 # # print("test: ", test)
                 # # test += 1
 
+                time_end_training = time.time()
+                file.write('batch cost: '+str(time_end_training-time_start_training)+'s')
+
             # 打乱数据集的batch
             X_batch_listA, X_batch_listB, y_batch_list = self.shuffle_distributed_data(X_batch_listA, 
                                 X_batch_listB, y_batch_list)
@@ -720,10 +724,10 @@ class LogisticRegression:
             # self.pool.close()
             # self.pool.join()
             
-            if self.n_iteration == 5:
-                file.close()
-                import sys
-                sys.exit(0)
+            # if self.n_iteration == 5:
+            #     file.close()
+            #     import sys
+            #     sys.exit(0)
 
 
             ## 判断是否停止
@@ -1139,7 +1143,79 @@ def read_distributed_encoded_data():
     # print(type(X_train), type(X_test))
     
     return X_train1, X_train2, Y_train, X_test1, X_test2, Y_test # matrix转array
+
+
+def read_distributed_squeeze_data():
+    from sklearn.datasets import load_svmlight_file
+    import os
+    from sklearn.preprocessing import MinMaxScaler, StandardScaler, normalize
+    mm = MinMaxScaler()
+    ss = StandardScaler()
+
+    dataset_file_name = 'splice'  
+    train_file_name = 'splice_train.txt' 
+    test_file_name = 'splice_test'
+    main_path = PATH_DATA
+    # main_path = '/Users/zbz/code/vscodemac_python/hetero_sshe_logistic_regression/data/'
+
+    # dataset_file_name = 'a6a'
+    # train_file_name = 'a6a.txt'
+    # test_file_name = 'a6a.t'
+    # main_path = '/Users/zbz/data/'
+    train_data = load_svmlight_file(os.path.join(main_path, dataset_file_name, train_file_name))
+    test_data = load_svmlight_file(os.path.join(main_path, dataset_file_name, test_file_name))
+    # X_train = train_data[0]
+    Y_train = train_data[1].astype(int)
+    # X_test = test_data[0]
+    Y_test = test_data[1].astype(int)
+    # print(type(X_train)) # 1000 * 60
+    # print(Y_train[0]) # 1000 * 1
+
+    # 判断标签是(1;-1)还是 (1;0), 将-1的标签全部转化成0标签
+    if -1 in Y_train:  
+        Y_train[Y_train == -1] = 0
+        Y_test[Y_test == -1] = 0
+    # print(Y_train)
+    # print(Y_test)
+
+    # #a6a a7a
+    # X_train = X_train.todense().A
+    # X_train = np.hstack( (X_train, np.zeros(X_train.shape[0]).reshape(-1, 1)) )
+    # return ss.fit_transform(X_train), Y_train, ss.fit_transform(X_test.todense().A), Y_test # matrix转array
+
+    # #splice
+    # return ss.fit_transform(X_train.todense().A), Y_train, ss.fit_transform(X_test.todense().A), Y_test # matrix转array
+    # # return X_train.todense().A, Y_train, X_test.todense().A, Y_test # matrix转array
+    print("loading dataset...")
+
+    dataset_file_name = 'splice/distrubuted/squeeze/'  
+    dataset_testfile_name = 'splice/distrubuted/encoded/'
+    train_file_name1 = 'X1_squeeze_train37.txt'
+    train_file_name2 = 'X2_squeeze_train37.txt'
+    test_file_name1 = 'X1_encoded_test37.txt'
+    test_file_name2 = 'X2_encoded_test37.txt'
+    # main_path = '/Users/zbz/code/vscodemac_python/hetero_sshe_logistic_regression/data/'
+    main_path = PATH_DATA
+    X_train1 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name1), delimiter=',') #, dtype = float)
+    X_train2 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name2), delimiter=',') #, dtype = float)
+    X_test1 = np.loadtxt(os.path.join(main_path, dataset_testfile_name, test_file_name1), delimiter=',') #, dtype = float)
+    X_test2 = np.loadtxt(os.path.join(main_path, dataset_testfile_name, test_file_name2), delimiter=',') #, dtype = float)
+    # X = normalize(X,'l2')
+    # X_train = ss.fit_transform(X_train)
+    print(X_train1.shape)         #查看特征形状
+    print(type(X_train1), type(X_test1))
+    print(X_test1.shape)         #查看测试特征形状
+
+    # print("Constructing sparse matrix...") # 使用COO格式高效创建稀疏矩阵, 以线性时间复杂度转化为CSR格式用于高效的矩阵乘法或转置运算.
+    # X_train = lil_matrix(X_train)
+    # # X_train.tocsr()
+    # X_test = lil_matrix(X_test)
+    # # X_test.tocsr()
+    # print(type(X_train), type(X_test))
     
+    return X_train1, X_train2, Y_train, X_test1, X_test2, Y_test # matrix转array
+
+
 
 if __name__ == "__main__":
 
@@ -1152,7 +1228,8 @@ if __name__ == "__main__":
     # print(X_data.shape, X_data.shape[0], X_data.shape[1], y_data.shape, X_test.shape, y_test.shape)
 
     # 纵向划分的数据集
-    X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_encoded_data()
+    # X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_encoded_data()
+    X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_squeeze_data()
     print(X_train1.shape, X_train2.shape, X_train1.shape[1], X_train2.shape[1], Y_train.shape, X_test1.shape, Y_test.shape)
 
     ########## 权重初始化 ##########
@@ -1186,7 +1263,7 @@ if __name__ == "__main__":
                     # splice 集中 0.9062068965517242
     # 纵向划分分布式
     LogisticRegressionModel = LogisticRegression(weight_vector = weight_vector, batch_size = 20, 
-                    max_iter = 10, alpha = 0.0001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
+                    max_iter = 100, alpha = 0.0001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
                     # splice 分布式 0.9062068965517242
 
     # 两部分数据集
