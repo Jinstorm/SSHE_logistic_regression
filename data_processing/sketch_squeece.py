@@ -129,7 +129,7 @@ def Dis_samples_to_sketch(m, n, n1, k, b, c, samples1, samples2):
         print('参数b,c错误！')
         return 'ERROR'
 
-PATH_DATA = '../data'
+PATH_DATA = '../data/'
 def read_distributed_encoded_data():
     from sklearn.datasets import load_svmlight_file
     import os
@@ -200,6 +200,56 @@ def read_distributed_encoded_data():
     return X_train1, X_train2, Y_train, X_test1, X_test2, Y_test # matrix转array
 
 
+def sketch_to_squeeze_dataset():
+    print("loading dataset...")
+
+    dataset_file_name = 'splice/distrubuted/'  
+    train_file_name1 = 'X1_train_sketch.txt'
+    train_file_name2 = 'X2_train_sketch.txt'
+    test_file_name1 = 'X1_test_sketch.txt'
+    test_file_name2 = 'X2_test_sketch.txt'
+    # main_path = '/Users/zbz/code/vscodemac_python/hetero_sshe_logistic_regression/data/'
+    main_path = PATH_DATA
+    # X_train1 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name1), delimiter=',', dtype = int)
+    # X_train2 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name2), delimiter=',', dtype = int)
+    X_test1 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name1), delimiter=',', dtype = int) #, dtype = float)
+    X_test2 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name2), delimiter=',', dtype = int) #, dtype = float)
+
+    # X_train = np.loadtxt('../data/splice/X_train_sketch.txt', delimiter=',') #, dtype = float)
+    X_test = np.loadtxt('../data/splice/X_test_sketch.txt', delimiter=',')
+
+    # Train dataset sketch squeeze
+    print(X_test.shape[0], X_test.shape[1])
+    print(X_test1.shape[0], X_test1.shape[1])
+    print(X_test2.shape[0], X_test2.shape[1])
+    m = X_test1.shape[0]
+    n = X_test1.shape[1] + X_test2.shape[1]
+    n1 = X_test1.shape[1]
+    k = n
+    b = 2
+    c = 0
+
+    sketch = Dis_samples_to_sketch(m, n, n1, k, b, c, X_test1, X_test2).toarray()
+    print(sketch.shape[0], sketch.shape[1])
+
+    k = sketch.shape[1]
+    partition = 3/10
+    k1 = np.floor(k * partition).astype(int)
+    result_X_test1, result_X_test2 = sketch[:,0:k1], sketch[:,k1:]
+
+    print(result_X_test1.shape[0], result_X_test1.shape[1])
+    print(result_X_test2.shape[0], result_X_test2.shape[1])
+
+    # 测试集
+    np.savetxt("../data/splice/distrubuted/squeeze/X1_squeeze_test37.txt",
+                result_X_test1, delimiter=',')
+    np.savetxt("../data/splice/distrubuted/squeeze/X2_squeeze_test37.txt",
+                result_X_test2, delimiter=',')
+
+
+
+
+
 
 if __name__ == '__main__':
     print()
@@ -209,13 +259,19 @@ if __name__ == '__main__':
     dataset_file_name = 'splice/distrubuted/'  
     train_file_name1 = 'X1_train_sketch.txt'
     train_file_name2 = 'X2_train_sketch.txt'
+    # test_file_name1 = 'X1_encoded_test37.txt'
+    # test_file_name2 = 'X2_encoded_test37.txt'
     # main_path = '/Users/zbz/code/vscodemac_python/hetero_sshe_logistic_regression/data/'
     main_path = PATH_DATA
     X_train1 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name1), delimiter=',', dtype = int)
     X_train2 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name2), delimiter=',', dtype = int)
+    # X_test1 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name1), delimiter=',') #, dtype = float)
+    # X_test2 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name2), delimiter=',') #, dtype = float)
 
     X_train = np.loadtxt('../data/splice/X_train_sketch.txt', delimiter=',') #, dtype = float)
+    # X_test = np.loadtxt('../data/splice/X_train_test.txt', delimiter=',')
 
+    # Train dataset sketch squeeze
     print(X_train.shape[0], X_train.shape[1])
     print(X_train1.shape[0], X_train1.shape[1])
     print(X_train2.shape[0], X_train2.shape[1])
@@ -226,21 +282,27 @@ if __name__ == '__main__':
     b = 2
     c = 0
 
-    sketch = Dis_samples_to_sketch(m, n, n1, k, b, c, X_train1, X_train2).toarray()
-    print(sketch.shape[0], sketch.shape[1])
+    sketch_to_squeeze_dataset()
 
-    k = sketch.shape[1]
-    partition = 3/10
-    k1 = np.floor(k * partition).astype(int)
-    result_X_train1, result_X_train2 = sketch[:,0:k1], sketch[:,k1:]
+    # sketch = Dis_samples_to_sketch(m, n, n1, k, b, c, X_train1, X_train2).toarray()
+    # print(sketch.shape[0], sketch.shape[1])
 
-    print(result_X_train1.shape[0], result_X_train1.shape[1])
-    print(result_X_train2.shape[0], result_X_train2.shape[1])
+    # k = sketch.shape[1]
+    # partition = 3/10
+    # k1 = np.floor(k * partition).astype(int)
+    # result_X_train1, result_X_train2 = sketch[:,0:k1], sketch[:,k1:]
 
-    np.savetxt("../data/splice/distrubuted/squeeze/X1_squeeze_train37.txt",
-                result_X_train1, delimiter=',')
-    np.savetxt("../data/splice/distrubuted/squeeze/X2_squeeze_train37.txt",
-                result_X_train2, delimiter=',')
+    # print(result_X_train1.shape[0], result_X_train1.shape[1])
+    # print(result_X_train2.shape[0], result_X_train2.shape[1])
+
+
+
+    # # 训练集
+    # np.savetxt("../data/splice/distrubuted/squeeze/X1_squeeze_train37.txt",
+    #             result_X_train1, delimiter=',')
+    # np.savetxt("../data/splice/distrubuted/squeeze/X2_squeeze_train37.txt",
+    #             result_X_train2, delimiter=',')
+    
     # np.savetxt("E:\\zbz\\code\\vscode_python\\hetero_sshe_logistic_regression\\data\\splice\\distrubuted\\squeeze\\X_squeeze_train.txt",
     #             sketch, delimiter=',')
     

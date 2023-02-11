@@ -597,8 +597,8 @@ class LogisticRegression:
         ############################
         import time
         filename = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime(time.time()))
-        name = filename + ".txt"
-        file = open(name, mode='w+') #  写入记录
+        self.log_name = filename + ".txt"
+        file = open(self.log_name, mode='w+') #  写入记录
         # time_start_training = time.time()
         ############################
         
@@ -615,7 +615,7 @@ class LogisticRegression:
                 print("batch ", test)
 
                 ############################
-                # file.write("batch " + str(test) + "\n")
+                # c
                 ############################
 
                 test += 1
@@ -740,6 +740,11 @@ class LogisticRegression:
 
                     self.model_weights = np.hstack((self.weightA, self.weightB))
                     print("self.model_weights: ", self.model_weights)
+                    import pickle
+                    # model.fit(x_data, y_data)
+                    s = pickle.dumps(self.model_weights)
+                    with open('myModel.model','wb+') as f: # 注意此处mode是'wb+'，表示二进制写入
+                        f.write(s)
                 break
 
             self.n_iteration += 1
@@ -936,8 +941,15 @@ class LogisticRegression:
                 score += 1
             else:
                 pass
-        rate = score/len(y)
+        rate = float(score)/float(len(y))
         print("Predict precision: ", rate)
+        file = open(self.log_name, mode='a+')
+        file.write("score: "+str(score))
+        file.write("\n")
+        file.write("len(y): "+str(len(y)))
+        file.write("\n")
+        file.write("Predict precision: "+str(rate))
+        file.close()
 
 
 def read_data():
@@ -1189,11 +1201,11 @@ def read_distributed_squeeze_data():
     print("loading dataset...")
 
     dataset_file_name = 'splice/distrubuted/squeeze/'  
-    dataset_testfile_name = 'splice/distrubuted/encoded/'
+    dataset_testfile_name = 'splice/distrubuted/squeeze/'
     train_file_name1 = 'X1_squeeze_train37.txt'
     train_file_name2 = 'X2_squeeze_train37.txt'
-    test_file_name1 = 'X1_encoded_test37.txt'
-    test_file_name2 = 'X2_encoded_test37.txt'
+    test_file_name1 = 'X1_squeeze_test37.txt'
+    test_file_name2 = 'X2_squeeze_test37.txt'
     # main_path = '/Users/zbz/code/vscodemac_python/hetero_sshe_logistic_regression/data/'
     main_path = PATH_DATA
     X_train1 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name1), delimiter=',') #, dtype = float)
@@ -1262,8 +1274,8 @@ if __name__ == "__main__":
                     # splice: 0.8482758620689655
                     # splice 集中 0.9062068965517242
     # 纵向划分分布式
-    LogisticRegressionModel = LogisticRegression(weight_vector = weight_vector, batch_size = 20, 
-                    max_iter = 100, alpha = 0.0001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
+    LogisticRegressionModel = LogisticRegression(weight_vector = weight_vector, batch_size = 40, 
+                    max_iter = 10, alpha = 0.0001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
                     # splice 分布式 0.9062068965517242
 
     # 两部分数据集
