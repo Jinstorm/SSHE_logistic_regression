@@ -735,8 +735,11 @@ class LogisticRegression:
             if self.is_converged:
                 # self.weightA, self.weightB = np.hsplit(self.model_weights, [self.indice]) # 权重向量是一个列向量，需要横向划分
                 if self.ratio is not None: 
-                    self.weightA = self.cipher.recursive_decrypt(wa1 + wa2)
-                    self.weightB = self.cipher.recursive_decrypt(wb1 + wb2)
+                    # self.weightA = self.cipher.recursive_decrypt(wa1 + wa2)
+                    # self.weightB = self.cipher.recursive_decrypt(wb1 + wb2)
+
+                    self.weightA = wa1 + wa2
+                    self.weightB = wb1 + wb2
 
                     self.model_weights = np.hstack((self.weightA, self.weightB))
                     print("self.model_weights: ", self.model_weights)
