@@ -88,7 +88,7 @@ class LogisticRegression:
         self.fixedpoint_encoder = FixedPointEndec(n = 1e10) # 加密前的定点化编码器初始化
 
         # 进程池
-        self.pool = Pool()
+        # self.pool = Pool()
 
 
 
@@ -443,21 +443,21 @@ class LogisticRegression:
         返回值: share的两个分片
         向量加密后做矩阵乘法, 然后 secret share 乘积结果的矩阵分成2个sharings
         '''
-        import time
+        # import time
  
-        time_start = time.time()
+        # time_start = time.time()
     
         if stage == "forward":
-            # encrypt_vec = self.cipher.recursive_encrypt(vector)
-            encrypt_vec = np.asarray(self.pool.map(self.cipher.recursive_encrypt, vector))
+            encrypt_vec = self.cipher.recursive_encrypt(vector)
+            # encrypt_vec = np.asarray(self.pool.map(self.cipher.recursive_encrypt, vector))
             # self.pool.close()
             # self.pool.join()
             # print("forward vector shape: ", vector.shape)
             assert(matrix.shape[1] == encrypt_vec.shape[1])
             mul_result = np.dot(matrix, encrypt_vec.T)
         elif stage == "backward":
-            # encrypt_vec = self.cipher.recursive_encrypt(vector)
-            encrypt_vec = np.asarray(self.pool.map(self.cipher.recursive_encrypt, vector))
+            encrypt_vec = self.cipher.recursive_encrypt(vector)
+            # encrypt_vec = np.asarray(self.pool.map(self.cipher.recursive_encrypt, vector))
             # self.pool.close()
             # print("backward vector shape: ", vector.shape)
             assert(encrypt_vec.shape[0] == matrix.shape[0])
@@ -465,8 +465,8 @@ class LogisticRegression:
 
         else: raise NotImplementedError
 
-        time_end = time.time()
-        # print('time cost: ',time_end-time_start,'s')
+        # time_end = time.time()
+        # print('time cost: ', time_end-time_start, 's')
         
         # print(type(mul_result))
         # print(type(mul_result[0][0]))
@@ -612,8 +612,8 @@ class LogisticRegression:
                 # print(type(self.za))
                 # print(type(self.zb))
 
-                # encrypt_zb = self.cipher.recursive_encrypt(self.zb)
-                encrypt_zb = np.asarray(self.pool.map(self.cipher.recursive_encrypt, self.zb))
+                encrypt_zb = self.cipher.recursive_encrypt(self.zb)
+                # encrypt_zb = np.asarray(self.pool.map(self.cipher.recursive_encrypt, self.zb))
                 # print("type encrypt_zb: ", type(encrypt_zb))
 
                 # wx encrypt
@@ -669,14 +669,14 @@ class LogisticRegression:
                 
                 ########################## update model #######################
                 # print("update model ...")
-                wa1 = wa1 - self.alpha * ga_new
-                wa2 = wa2 - self.alpha * ga2_2
-                wb1 = wb1 - self.alpha * gb1
-                wb2 = wb2 - self.alpha * gb2
+                wa1 = wa1 - self.alpha * ga_new - self.lambda_para * self.alpha * wa1 / batch_num
+                wa2 = wa2 - self.alpha * ga2_2 - self.lambda_para * self.alpha * wa2 / batch_num
+                wb1 = wb1 - self.alpha * gb1 - self.lambda_para * self.alpha * wb1 / batch_num
+                wb2 = wb2 - self.alpha * gb2 - self.lambda_para * self.alpha * wb2 / batch_num
 
-                # # print("test: ", test)
-                # # test += 1
-                time_end_training = time.time()
+                # l2-penalty
+                # self.model_weights = self.model_weights - self.alpha * gradient - self.lambda_para * self.alpha * self.model_weights / batch_num
+                # time_end_training = time.time()
                 # print('batch cost: ',time_end_training-time_start_training,'s')
 
             # 打乱数据集的batch
@@ -708,8 +708,11 @@ class LogisticRegression:
             if self.is_converged:
                 # self.weightA, self.weightB = np.hsplit(self.model_weights, [self.indice]) # 权重向量是一个列向量，需要横向划分
                 if self.ratio is not None: 
-                    self.weightA = self.cipher.recursive_decrypt(wa1 + wa2)
-                    self.weightB = self.cipher.recursive_decrypt(wb1 + wb2)
+                    # self.weightA = self.cipher.recursive_decrypt(wa1 + wa2)
+                    # self.weightB = self.cipher.recursive_decrypt(wb1 + wb2)
+
+                    self.weightA = wa1 + wa2
+                    self.weightB = wb1 + wb2
 
                     self.model_weights = np.hstack((self.weightA, self.weightB))
                     print("self.model_weights: ", self.model_weights)
@@ -1126,6 +1129,7 @@ def read_distributed_encoded_data():
 
 
 def read_distributed_squeeze_data():
+    ## countsketch
     from sklearn.datasets import load_svmlight_file
     import os
     from sklearn.preprocessing import MinMaxScaler, StandardScaler, normalize
@@ -1168,12 +1172,11 @@ def read_distributed_squeeze_data():
     # # return X_train.todense().A, Y_train, X_test.todense().A, Y_test # matrix转array
     print("loading dataset...")
 
-    dataset_file_name = 'splice/distrubuted/squeeze/'  
-    dataset_testfile_name = 'splice/distrubuted/encoded/'
-    train_file_name1 = 'X1_squeeze_train37.txt'
-    train_file_name2 = 'X2_squeeze_train37.txt'
-    test_file_name1 = 'X1_squeeze_test37.txt'
-    test_file_name2 = 'X2_squeeze_test37.txt'
+    dataset_file_name = 'splice/distrubuted/countsketch/'  
+    train_file_name1 = 'X1_squeeze_train37_Countsketch.txt'
+    train_file_name2 = 'X2_squeeze_train37_Countsketch.txt'
+    test_file_name1 = 'X1_squeeze_test37_Countsketch.txt'
+    test_file_name2 = 'X2_squeeze_test37_Countsketch.txt'
     # main_path = '/Users/zbz/code/vscodemac_python/hetero_sshe_logistic_regression/data/'
     main_path = PATH_DATA
     X_train1 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name1), delimiter=',') #, dtype = float)
@@ -1245,9 +1248,11 @@ if __name__ == "__main__":
                     # splice: 0.8482758620689655
                     # splice 集中 0.9062068965517242
     # 纵向划分分布式
-    LogisticRegressionModel = LogisticRegression(weight_vector = weight_vector, batch_size = 40, 
-                    max_iter = 500, alpha = 0.0001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
+    LogisticRegressionModel = LogisticRegression(weight_vector = weight_vector, batch_size = 512, 
+                    max_iter = 200, alpha = 0.001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
                     # splice 分布式 0.9062068965517242
+    # LogisticRegressionModel = LogisticRegression(weight_vector = weight_vector, batch_size = 20, 
+    #                 max_iter = 600, alpha = 0.0001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
 
     # 两部分数据集
     # sparse: 12.54981803894043 s,       Predict precision:  0.9062068965517242    Iteration 645

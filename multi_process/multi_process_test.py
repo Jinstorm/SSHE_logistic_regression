@@ -10,7 +10,7 @@ from paillierm.encrypt import PaillierEncrypt
 import numpy as np
 
 np.random.seed(100)
-a = np.random.random(5000)
+a = np.random.random(10000)
 cipher = PaillierEncrypt()
 cipher.generate_key(2048)
 
@@ -19,7 +19,7 @@ def encrypt_vector(tmp):
     return encrypt_table
 
 if __name__ == '__main__':
-    pool = Pool(4)
+    pool = Pool(8)
     # args = [a,]
     start = time.time()
     print("hello")
