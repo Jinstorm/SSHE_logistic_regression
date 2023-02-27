@@ -450,7 +450,12 @@ class LogisticRegression:
             time_start_training = time.time()
             loss_list = []
             batch_labels = None
+            i_batch = 0
             for batch_dataB, batch_labels, batch_num in zip(self.X_batch_listB, self.y_batch_list, self.batch_num):
+                # file.write("batch ", i_batch)
+                # file.write("batch " + str(i_batch))
+                # print("batch " + str(i_batch))
+
                 batch_labels = batch_labels.reshape(-1, 1)
                 self.forward_Guest_B(batch_dataB, wb2, wa2, party = "B")
                 encrypt_za = self.comm_Queue_B.get()
@@ -482,7 +487,10 @@ class LogisticRegression:
                 # print("wa2,wb2: ", wa2,wb2)
 
                 # 对应一下get和put的数量和顺序
-
+                time_end_training = time.time()
+                file.write('batch cost: ' + str(time_end_training-time_start_training)+'s')
+                # print("batch cost: " + str(time_end_training-time_start_training)+'s')
+                i_batch += 1
             # 打乱数据集的batch
             # self.X_batch_listA, self.X_batch_listB, self.y_batch_list = self.shuffle_distributed_data(self.X_batch_listA, 
             #                     self.X_batch_listB, self.y_batch_list)
@@ -494,11 +502,11 @@ class LogisticRegression:
             loss_decrypt = self.cipher.recursive_decrypt(loss)
             time_end_training = time.time()
 
-            print("\rEpoch {}, batch sum loss: {}".format(self.n_iteration, loss_decrypt), end='')
+            print("Epoch {}, batch sum loss: {}".format(self.n_iteration, loss_decrypt), end='')
             print(" Time: " + str(time_end_training-time_start_training) + "s")
             file.write("Time: " + str(time_end_training-time_start_training) + "s\n")
             # file.write("loss shape: " + str(loss.shape) + "\n")
-            file.write("\rEpoch {}, batch sum loss: {}".format(self.n_iteration, loss_decrypt))
+            file.write("Epoch {}, batch sum loss: {}\n".format(self.n_iteration, loss_decrypt))
             
             
             self.is_converged = self.check_converge_by_loss(loss_decrypt)
@@ -835,7 +843,7 @@ if __name__ == "__main__":
                     # splice 集中 0.9062068965517242
     # 纵向划分分布式
     LogisticRegressionModel = LogisticRegression(weight_vector = weight_vector, batch_size = 256, 
-                    max_iter = 200, alpha = 0.001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
+                    max_iter = 10, alpha = 0.001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
                     # splice 分布式 0.9062068965517242
     # LogisticRegressionModel = LogisticRegression(weight_vector = weight_vector, batch_size = 20, 
     #                 max_iter = 600, alpha = 0.0001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)

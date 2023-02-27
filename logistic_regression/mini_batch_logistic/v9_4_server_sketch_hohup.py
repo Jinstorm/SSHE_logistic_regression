@@ -27,7 +27,7 @@ from paillierm.utils import urand_tensor
 # from federatedml.secureprotol.spdz.utils import urand_tensor
 
 PATH_DATA = '../../data/' # '../../data/'
-flag = '' # sketch or raw
+# flag = '' # sketch or raw
 
 class LogisticRegression:
     """
@@ -273,6 +273,11 @@ class LogisticRegression:
         # import multiprocessing
         # m = multiprocessing.Manager()
         # arr = m.list()
+
+        import time
+        name = "sketch_time.txt"
+        file = open(name, mode='w+') #  写入记录
+        time_start_training = time.time()
         
         host_A = Process(target = self.fit_model_secure_Host_A,args=() )
         guest_B = Process(target = self.fit_model_secure_Guest_B,args=(instances_count, self.comm_Queue_C) )
@@ -291,6 +296,11 @@ class LogisticRegression:
         host_A.terminate()
         host_A.join()
         print("Done.")
+
+        time_end_training = time.time()
+        file.write("Total Train time: " + str(time_end_training-time_start_training) + "s\n")
+        file.close()
+
         # print(arr)
         # self.model_weights = np.asarray(arr)
         # print("self.model_weights3: ", self.model_weights)
@@ -378,6 +388,7 @@ class LogisticRegression:
         while self.n_iteration <= self.max_iter:
             # print("wa111 shape: ", wa1.shape)
             for batch_dataA, batch_num in zip(self.X_batch_listA, self.batch_num):
+                # print("forward..")
                 self.forward_Host_A(batch_dataA, wa1, wb1, party = "A")
                 if self.terminal == True: 
                     print("A return/")
@@ -389,6 +400,7 @@ class LogisticRegression:
                 error_a = ya_s
 
                 # backward
+                # print("backward..")
                 ga = np.dot(error_a.T, batch_dataA) * (1 / batch_num)
                 gb1 = self.comm_Queue_A.get()
 
@@ -424,11 +436,13 @@ class LogisticRegression:
         name1 = filename + "_Epoch.txt"
         file = open(name1, mode='w+') #  写入记录每个epoch的时间和loss
         name2 = filename + "_Batch.txt"
-        file2 = open(name2, mode='w+') #  写入some fuzz buzz
+        file2 = open(name2, mode='w+') #  写入 some trash or useful words
+
         # global flag
-        # if flag == "sketch": file.write("sketch data." + "\n")
+        # if flag == "sketch": 
         # elif flag == "raw": file.write("raw data." + "\n")
-        file.write("raw data." + "\n")
+        file.write("sketch data." + "\n")
+
 
         flag = "B"
         print("secret sharing model B...")
@@ -444,10 +458,11 @@ class LogisticRegression:
             batch_labels = None
             i_batch = 0
             for batch_dataB, batch_labels, batch_num in zip(self.X_batch_listB, self.y_batch_list, self.batch_num):
+                # file.write("batch ", i_batch)
                 file2.write("batch " + str(i_batch))
                 print("batch " + str(i_batch), end = '')
                 print("forward..", end = '')
-                
+
                 batch_labels = batch_labels.reshape(-1, 1)
                 self.forward_Guest_B(batch_dataB, wb2, wa2, party = "B")
                 encrypt_za = self.comm_Queue_B.get()
@@ -457,6 +472,7 @@ class LogisticRegression:
                 # self.backward_Guest_B(batch_labels, batch_num)
                 
                 # backward
+                # print("backward..")
                 yb_s = self.secret_share_vector(self.encrypted_sigmoid_wx, flag)
                 error_b = yb_s - batch_labels
 
@@ -485,7 +501,6 @@ class LogisticRegression:
 
                 i_batch += 1
 
-
             # 打乱数据集的batch
             # self.X_batch_listA, self.X_batch_listB, self.y_batch_list = self.shuffle_distributed_data(self.X_batch_listA, 
             #                     self.X_batch_listB, self.y_batch_list)
@@ -497,11 +512,12 @@ class LogisticRegression:
             loss_decrypt = self.cipher.recursive_decrypt(loss)
             time_end_training = time.time()
 
-            print("\rEpoch {}, batch sum loss: {}".format(self.n_iteration, loss_decrypt), end='')
+            print("\nEpoch {}, batch sum loss: {}".format(self.n_iteration, loss_decrypt), end='')
             print(" Time: " + str(time_end_training-time_start_training) + "s")
             file.write("Time: " + str(time_end_training-time_start_training) + "s\n")
             # file.write("loss shape: " + str(loss.shape) + "\n")
-            file.write("\rEpoch {}, batch sum loss: {}".format(self.n_iteration, loss_decrypt))
+            file.write("Epoch {}, batch sum loss: {}\n".format(self.n_iteration, loss_decrypt))
+            file2.write("\nEpoch {}, batch sum loss: {}\n".format(self.n_iteration, loss_decrypt))
             
             
             self.is_converged = self.check_converge_by_loss(loss_decrypt)
@@ -642,9 +658,6 @@ def read_distributed_data():
     from sklearn.datasets import load_svmlight_file
     import os
 
-    # global flag
-    # flag = "raw"
-
     dataset_file_name = 'DailySports'  
     train_file_name = 'DailySports_train.txt' 
     test_file_name = 'DailySports_test.txt'
@@ -712,8 +725,6 @@ def read_distributed_squeeze_data():
     ## countsketch
     from sklearn.datasets import load_svmlight_file
     import os
-    global flag
-    flag = "sketch"
 
     dataset_file_name = 'DailySports'  
     train_file_name = 'DailySports_train.txt' 
@@ -801,9 +812,9 @@ if __name__ == "__main__":
     # X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_encoded_data()
 
     # Raw data
-    X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_data()
+    # X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_data()
     # Sketch data
-    # X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_squeeze_data()
+    X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_squeeze_data()
 
     print(X_train1.shape, X_train2.shape, X_train1.shape[1], X_train2.shape[1], Y_train.shape, X_test1.shape, Y_test.shape)
 
@@ -838,7 +849,7 @@ if __name__ == "__main__":
                     # splice 集中 0.9062068965517242
     # 纵向划分分布式
     LogisticRegressionModel = LogisticRegression(weight_vector = weight_vector, batch_size = 256, 
-                    max_iter = 200, alpha = 0.0001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
+                    max_iter = 200, alpha = 0.001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
                     # splice 分布式 0.9062068965517242
     # LogisticRegressionModel = LogisticRegression(weight_vector = weight_vector, batch_size = 20, 
     #                 max_iter = 600, alpha = 0.0001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
