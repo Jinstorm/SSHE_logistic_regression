@@ -273,11 +273,6 @@ class LogisticRegression:
         # import multiprocessing
         # m = multiprocessing.Manager()
         # arr = m.list()
-
-        import time
-        name = "sketch_time.txt"
-        file = open(name, mode='w+') #  写入记录
-        time_start_training = time.time()
         
         host_A = Process(target = self.fit_model_secure_Host_A,args=() )
         guest_B = Process(target = self.fit_model_secure_Guest_B,args=(instances_count, self.comm_Queue_C) )
@@ -296,10 +291,6 @@ class LogisticRegression:
         host_A.terminate()
         host_A.join()
         print("Done.")
-
-        time_end_training = time.time()
-        file.write("Total Train time: " + str(time_end_training-time_start_training) + "s\n")
-
         # print(arr)
         # self.model_weights = np.asarray(arr)
         # print("self.model_weights3: ", self.model_weights)
@@ -433,10 +424,9 @@ class LogisticRegression:
         name = filename + ".txt"
         file = open(name, mode='w+') #  写入记录
         # global flag
-        # if flag == "sketch": 
+        # if flag == "sketch": file.write("sketch data." + "\n")
         # elif flag == "raw": file.write("raw data." + "\n")
-        file.write("sketch data." + "\n")
-
+        file.write("raw data." + "\n")
 
         flag = "B"
         print("secret sharing model B...")
@@ -639,8 +629,8 @@ def read_distributed_data():
     from sklearn.datasets import load_svmlight_file
     import os
 
-    global flag
-    flag = "raw"
+    # global flag
+    # flag = "raw"
 
     dataset_file_name = 'DailySports'  
     train_file_name = 'DailySports_train.txt' 
@@ -798,9 +788,9 @@ if __name__ == "__main__":
     # X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_encoded_data()
 
     # Raw data
-    # X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_data()
+    X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_data()
     # Sketch data
-    X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_squeeze_data()
+    # X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_squeeze_data()
 
     print(X_train1.shape, X_train2.shape, X_train1.shape[1], X_train2.shape[1], Y_train.shape, X_test1.shape, Y_test.shape)
 
@@ -835,7 +825,7 @@ if __name__ == "__main__":
                     # splice 集中 0.9062068965517242
     # 纵向划分分布式
     LogisticRegressionModel = LogisticRegression(weight_vector = weight_vector, batch_size = 256, 
-                    max_iter = 200, alpha = 0.001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
+                    max_iter = 10, alpha = 0.001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
                     # splice 分布式 0.9062068965517242
     # LogisticRegressionModel = LogisticRegression(weight_vector = weight_vector, batch_size = 20, 
     #                 max_iter = 600, alpha = 0.0001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)

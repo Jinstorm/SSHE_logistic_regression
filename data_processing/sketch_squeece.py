@@ -179,12 +179,22 @@ PATH_DATA = '../data/'
 #                 result_X_test2, delimiter=',')
 
 
-def sketch_to_countsketch(tag, b, division):
-    dataset_file_name = 'splice/distrubuted/'  
-    train_file_name1 = 'X1_train_sketch.txt'
-    train_file_name2 = 'X2_train_sketch.txt'
-    test_file_name1 = 'X1_test_sketch.txt'
-    test_file_name2 = 'X2_test_sketch.txt'
+def sketch_to_countsketch(tag, b, division, dataset, rate):
+    if rate == 1024:
+        dataset_file_name = 'DailySports/portion37_pminhash/sketch1024/'
+    elif rate == 512:
+        dataset_file_name = 'DailySports/portion37_pminhash/sketch512/'
+    
+    train_file_name1 = 'X1_train_samples.txt'
+    train_file_name2 = 'X2_train_samples.txt'
+    test_file_name1 = 'X1_test_samples.txt'
+    test_file_name2 = 'X2_test_samples.txt'
+    # dataset_file_name = 'splice/distrubuted/'  
+    # train_file_name1 = 'X1_train_sketch.txt'
+    # train_file_name2 = 'X2_train_sketch.txt'
+    # test_file_name1 = 'X1_test_sketch.txt'
+    # test_file_name2 = 'X2_test_sketch.txt'
+    
     # dataset_file_name = 'splice/distrubuted/encoded'  
     # train_file_name1 = 'X1_encoded_train37.txt'
     # train_file_name2 = 'X2_encoded_train37.txt'
@@ -217,11 +227,25 @@ def sketch_to_countsketch(tag, b, division):
         result_X_train1, result_X_train2 = sketch[:,0:k1], sketch[:,k1:]
 
         # 训练集
-        np.savetxt("../data/splice/distrubuted/countsketch/X1_squeeze_train37_Countsketch.txt",
-                    result_X_train1, delimiter=',', fmt='%d')
-        np.savetxt("../data/splice/distrubuted/countsketch/X2_squeeze_train37_Countsketch.txt",
-                    result_X_train2, delimiter=',', fmt='%d')
-        print("Train count-sketch data saved.")
+        if dataset == "DailySports":
+            if rate == 1024:
+                np.savetxt("../data/DailySports/portion37_pminhash/sketch1024/countsketch/X1_squeeze_train37_Countsketch.txt",
+                            result_X_train1, delimiter=',', fmt='%d')
+                np.savetxt("../data/DailySports/portion37_pminhash/sketch1024/countsketch/X2_squeeze_train37_Countsketch.txt",
+                            result_X_train2, delimiter=',', fmt='%d')
+            elif rate == 512:
+                np.savetxt("../data/DailySports/portion37_pminhash/sketch512/countsketch/X1_squeeze_train37_Countsketch.txt",
+                            result_X_train1, delimiter=',', fmt='%d')
+                np.savetxt("../data/DailySports/portion37_pminhash/sketch512/countsketch/X2_squeeze_train37_Countsketch.txt",
+                            result_X_train2, delimiter=',', fmt='%d')
+            else:
+                raise NotImplementedError("Invalid rate.")
+        # np.savetxt("../data/splice/distrubuted/countsketch/X1_squeeze_train37_Countsketch.txt",
+        #             result_X_train1, delimiter=',', fmt='%d')
+        # np.savetxt("../data/splice/distrubuted/countsketch/X2_squeeze_train37_Countsketch.txt",
+        #             result_X_train2, delimiter=',', fmt='%d')
+
+            print("Train count-sketch data saved.")
 
     elif tag == "test":
         X_test1 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name1), delimiter=',', dtype = int)
@@ -247,12 +271,25 @@ def sketch_to_countsketch(tag, b, division):
         print(result_X_test2.shape[0], result_X_test2.shape[1])
 
         # 测试集
-        np.savetxt("../data/splice/distrubuted/countsketch/X1_squeeze_test37_Countsketch.txt",
-                    result_X_test1, delimiter=',', fmt='%d')
-        np.savetxt("../data/splice/distrubuted/countsketch/X2_squeeze_test37_Countsketch.txt",
-                    result_X_test2, delimiter=',', fmt='%d')
+        if dataset == "DailySports":
+            if rate == 1024:
+                np.savetxt("../data/DailySports/portion37_pminhash/sketch1024/countsketch/X1_squeeze_test37_Countsketch.txt",
+                            result_X_test1, delimiter=',', fmt='%d')
+                np.savetxt("../data/DailySports/portion37_pminhash/sketch1024/countsketch/X2_squeeze_test37_Countsketch.txt",
+                            result_X_test2, delimiter=',', fmt='%d')
+            elif rate == 512:
+                np.savetxt("../data/DailySports/portion37_pminhash/sketch512/countsketch/X1_squeeze_test37_Countsketch.txt",
+                            result_X_test1, delimiter=',', fmt='%d')
+                np.savetxt("../data/DailySports/portion37_pminhash/sketch512/countsketch/X2_squeeze_test37_Countsketch.txt",
+                            result_X_test2, delimiter=',', fmt='%d')
+            else:
+                raise NotImplementedError("Invalid rate.")
+        # np.savetxt("../data/splice/distrubuted/countsketch/X1_squeeze_test37_Countsketch.txt",
+        #             result_X_test1, delimiter=',', fmt='%d')
+        # np.savetxt("../data/splice/distrubuted/countsketch/X2_squeeze_test37_Countsketch.txt",
+        #             result_X_test2, delimiter=',', fmt='%d')
 
-        print("Test count-sketch data saved.")
+            print("Test count-sketch data saved.")
     else:
         raise Exception('[Exception] tag error occurred.')
     
@@ -262,9 +299,11 @@ def sketch_to_countsketch(tag, b, division):
 if __name__ == '__main__':
     # X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_encoded_data()
     print("loading dataset...")
-    division_ = 8
-    sketch_to_countsketch("train", 0, division_)
-    sketch_to_countsketch("test", 0, division_)
+    c = 2
+    dataset_name = "DailySports"
+    rate = 1024
+    sketch_to_countsketch("train", 0, c, dataset_name, rate)
+    sketch_to_countsketch("test", 0, c, dataset_name, rate)
 
 
 

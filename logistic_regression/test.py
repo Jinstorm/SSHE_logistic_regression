@@ -74,7 +74,16 @@ import numpy as np
 # print((a+b)*(a+b))
 # print(a*a+2*a*b+b*b)
 
-file = open("a.txt", 'w')
-file.write(str(1+1))
-file.close
+ 
+c = np.array([[1,2,0],[4,0,1],[0,5,0]])
+c[c!=0] = -1
+print(c)
+i = 1
+c = 2
+# raise NotImplementedError("Invalid rate.")
+while i <= 10:
+    print(i)
+    if c == 1 or i == 10:
+        print("hello")
+    i = i +1
 
