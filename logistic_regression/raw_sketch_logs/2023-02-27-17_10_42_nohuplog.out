@@ -1,0 +1,333 @@
+nohup: 忽略输入
+processing dataset...
+loading dataset...
+(4560, 307)
+<class 'numpy.ndarray'> <class 'numpy.ndarray'>
+(4560, 307)
+(4560, 307) (4560, 717) 307 717 (4560,) (4560, 307) (4560,)
+ratio:  0.7
+(1, 307) (1, 717)
+processing dataset...
+loading dataset...
+(4560, 307)
+<class 'numpy.ndarray'> <class 'numpy.ndarray'>
+(4560, 307)
+(4560, 307) (4560, 717) 307 717 (4560,) (4560, 307) (4560,)
+ratio:  0.7
+(1, 307) (1, 717)
+secret sharing model A...
+secret sharing model B...
+wa1 shape:  (1, 307)
+batch 0forward..batch cost: 33.05907416343689sbatch 1forward..batch cost: 66.16078019142151sbatch 2forward..batch cost: 99.36100268363953sbatch 3forward..batch cost: 132.61143684387207sbatch 4forward..batch cost: 166.1593792438507sbatch 5forward..batch cost: 199.9387924671173sbatch 6forward..batch cost: 233.0258867740631sbatch 7forward..batch cost: 266.624383687973sbatch 8forward..batch cost: 300.17546486854553sbatch 9forward..batch cost: 333.5444071292877sbatch 10forward..batch cost: 367.00570344924927sbatch 11forward..batch cost: 400.2191205024719sbatch 12forward..batch cost: 433.4854381084442sbatch 13forward..batch cost: 467.10397386550903sbatch 14forward..batch cost: 500.7642240524292sbatch 15forward..batch cost: 534.2175645828247sbatch 16forward..batch cost: 567.2858426570892sbatch 17forward..batch cost: 594.5756525993347s
+Epoch 1, batch sum loss: 0.692076679159368 Time: 594.5773706436157s
+batch 0forward..batch cost: 33.69791603088379sbatch 1forward..batch cost: 67.3063600063324sbatch 2forward..batch cost: 100.36880469322205sbatch 3forward..batch cost: 133.64952087402344sbatch 4forward..batch cost: 167.05413794517517sbatch 5forward..batch cost: 200.37105584144592sbatch 6forward..batch cost: 233.90177416801453sbatch 7forward..batch cost: 267.25249314308167sbatch 8forward..batch cost: 300.41700053215027sbatch 9forward..batch cost: 333.503137588501sbatch 10forward..batch cost: 366.6298689842224sbatch 11forward..batch cost: 399.9684410095215sbatch 12forward..batch cost: 433.0720012187958sbatch 13forward..batch cost: 466.257342338562sbatch 14forward..batch cost: 499.4714844226837sbatch 15forward..batch cost: 532.5677797794342sbatch 16forward..batch cost: 565.556957244873sbatch 17forward..batch cost: 592.9865407943726s
+Epoch 2, batch sum loss: 0.6915965075795416 Time: 592.9877088069916s
+batch 0forward..batch cost: 33.050286293029785sbatch 1forward..batch cost: 66.3437328338623sbatch 2forward..batch cost: 99.65653443336487sbatch 3forward..batch cost: 133.0020546913147sbatch 4forward..batch cost: 166.44092631340027sbatch 5forward..batch cost: 199.61149096488953sbatch 6forward..batch cost: 232.7068009376526sbatch 7forward..batch cost: 265.7866897583008sbatch 8forward..batch cost: 298.9723286628723sbatch 9forward..batch cost: 331.9292974472046sbatch 10forward..batch cost: 365.0139753818512sbatch 11forward..batch cost: 398.07267904281616sbatch 12forward..batch cost: 431.23521304130554sbatch 13forward..batch cost: 464.6452190876007sbatch 14forward..batch cost: 498.0425531864166sbatch 15forward..batch cost: 531.9267017841339sbatch 16forward..batch cost: 565.3442068099976sbatch 17forward..batch cost: 592.6575427055359s
+Epoch 3, batch sum loss: 0.6915683157889754 Time: 592.658798456192s
+batch 0forward..batch cost: 33.11076831817627sbatch 1forward..batch cost: 66.55074071884155sbatch 2forward..batch cost: 99.81050276756287sbatch 3forward..batch cost: 132.96109986305237sbatch 4forward..batch cost: 166.18815517425537sbatch 5forward..batch cost: 199.39561080932617sbatch 6forward..batch cost: 232.429701089859sbatch 7forward..batch cost: 265.4496524333954sbatch 8forward..batch cost: 298.6180601119995sbatch 9forward..batch cost: 331.5874102115631sbatch 10forward..batch cost: 365.0524311065674sbatch 11forward..batch cost: 398.40093517303467sbatch 12forward..batch cost: 431.9115641117096sbatch 13forward..batch cost: 465.45659494400024sbatch 14forward..batch cost: 498.865234375sbatch 15forward..batch cost: 532.5052995681763sbatch 16forward..batch cost: 565.9495625495911sbatch 17forward..batch cost: 593.3618967533112s
+Epoch 4, batch sum loss: 0.6915566446690344 Time: 593.3631229400635s
+batch 0forward..batch cost: 33.30318355560303sbatch 1forward..batch cost: 66.58146047592163sbatch 2forward..batch cost: 99.77510118484497sbatch 3forward..batch cost: 133.2277045249939sbatch 4forward..batch cost: 166.47535228729248sbatch 5forward..batch cost: 200.48490524291992sbatch 6forward..batch cost: 234.9898693561554sbatch 7forward..batch cost: 268.1269555091858sbatch 8forward..batch cost: 301.1624593734741sbatch 9forward..batch cost: 334.42997884750366sbatch 10forward..batch cost: 367.7634627819061sbatch 11forward..batch cost: 400.99316334724426sbatch 12forward..batch cost: 434.83828592300415sbatch 13forward..batch cost: 468.1236698627472sbatch 14forward..batch cost: 501.7539372444153sbatch 15forward..batch cost: 535.122156381607sbatch 16forward..batch cost: 568.5890030860901sbatch 17forward..batch cost: 596.1478116512299s
+Epoch 5, batch sum loss: 0.6915468558699278 Time: 596.1490223407745s
+batch 0forward..batch cost: 33.41886067390442sbatch 1forward..batch cost: 66.65848636627197sbatch 2forward..batch cost: 100.18851351737976sbatch 3forward..batch cost: 133.49392700195312sbatch 4forward..batch cost: 166.82560634613037sbatch 5forward..batch cost: 200.57031631469727sbatch 6forward..batch cost: 233.98700308799744sbatch 7forward..batch cost: 267.55953454971313sbatch 8forward..batch cost: 301.12918496131897sbatch 9forward..batch cost: 334.2497193813324sbatch 10forward..batch cost: 367.28853034973145sbatch 11forward..batch cost: 400.5181496143341sbatch 12forward..batch cost: 433.6301176548004sbatch 13forward..batch cost: 466.84127163887024sbatch 14forward..batch cost: 499.91969990730286sbatch 15forward..batch cost: 533.2091145515442sbatch 16forward..batch cost: 566.4413318634033sbatch 17forward..batch cost: 593.8371760845184s
+Epoch 6, batch sum loss: 0.6915383141969583 Time: 593.8383123874664s
+batch 0forward..batch cost: 33.25515937805176sbatch 1forward..batch cost: 66.29040575027466sbatch 2forward..batch cost: 99.20656561851501sbatch 3forward..batch cost: 132.33549189567566sbatch 4forward..batch cost: 165.47044944763184sbatch 5forward..batch cost: 198.38837599754333sbatch 6forward..batch cost: 231.4512984752655sbatch 7forward..batch cost: 264.5394022464752sbatch 8forward..batch cost: 297.5508482456207sbatch 9forward..batch cost: 330.93605494499207sbatch 10forward..batch cost: 364.18185591697693sbatch 11forward..batch cost: 397.0430130958557sbatch 12forward..batch cost: 430.34078454971313sbatch 13forward..batch cost: 463.8605980873108sbatch 14forward..batch cost: 496.8300268650055sbatch 15forward..batch cost: 530.0068640708923sbatch 16forward..batch cost: 563.5973372459412sbatch 17forward..batch cost: 591.0416867733002s
+Epoch 7, batch sum loss: 0.6915307143294485 Time: 591.0428395271301s
+batch 0forward..batch cost: 33.29158663749695sbatch 1forward..batch cost: 66.44129753112793sbatch 2forward..batch cost: 99.35437417030334sbatch 3forward..batch cost: 132.7465090751648sbatch 4forward..batch cost: 165.66589856147766sbatch 5forward..batch cost: 198.65826749801636sbatch 6forward..batch cost: 231.57473492622375sbatch 7forward..batch cost: 264.5182058811188sbatch 8forward..batch cost: 297.53420519828796sbatch 9forward..batch cost: 330.5045394897461sbatch 10forward..batch cost: 364.24811935424805sbatch 11forward..batch cost: 397.28856325149536sbatch 12forward..batch cost: 430.23894572257996sbatch 13forward..batch cost: 463.25633001327515sbatch 14forward..batch cost: 496.0994699001312sbatch 15forward..batch cost: 529.2116813659668sbatch 16forward..batch cost: 562.0895133018494sbatch 17forward..batch cost: 589.0894865989685s
+Epoch 8, batch sum loss: 0.6915240150489608 Time: 589.0906536579132s
+batch 0forward..batch cost: 33.353530406951904sbatch 1forward..batch cost: 66.39605951309204sbatch 2forward..batch cost: 99.57455611228943sbatch 3forward..batch cost: 133.45312452316284sbatch 4forward..batch cost: 167.46617031097412sbatch 5forward..batch cost: 201.04435682296753sbatch 6forward..batch cost: 234.65517830848694sbatch 7forward..batch cost: 268.3125731945038sbatch 8forward..batch cost: 301.99120569229126sbatch 9forward..batch cost: 336.0641622543335sbatch 10forward..batch cost: 369.815434217453sbatch 11forward..batch cost: 403.6872453689575sbatch 12forward..batch cost: 436.91868686676025sbatch 13forward..batch cost: 470.34977674484253sbatch 14forward..batch cost: 503.6135604381561sbatch 15forward..batch cost: 536.8861939907074sbatch 16forward..batch cost: 570.1664443016052sbatch 17forward..batch cost: 597.8617057800293s
+Epoch 9, batch sum loss: 0.6915180680368523 Time: 597.8628952503204s
+batch 0forward..batch cost: 33.60324954986572sbatch 1forward..batch cost: 66.9224112033844sbatch 2forward..batch cost: 100.25857162475586sbatch 3forward..batch cost: 133.62070393562317sbatch 4forward..batch cost: 166.79576134681702sbatch 5forward..batch cost: 200.21429896354675sbatch 6forward..batch cost: 233.53445196151733sbatch 7forward..batch cost: 267.1613435745239sbatch 8forward..batch cost: 300.422842502594sbatch 9forward..batch cost: 333.7559697628021sbatch 10forward..batch cost: 367.20669436454773sbatch 11forward..batch cost: 400.83169388771057sbatch 12forward..batch cost: 434.4732539653778sbatch 13forward..batch cost: 468.08829069137573sbatch 14forward..batch cost: 501.44914746284485sbatch 15forward..batch cost: 535.2795693874359sbatch 16forward..batch cost: 568.7473380565643sbatch 17forward..batch cost: 596.2526021003723s
+Epoch 10, batch sum loss: 0.691512672108542 Time: 596.2538170814514s
+batch 0forward..batch cost: 33.164740800857544sbatch 1forward..batch cost: 66.4493761062622sbatch 2forward..batch cost: 99.78267216682434sbatch 3forward..batch cost: 133.03023028373718sbatch 4forward..batch cost: 166.42845916748047sbatch 5forward..batch cost: 199.82263851165771sbatch 6forward..batch cost: 233.66747641563416sbatch 7forward..batch cost: 266.99185967445374sbatch 8forward..batch cost: 300.2906918525696sbatch 9forward..batch cost: 333.52157258987427sbatch 10forward..batch cost: 366.7044749259949sbatch 11forward..batch cost: 399.83150911331177sbatch 12forward..batch cost: 433.19700479507446sbatch 13forward..batch cost: 466.32863330841064sbatch 14forward..batch cost: 499.8100323677063sbatch 15forward..batch cost: 533.0596911907196sbatch 16forward..batch cost: 566.4876391887665sbatch 17forward..batch cost: 594.2237191200256s
+Epoch 11, batch sum loss: 0.6915078837979906 Time: 594.2249212265015s
+batch 0forward..batch cost: 33.12542200088501sbatch 1forward..batch cost: 66.30082774162292sbatch 2forward..batch cost: 99.62533044815063sbatch 3forward..batch cost: 132.95597410202026sbatch 4forward..batch cost: 165.81295466423035sbatch 5forward..batch cost: 198.9567892551422sbatch 6forward..batch cost: 231.9973292350769sbatch 7forward..batch cost: 265.00463914871216sbatch 8forward..batch cost: 298.1238217353821sbatch 9forward..batch cost: 331.2804307937622sbatch 10forward..batch cost: 364.38835763931274sbatch 11forward..batch cost: 397.4173288345337sbatch 12forward..batch cost: 430.3642990589142sbatch 13forward..batch cost: 463.54290747642517sbatch 14forward..batch cost: 496.36919236183167sbatch 15forward..batch cost: 529.3211555480957sbatch 16forward..batch cost: 562.5672988891602sbatch 17forward..batch cost: 589.6137945652008s
+Epoch 12, batch sum loss: 0.6915035501916358 Time: 589.6149725914001s
+batch 0forward..batch cost: 33.07493805885315sbatch 1forward..batch cost: 65.91277194023132sbatch 2forward..batch cost: 99.08174252510071sbatch 3forward..batch cost: 132.0977520942688sbatch 4forward..batch cost: 165.0017364025116sbatch 5forward..batch cost: 198.15983247756958sbatch 6forward..batch cost: 230.94014930725098sbatch 7forward..batch cost: 263.9631083011627sbatch 8forward..batch cost: 296.9842965602875sbatch 9forward..batch cost: 330.162659406662sbatch 10forward..batch cost: 363.11461091041565sbatch 11forward..batch cost: 396.23750853538513sbatch 12forward..batch cost: 429.2313184738159sbatch 13forward..batch cost: 462.43041157722473sbatch 14forward..batch cost: 495.7387025356293sbatch 15forward..batch cost: 528.7650671005249sbatch 16forward..batch cost: 561.8336861133575sbatch 17forward..batch cost: 589.0169155597687s
+Epoch 13, batch sum loss: 0.6914995797426068 Time: 589.0179622173309s
+batch 0forward..batch cost: 33.139354944229126sbatch 1forward..batch cost: 66.23467063903809sbatch 2forward..batch cost: 99.283376455307sbatch 3forward..batch cost: 132.18775510787964sbatch 4forward..batch cost: 165.271497964859sbatch 5forward..batch cost: 198.27944350242615sbatch 6forward..batch cost: 231.17195534706116sbatch 7forward..batch cost: 264.29925775527954sbatch 8forward..batch cost: 297.75268363952637sbatch 9forward..batch cost: 331.07368326187134sbatch 10forward..batch cost: 364.3155138492584sbatch 11forward..batch cost: 397.679963350296sbatch 12forward..batch cost: 430.8683662414551sbatch 13forward..batch cost: 464.08751702308655sbatch 14forward..batch cost: 497.01533675193787sbatch 15forward..batch cost: 529.7785074710846sbatch 16forward..batch cost: 562.8483574390411sbatch 17forward..batch cost: 590.1031217575073s
+Epoch 14, batch sum loss: 0.6914959565846703 Time: 590.1043119430542s
+batch 0forward..batch cost: 33.10061597824097sbatch 1forward..batch cost: 66.69810080528259sbatch 2forward..batch cost: 100.09404873847961sbatch 3forward..batch cost: 133.91103148460388sbatch 4forward..batch cost: 166.98097109794617sbatch 5forward..batch cost: 200.28849697113037sbatch 6forward..batch cost: 233.53676414489746sbatch 7forward..batch cost: 266.5394608974457sbatch 8forward..batch cost: 299.5860061645508sbatch 9forward..batch cost: 332.7980751991272sbatch 10forward..batch cost: 366.2280671596527sbatch 11forward..batch cost: 399.36364912986755sbatch 12forward..batch cost: 432.33083844184875sbatch 13forward..batch cost: 465.9861979484558sbatch 14forward..batch cost: 498.969318151474sbatch 15forward..batch cost: 531.8368320465088sbatch 16forward..batch cost: 564.671882390976sbatch 17forward..batch cost: 591.591685295105s
+Epoch 15, batch sum loss: 0.6914926733927101 Time: 591.5927789211273s
+batch 0forward..batch cost: 33.096320390701294sbatch 1forward..batch cost: 66.12891101837158sbatch 2forward..batch cost: 99.01004934310913sbatch 3forward..batch cost: 132.043701171875sbatch 4forward..batch cost: 165.18404150009155sbatch 5forward..batch cost: 198.023779630661sbatch 6forward..batch cost: 231.06151175498962sbatch 7forward..batch cost: 264.2113320827484sbatch 8forward..batch cost: 297.40681862831116sbatch 9forward..batch cost: 330.65106439590454sbatch 10forward..batch cost: 364.1376540660858sbatch 11forward..batch cost: 397.7518980503082sbatch 12forward..batch cost: 431.18168473243713sbatch 13forward..batch cost: 464.5987379550934sbatch 14forward..batch cost: 497.6266665458679sbatch 15forward..batch cost: 530.8670592308044sbatch 16forward..batch cost: 563.8621661663055sbatch 17forward..batch cost: 591.1427381038666s
+Epoch 16, batch sum loss: 0.6914895717522318 Time: 591.1439135074615s
+batch 0forward..batch cost: 33.11117887496948sbatch 1forward..batch cost: 66.1821641921997sbatch 2forward..batch cost: 99.37450790405273sbatch 3forward..batch cost: 132.40323781967163sbatch 4forward..batch cost: 165.5549762248993sbatch 5forward..batch cost: 198.7866129875183sbatch 6forward..batch cost: 232.07467436790466sbatch 7forward..batch cost: 265.7351930141449sbatch 8forward..batch cost: 299.27823185920715sbatch 9forward..batch cost: 332.40787863731384sbatch 10forward..batch cost: 365.50183367729187sbatch 11forward..batch cost: 398.80399537086487sbatch 12forward..batch cost: 432.1180627346039sbatch 13forward..batch cost: 465.51353120803833sbatch 14forward..batch cost: 498.95854115486145sbatch 15forward..batch cost: 532.3872532844543sbatch 16forward..batch cost: 565.6445915699005sbatch 17forward..batch cost: 592.9177143573761s
+Epoch 17, batch sum loss: 0.6914867585157757 Time: 592.9189145565033s
+batch 0forward..batch cost: 33.104482650756836sbatch 1forward..batch cost: 66.57699465751648sbatch 2forward..batch cost: 99.76316833496094sbatch 3forward..batch cost: 133.30399560928345sbatch 4forward..batch cost: 166.95445275306702sbatch 5forward..batch cost: 200.31845545768738sbatch 6forward..batch cost: 233.40938091278076sbatch 7forward..batch cost: 266.422913312912sbatch 8forward..batch cost: 299.6162266731262sbatch 9forward..batch cost: 333.0471148490906sbatch 10forward..batch cost: 366.56345200538635sbatch 11forward..batch cost: 399.89114141464233sbatch 12forward..batch cost: 433.4254422187805sbatch 13forward..batch cost: 466.75353384017944sbatch 14forward..batch cost: 500.06894636154175sbatch 15forward..batch cost: 533.359884262085sbatch 16forward..batch cost: 566.8709495067596sbatch 17forward..batch cost: 594.3214144706726s
+Epoch 18, batch sum loss: 0.6914840666385287 Time: 594.3225662708282s
+batch 0forward..batch cost: 33.426921367645264sbatch 1forward..batch cost: 67.08295011520386sbatch 2forward..batch cost: 100.50878095626831sbatch 3forward..batch cost: 133.88365840911865sbatch 4forward..batch cost: 167.3442940711975sbatch 5forward..batch cost: 200.75114345550537sbatch 6forward..batch cost: 234.17635321617126sbatch 7forward..batch cost: 268.3962404727936sbatch 8forward..batch cost: 302.8078200817108sbatch 9forward..batch cost: 336.3377938270569sbatch 10forward..batch cost: 369.8544890880585sbatch 11forward..batch cost: 403.20056653022766sbatch 12forward..batch cost: 436.93489694595337sbatch 13forward..batch cost: 470.75787901878357sbatch 14forward..batch cost: 504.07660937309265sbatch 15forward..batch cost: 537.7549765110016sbatch 16forward..batch cost: 571.6881835460663sbatch 17forward..batch cost: 599.4294257164001s
+Epoch 19, batch sum loss: 0.6914815939911714 Time: 599.4305863380432s
+batch 0forward..batch cost: 33.53343367576599sbatch 1forward..batch cost: 67.0945258140564sbatch 2forward..batch cost: 100.49229860305786sbatch 3forward..batch cost: 133.95969033241272sbatch 4forward..batch cost: 167.03802514076233sbatch 5forward..batch cost: 200.6254541873932sbatch 6forward..batch cost: 234.0473120212555sbatch 7forward..batch cost: 267.2975540161133sbatch 8forward..batch cost: 300.783216714859sbatch 9forward..batch cost: 333.99992871284485sbatch 10forward..batch cost: 367.41264128685sbatch 11forward..batch cost: 400.8821015357971sbatch 12forward..batch cost: 434.05885124206543sbatch 13forward..batch cost: 467.31392908096313sbatch 14forward..batch cost: 501.0350658893585sbatch 15forward..batch cost: 534.4651718139648sbatch 16forward..batch cost: 567.9632041454315sbatch 17forward..batch cost: 595.2555840015411s
+Epoch 20, batch sum loss: 0.6914792499383304 Time: 595.2567698955536s
+batch 0forward..batch cost: 33.34553837776184sbatch 1forward..batch cost: 66.64107584953308sbatch 2forward..batch cost: 100.49215769767761sbatch 3forward..batch cost: 133.65355253219604sbatch 4forward..batch cost: 166.7424385547638sbatch 5forward..batch cost: 199.9430034160614sbatch 6forward..batch cost: 233.3537187576294sbatch 7forward..batch cost: 266.7573757171631sbatch 8forward..batch cost: 300.010546207428sbatch 9forward..batch cost: 333.4228165149689sbatch 10forward..batch cost: 366.82296419143677sbatch 11forward..batch cost: 400.0432858467102sbatch 12forward..batch cost: 433.492151260376sbatch 13forward..batch cost: 466.8139088153839sbatch 14forward..batch cost: 500.32554268836975sbatch 15forward..batch cost: 533.6366221904755sbatch 16forward..batch cost: 566.8751752376556sbatch 17forward..batch cost: 595.0791347026825s
+Epoch 21, batch sum loss: 0.69147701808125 Time: 595.0803356170654s
+batch 0forward..batch cost: 33.62431049346924sbatch 1forward..batch cost: 66.86372303962708sbatch 2forward..batch cost: 100.12009716033936sbatch 3forward..batch cost: 133.35282349586487sbatch 4forward..batch cost: 166.5652482509613sbatch 5forward..batch cost: 199.99610137939453sbatch 6forward..batch cost: 233.7858898639679sbatch 7forward..batch cost: 267.3468608856201sbatch 8forward..batch cost: 301.08439111709595sbatch 9forward..batch cost: 334.88612270355225sbatch 10forward..batch cost: 368.35328674316406sbatch 11forward..batch cost: 401.7921578884125sbatch 12forward..batch cost: 435.5291311740875sbatch 13forward..batch cost: 469.13850140571594sbatch 14forward..batch cost: 502.51517128944397sbatch 15forward..batch cost: 535.8981456756592sbatch 16forward..batch cost: 569.3984961509705sbatch 17forward..batch cost: 596.7710103988647s
+Epoch 22, batch sum loss: 0.691474919795855 Time: 596.7721557617188s
+batch 0forward..batch cost: 33.209511280059814sbatch 1forward..batch cost: 66.6939344406128sbatch 2forward..batch cost: 100.07899165153503sbatch 3forward..batch cost: 133.5059506893158sbatch 4forward..batch cost: 167.19647645950317sbatch 5forward..batch cost: 200.4801104068756sbatch 6forward..batch cost: 234.21399641036987sbatch 7forward..batch cost: 267.74996161460876sbatch 8forward..batch cost: 301.492484331131sbatch 9forward..batch cost: 334.96675181388855sbatch 10forward..batch cost: 368.21144437789917sbatch 11forward..batch cost: 401.5962381362915sbatch 12forward..batch cost: 434.6158094406128sbatch 13forward..batch cost: 467.8636009693146sbatch 14forward..batch cost: 501.23168444633484sbatch 15forward..batch cost: 534.3673059940338sbatch 16forward..batch cost: 567.2810609340668sbatch 17forward..batch cost: 594.4803729057312s
+Epoch 23, batch sum loss: 0.6914729281513172 Time: 594.481486082077s
+batch 0forward..batch cost: 33.08033776283264sbatch 1forward..batch cost: 66.01853275299072sbatch 2forward..batch cost: 98.920325756073sbatch 3forward..batch cost: 131.93843007087708sbatch 4forward..batch cost: 164.70489120483398sbatch 5forward..batch cost: 197.100998878479sbatch 6forward..batch cost: 229.77826833724976sbatch 7forward..batch cost: 262.4026765823364sbatch 8forward..batch cost: 294.9995710849762sbatch 9forward..batch cost: 327.79043674468994sbatch 10forward..batch cost: 360.5446469783783sbatch 11forward..batch cost: 393.4589364528656sbatch 12forward..batch cost: 426.3121919631958sbatch 13forward..batch cost: 460.27580404281616sbatch 14forward..batch cost: 492.92989206314087sbatch 15forward..batch cost: 525.7778871059418sbatch 16forward..batch cost: 558.8292009830475sbatch 17forward..batch cost: 585.896594285965s
+Epoch 24, batch sum loss: 0.691471003712205 Time: 585.8979649543762s
+batch 0forward..batch cost: 33.01525545120239sbatch 1forward..batch cost: 66.0004529953003sbatch 2forward..batch cost: 99.22067546844482sbatch 3forward..batch cost: 132.39604926109314sbatch 4forward..batch cost: 165.48727202415466sbatch 5forward..batch cost: 199.87023448944092sbatch 6forward..batch cost: 232.9171586036682sbatch 7forward..batch cost: 266.048348903656sbatch 8forward..batch cost: 299.23520064353943sbatch 9forward..batch cost: 332.34192299842834sbatch 10forward..batch cost: 366.18122601509094sbatch 11forward..batch cost: 399.3137242794037sbatch 12forward..batch cost: 432.287237405777sbatch 13forward..batch cost: 466.68477606773376sbatch 14forward..batch cost: 499.9463834762573sbatch 15forward..batch cost: 534.5269174575806sbatch 16forward..batch cost: 568.6579265594482sbatch 17forward..batch cost: 595.8148810863495s
+Epoch 25, batch sum loss: 0.6914691703492812 Time: 595.8162996768951s
+batch 0forward..batch cost: 33.398486614227295sbatch 1forward..batch cost: 67.8010184764862sbatch 2forward..batch cost: 101.6724009513855sbatch 3forward..batch cost: 135.6916036605835sbatch 4forward..batch cost: 170.43349742889404sbatch 5forward..batch cost: 205.24655485153198sbatch 6forward..batch cost: 239.84923458099365sbatch 7forward..batch cost: 274.38307309150696sbatch 8forward..batch cost: 308.56142234802246sbatch 9forward..batch cost: 342.9059970378876sbatch 10forward..batch cost: 377.43934774398804sbatch 11forward..batch cost: 411.97935152053833sbatch 12forward..batch cost: 446.6030693054199sbatch 13forward..batch cost: 481.2577519416809sbatch 14forward..batch cost: 516.0827922821045sbatch 15forward..batch cost: 550.8453872203827sbatch 16forward..batch cost: 585.8795032501221sbatch 17forward..batch cost: 614.6525373458862s
+Epoch 26, batch sum loss: 0.6914674060485354 Time: 614.6537425518036s
+batch 0forward..batch cost: 34.750139474868774sbatch 1forward..batch cost: 69.90988183021545sbatch 2forward..batch cost: 105.52395749092102sbatch 3forward..batch cost: 140.78162598609924sbatch 4forward..batch cost: 175.744140625sbatch 5forward..batch cost: 210.80831718444824sbatch 6forward..batch cost: 246.5407612323761sbatch 7forward..batch cost: 281.4833815097809sbatch 8forward..batch cost: 316.41949224472046sbatch 9forward..batch cost: 351.47099685668945sbatch 10forward..batch cost: 386.21532106399536sbatch 11forward..batch cost: 420.91755628585815sbatch 12forward..batch cost: 455.79313468933105sbatch 13forward..batch cost: 490.6250424385071sbatch 14forward..batch cost: 525.4901883602142sbatch 15forward..batch cost: 560.3430767059326sbatch 16forward..batch cost: 595.4892687797546sbatch 17forward..batch cost: 624.0825102329254s
+Epoch 27, batch sum loss: 0.6914657153067015 Time: 624.0837135314941s
+batch 0forward..batch cost: 35.07492446899414sbatch 1forward..batch cost: 69.93833518028259sbatch 2forward..batch cost: 105.31511616706848sbatch 3forward..batch cost: 140.19665122032166sbatch 4forward..batch cost: 175.1643316745758sbatch 5forward..batch cost: 209.96740984916687sbatch 6forward..batch cost: 244.66082000732422sbatch 7forward..batch cost: 279.29271841049194sbatch 8forward..batch cost: 314.10763788223267sbatch 9forward..batch cost: 348.81617641448975sbatch 10forward..batch cost: 383.3965759277344sbatch 11forward..batch cost: 417.8512759208679sbatch 12forward..batch cost: 452.5550026893616sbatch 13forward..batch cost: 487.2608165740967sbatch 14forward..batch cost: 521.9375278949738sbatch 15forward..batch cost: 556.446343421936sbatch 16forward..batch cost: 591.3717608451843sbatch 17forward..batch cost: 619.4435927867889s
+Epoch 28, batch sum loss: 0.6914640717637943 Time: 619.4447824954987s
+batch 0forward..batch cost: 34.598421573638916sbatch 1forward..batch cost: 69.14586734771729sbatch 2forward..batch cost: 103.59048867225647sbatch 3forward..batch cost: 137.6668689250946sbatch 4forward..batch cost: 172.04080176353455sbatch 5forward..batch cost: 206.19443130493164sbatch 6forward..batch cost: 241.15599918365479sbatch 7forward..batch cost: 275.3226261138916sbatch 8forward..batch cost: 309.1834557056427sbatch 9forward..batch cost: 343.4090027809143sbatch 10forward..batch cost: 378.3884308338165sbatch 11forward..batch cost: 412.5461845397949sbatch 12forward..batch cost: 447.2448625564575sbatch 13forward..batch cost: 481.3835196495056sbatch 14forward..batch cost: 515.5941123962402sbatch 15forward..batch cost: 549.6603753566742sbatch 16forward..batch cost: 583.4648456573486sbatch 17forward..batch cost: 611.4370834827423s
+Epoch 29, batch sum loss: 0.6914624884008492 Time: 611.4382922649384s
+batch 0forward..batch cost: 34.107093811035156sbatch 1forward..batch cost: 67.66550016403198sbatch 2forward..batch cost: 101.54730606079102sbatch 3forward..batch cost: 136.06842637062073sbatch 4forward..batch cost: 170.189204454422sbatch 5forward..batch cost: 203.5865616798401sbatch 6forward..batch cost: 237.10987424850464sbatch 7forward..batch cost: 271.03643441200256sbatch 8forward..batch cost: 305.139363527298sbatch 9forward..batch cost: 339.41394233703613sbatch 10forward..batch cost: 373.45102405548096sbatch 11forward..batch cost: 407.2116377353668sbatch 12forward..batch cost: 441.17602491378784sbatch 13forward..batch cost: 474.7471477985382sbatch 14forward..batch cost: 508.38472867012024sbatch 15forward..batch cost: 541.951874256134sbatch 16forward..batch cost: 575.6078293323517sbatch 17forward..batch cost: 603.393492937088s
+Epoch 30, batch sum loss: 0.6914609571876997 Time: 603.3947043418884s
+batch 0forward..batch cost: 33.458468198776245sbatch 1forward..batch cost: 67.57745337486267sbatch 2forward..batch cost: 100.93205618858337sbatch 3forward..batch cost: 134.1379954814911sbatch 4forward..batch cost: 167.23113775253296sbatch 5forward..batch cost: 200.68417167663574sbatch 6forward..batch cost: 234.4582347869873sbatch 7forward..batch cost: 267.967613697052sbatch 8forward..batch cost: 301.42415285110474sbatch 9forward..batch cost: 335.57766342163086sbatch 10forward..batch cost: 369.599755525589sbatch 11forward..batch cost: 403.54004883766174sbatch 12forward..batch cost: 437.143098115921sbatch 13forward..batch cost: 470.54475831985474sbatch 14forward..batch cost: 504.4995906352997sbatch 15forward..batch cost: 538.7567527294159sbatch 16forward..batch cost: 572.5387728214264sbatch 17forward..batch cost: 600.1885569095612s
+Epoch 31, batch sum loss: 0.6914594671557847 Time: 600.1897315979004s
+batch 0forward..batch cost: 33.614118814468384sbatch 1forward..batch cost: 67.083984375sbatch 2forward..batch cost: 100.52488589286804sbatch 3forward..batch cost: 133.60768914222717sbatch 4forward..batch cost: 166.90003299713135sbatch 5forward..batch cost: 200.54323935508728sbatch 6forward..batch cost: 233.97335267066956sbatch 7forward..batch cost: 267.49482464790344sbatch 8forward..batch cost: 301.4110357761383sbatch 9forward..batch cost: 334.84942054748535sbatch 10forward..batch cost: 368.0884244441986sbatch 11forward..batch cost: 401.00173926353455sbatch 12forward..batch cost: 433.9286239147186sbatch 13forward..batch cost: 466.9830062389374sbatch 14forward..batch cost: 500.1306519508362sbatch 15forward..batch cost: 533.1123657226562sbatch 16forward..batch cost: 566.1868834495544sbatch 17forward..batch cost: 593.4321241378784s
+Epoch 32, batch sum loss: 0.6914580165734249 Time: 593.433347940445s
+batch 0forward..batch cost: 32.95149517059326sbatch 1forward..batch cost: 65.75365948677063sbatch 2forward..batch cost: 99.01009750366211sbatch 3forward..batch cost: 131.94163274765015sbatch 4forward..batch cost: 164.68310165405273sbatch 5forward..batch cost: 197.5547821521759sbatch 6forward..batch cost: 230.68104028701782sbatch 7forward..batch cost: 263.7084219455719sbatch 8forward..batch cost: 296.54858684539795sbatch 9forward..batch cost: 329.231080532074sbatch 10forward..batch cost: 362.14557361602783sbatch 11forward..batch cost: 395.1197466850281sbatch 12forward..batch cost: 428.2527234554291sbatch 13forward..batch cost: 461.1313257217407sbatch 14forward..batch cost: 493.77787256240845sbatch 15forward..batch cost: 526.8343813419342sbatch 16forward..batch cost: 560.0155756473541sbatch 17forward..batch cost: 587.3019857406616s
+Epoch 33, batch sum loss: 0.6914566034095359 Time: 587.3031711578369s
+batch 0forward..batch cost: 33.436930894851685sbatch 1forward..batch cost: 67.03113174438477sbatch 2forward..batch cost: 100.24201655387878sbatch 3forward..batch cost: 133.77137184143066sbatch 4forward..batch cost: 167.04942321777344sbatch 5forward..batch cost: 200.6401526927948sbatch 6forward..batch cost: 234.06421327590942sbatch 7forward..batch cost: 267.7398359775543sbatch 8forward..batch cost: 301.45634412765503sbatch 9forward..batch cost: 334.88826513290405sbatch 10forward..batch cost: 368.3869700431824sbatch 11forward..batch cost: 401.8995039463043sbatch 12forward..batch cost: 435.73739194869995sbatch 13forward..batch cost: 469.55316185951233sbatch 14forward..batch cost: 503.154682636261sbatch 15forward..batch cost: 536.9437885284424sbatch 16forward..batch cost: 570.7358887195587sbatch 17forward..batch cost: 598.8094165325165s
+Epoch 34, batch sum loss: 0.6914552311074338 Time: 598.8105683326721s
+batch 0forward..batch cost: 34.181405782699585sbatch 1forward..batch cost: 67.98837685585022sbatch 2forward..batch cost: 101.9570882320404sbatch 3forward..batch cost: 135.9130403995514sbatch 4forward..batch cost: 169.68446850776672sbatch 5forward..batch cost: 202.88542866706848sbatch 6forward..batch cost: 236.38453817367554sbatch 7forward..batch cost: 269.8548696041107sbatch 8forward..batch cost: 303.3148367404938sbatch 9forward..batch cost: 337.03156042099sbatch 10forward..batch cost: 370.2193503379822sbatch 11forward..batch cost: 403.6064200401306sbatch 12forward..batch cost: 437.04013180732727sbatch 13forward..batch cost: 471.4900577068329sbatch 14forward..batch cost: 504.8568253517151sbatch 15forward..batch cost: 538.2625670433044sbatch 16forward..batch cost: 571.666622877121sbatch 17forward..batch cost: 599.5369257926941s
+Epoch 35, batch sum loss: 0.6914538883306315 Time: 599.5383217334747s
+batch 0forward..batch cost: 33.734811305999756sbatch 1forward..batch cost: 67.3775737285614sbatch 2forward..batch cost: 101.26287150382996sbatch 3forward..batch cost: 134.54209995269775sbatch 4forward..batch cost: 167.70478105545044sbatch 5forward..batch cost: 202.20668172836304sbatch 6forward..batch cost: 236.5398142337799sbatch 7forward..batch cost: 269.7981450557709sbatch 8forward..batch cost: 302.78204345703125sbatch 9forward..batch cost: 336.6858673095703sbatch 10forward..batch cost: 371.0592203140259sbatch 11forward..batch cost: 405.4666175842285sbatch 12forward..batch cost: 438.8691475391388sbatch 13forward..batch cost: 473.3111503124237sbatch 14forward..batch cost: 507.97338461875916sbatch 15forward..batch cost: 542.5000877380371sbatch 16forward..batch cost: 577.1798491477966sbatch 17forward..batch cost: 605.2298085689545s
+Epoch 36, batch sum loss: 0.6914525768073432 Time: 605.2312097549438s
+batch 0forward..batch cost: 33.206713914871216sbatch 1forward..batch cost: 66.8773980140686sbatch 2forward..batch cost: 101.06927371025085sbatch 3forward..batch cost: 135.53317761421204sbatch 4forward..batch cost: 169.8523886203766sbatch 5forward..batch cost: 204.05302500724792sbatch 6forward..batch cost: 238.47886157035828sbatch 7forward..batch cost: 273.18994069099426sbatch 8forward..batch cost: 307.26569867134094sbatch 9forward..batch cost: 341.992858171463sbatch 10forward..batch cost: 376.27966833114624sbatch 11forward..batch cost: 411.2692904472351sbatch 12forward..batch cost: 446.5777111053467sbatch 13forward..batch cost: 481.07543897628784sbatch 14forward..batch cost: 515.445127248764sbatch 15forward..batch cost: 550.3269445896149sbatch 16forward..batch cost: 584.7881639003754sbatch 17forward..batch cost: 613.294260263443s
+Epoch 37, batch sum loss: 0.6914512958892179 Time: 613.295636177063s
+batch 0forward..batch cost: 34.89545154571533sbatch 1forward..batch cost: 69.42969799041748sbatch 2forward..batch cost: 104.42011451721191sbatch 3forward..batch cost: 139.497576713562sbatch 4forward..batch cost: 174.24315571784973sbatch 5forward..batch cost: 209.43681597709656sbatch 6forward..batch cost: 244.25852727890015sbatch 7forward..batch cost: 279.2835884094238sbatch 8forward..batch cost: 314.2602617740631sbatch 9forward..batch cost: 349.17514395713806sbatch 10forward..batch cost: 384.186470746994sbatch 11forward..batch cost: 419.5173056125641sbatch 12forward..batch cost: 454.6410038471222sbatch 13forward..batch cost: 490.78982639312744sbatch 14forward..batch cost: 526.530683517456sbatch 15forward..batch cost: 561.7757875919342sbatch 16forward..batch cost: 596.8544881343842sbatch 17forward..batch cost: 625.9251484870911s
+Epoch 38, batch sum loss: 0.6914500429165537 Time: 625.9264163970947s
+batch 0forward..batch cost: 35.19933748245239sbatch 1forward..batch cost: 70.38669776916504sbatch 2forward..batch cost: 105.98331069946289sbatch 3forward..batch cost: 141.61449432373047sbatch 4forward..batch cost: 176.608811378479sbatch 5forward..batch cost: 212.34186244010925sbatch 6forward..batch cost: 247.8120996952057sbatch 7forward..batch cost: 282.74899792671204sbatch 8forward..batch cost: 318.4669563770294sbatch 9forward..batch cost: 354.1642053127289sbatch 10forward..batch cost: 390.18087124824524sbatch 11forward..batch cost: 425.79444766044617sbatch 12forward..batch cost: 461.16404581069946sbatch 13forward..batch cost: 497.0410511493683sbatch 14forward..batch cost: 532.3068923950195sbatch 15forward..batch cost: 567.8661949634552sbatch 16forward..batch cost: 603.1697971820831sbatch 17forward..batch cost: 632.1547906398773s
+Epoch 39, batch sum loss: 0.6914488159511935 Time: 632.1561431884766s
+batch 0forward..batch cost: 35.20876121520996sbatch 1forward..batch cost: 70.9208505153656sbatch 2forward..batch cost: 106.61521887779236sbatch 3forward..batch cost: 141.6831500530243sbatch 4forward..batch cost: 176.88962697982788sbatch 5forward..batch cost: 212.23306465148926sbatch 6forward..batch cost: 247.65036582946777sbatch 7forward..batch cost: 282.89448046684265sbatch 8forward..batch cost: 318.4878261089325sbatch 9forward..batch cost: 353.64547848701477sbatch 10forward..batch cost: 388.84740924835205sbatch 11forward..batch cost: 423.9256660938263sbatch 12forward..batch cost: 458.999947309494sbatch 13forward..batch cost: 493.8030641078949sbatch 14forward..batch cost: 528.9387149810791sbatch 15forward..batch cost: 564.073076248169sbatch 16forward..batch cost: 599.5586314201355sbatch 17forward..batch cost: 628.0519514083862s
+Epoch 40, batch sum loss: 0.691447613956159 Time: 628.0533499717712s
+batch 0forward..batch cost: 35.45207142829895sbatch 1forward..batch cost: 70.60001182556152sbatch 2forward..batch cost: 105.45949292182922sbatch 3forward..batch cost: 140.41006755828857sbatch 4forward..batch cost: 175.40090584754944sbatch 5forward..batch cost: 210.75014925003052sbatch 6forward..batch cost: 245.47685265541077sbatch 7forward..batch cost: 280.7220149040222sbatch 8forward..batch cost: 316.36748218536377sbatch 9forward..batch cost: 351.722553730011sbatch 10forward..batch cost: 386.82297706604004sbatch 11forward..batch cost: 422.30826687812805sbatch 12forward..batch cost: 457.9065225124359sbatch 13forward..batch cost: 493.39714002609253sbatch 14forward..batch cost: 528.9519402980804sbatch 15forward..batch cost: 564.0559780597687sbatch 16forward..batch cost: 599.367949962616sbatch 17forward..batch cost: 628.6623690128326s
+Epoch 41, batch sum loss: 0.6914464354511816 Time: 628.6639838218689s
+batch 0forward..batch cost: 34.84056353569031sbatch 1forward..batch cost: 69.75547122955322sbatch 2forward..batch cost: 104.94775009155273sbatch 3forward..batch cost: 139.7281346321106sbatch 4forward..batch cost: 175.70609617233276sbatch 5forward..batch cost: 211.12795162200928sbatch 6forward..batch cost: 246.41826033592224sbatch 7forward..batch cost: 281.8959758281708sbatch 8forward..batch cost: 317.06896352767944sbatch 9forward..batch cost: 352.33622646331787sbatch 10forward..batch cost: 387.20952463150024sbatch 11forward..batch cost: 422.09251594543457sbatch 12forward..batch cost: 457.66046023368835sbatch 13forward..batch cost: 493.5489556789398sbatch 14forward..batch cost: 528.4288418292999sbatch 15forward..batch cost: 563.7603967189789sbatch 16forward..batch cost: 598.8536949157715sbatch 17forward..batch cost: 627.7637686729431s
+Epoch 42, batch sum loss: 0.6914452802823107 Time: 627.7653906345367s
+batch 0forward..batch cost: 34.890132904052734sbatch 1forward..batch cost: 69.71584892272949sbatch 2forward..batch cost: 104.63336062431335sbatch 3forward..batch cost: 139.48831248283386sbatch 4forward..batch cost: 174.1219835281372sbatch 5forward..batch cost: 209.0513050556183sbatch 6forward..batch cost: 244.8802649974823sbatch 7forward..batch cost: 279.7212221622467sbatch 8forward..batch cost: 314.84454107284546sbatch 9forward..batch cost: 349.59028029441833sbatch 10forward..batch cost: 384.4433994293213sbatch 11forward..batch cost: 419.2876195907593sbatch 12forward..batch cost: 454.0236020088196sbatch 13forward..batch cost: 488.7463471889496sbatch 14forward..batch cost: 523.8951387405396sbatch 15forward..batch cost: 559.0620453357697sbatch 16forward..batch cost: 594.2610099315643sbatch 17forward..batch cost: 623.668566942215s
+Epoch 43, batch sum loss: 0.6914441465047734 Time: 623.6702451705933s
+batch 0forward..batch cost: 35.04279923439026sbatch 1forward..batch cost: 69.55928492546082sbatch 2forward..batch cost: 104.1172354221344sbatch 3forward..batch cost: 137.99508213996887sbatch 4forward..batch cost: 172.84456491470337sbatch 5forward..batch cost: 207.7488353252411sbatch 6forward..batch cost: 243.26561069488525sbatch 7forward..batch cost: 278.5334656238556sbatch 8forward..batch cost: 311.93732047080994sbatch 9forward..batch cost: 345.38186287879944sbatch 10forward..batch cost: 379.4865565299988sbatch 11forward..batch cost: 412.8988559246063sbatch 12forward..batch cost: 446.7197687625885sbatch 13forward..batch cost: 481.2109332084656sbatch 14forward..batch cost: 516.0174803733826sbatch 15forward..batch cost: 550.477460861206sbatch 16forward..batch cost: 585.6063113212585sbatch 17forward..batch cost: 613.9017412662506s
+Epoch 44, batch sum loss: 0.6914430327469635 Time: 613.9033010005951s
+batch 0forward..batch cost: 34.87854266166687sbatch 1forward..batch cost: 68.37678980827332sbatch 2forward..batch cost: 102.53106260299683sbatch 3forward..batch cost: 135.91477036476135sbatch 4forward..batch cost: 170.3755784034729sbatch 5forward..batch cost: 204.54460453987122sbatch 6forward..batch cost: 238.8117218017578sbatch 7forward..batch cost: 273.2628870010376sbatch 8forward..batch cost: 306.7811961174011sbatch 9forward..batch cost: 340.58578872680664sbatch 10forward..batch cost: 374.03627252578735sbatch 11forward..batch cost: 408.8777816295624sbatch 12forward..batch cost: 442.6076822280884sbatch 13forward..batch cost: 475.9406678676605sbatch 14forward..batch cost: 509.1967670917511sbatch 15forward..batch cost: 542.4949550628662sbatch 16forward..batch cost: 575.8901267051697sbatch 17forward..batch cost: 603.4694230556488s
+Epoch 45, batch sum loss: 0.6914419395278562 Time: 603.4707727432251s
+batch 0forward..batch cost: 33.90644192695618sbatch 1forward..batch cost: 67.85113596916199sbatch 2forward..batch cost: 101.39629626274109sbatch 3forward..batch cost: 134.92327499389648sbatch 4forward..batch cost: 168.45743989944458sbatch 5forward..batch cost: 202.04381823539734sbatch 6forward..batch cost: 235.55732488632202sbatch 7forward..batch cost: 268.8220844268799sbatch 8forward..batch cost: 302.27336740493774sbatch 9forward..batch cost: 336.2744812965393sbatch 10forward..batch cost: 369.61160016059875sbatch 11forward..batch cost: 403.0296108722687sbatch 12forward..batch cost: 436.5841751098633sbatch 13forward..batch cost: 469.9133086204529sbatch 14forward..batch cost: 503.38392519950867sbatch 15forward..batch cost: 536.8437757492065sbatch 16forward..batch cost: 570.1579430103302sbatch 17forward..batch cost: 597.5524923801422s
+Epoch 46, batch sum loss: 0.6914408667309085 Time: 597.5536463260651s
+batch 0forward..batch cost: 33.359336376190186sbatch 1forward..batch cost: 66.90341687202454sbatch 2forward..batch cost: 100.27612686157227sbatch 3forward..batch cost: 133.62795543670654sbatch 4forward..batch cost: 166.76639437675476sbatch 5forward..batch cost: 200.04565286636353sbatch 6forward..batch cost: 233.18808698654175sbatch 7forward..batch cost: 266.79985666275024sbatch 8forward..batch cost: 299.8980448246002sbatch 9forward..batch cost: 333.1678819656372sbatch 10forward..batch cost: 366.5953404903412sbatch 11forward..batch cost: 400.4710912704468sbatch 12forward..batch cost: 433.7534065246582sbatch 13forward..batch cost: 466.87823152542114sbatch 14forward..batch cost: 500.2038006782532sbatch 15forward..batch cost: 533.3417172431946sbatch 16forward..batch cost: 566.6220877170563sbatch 17forward..batch cost: 594.3235766887665s
+Epoch 47, batch sum loss: 0.6914398113751133 Time: 594.3247375488281s
+batch 0forward..batch cost: 33.34302282333374sbatch 1forward..batch cost: 66.81317567825317sbatch 2forward..batch cost: 100.23349070549011sbatch 3forward..batch cost: 133.56845784187317sbatch 4forward..batch cost: 166.92712903022766sbatch 5forward..batch cost: 200.52829933166504sbatch 6forward..batch cost: 234.00367259979248sbatch 7forward..batch cost: 267.3469331264496sbatch 8forward..batch cost: 300.5656027793884sbatch 9forward..batch cost: 333.8572688102722sbatch 10forward..batch cost: 367.25644636154175sbatch 11forward..batch cost: 400.79392313957214sbatch 12forward..batch cost: 434.05268597602844sbatch 13forward..batch cost: 467.25189995765686sbatch 14forward..batch cost: 500.9673767089844sbatch 15forward..batch cost: 534.7793834209442sbatch 16forward..batch cost: 568.1136238574982sbatch 17forward..batch cost: 595.6200740337372s
+Epoch 48, batch sum loss: 0.6914387760960157 Time: 595.6212556362152s
+batch 0forward..batch cost: 33.550150632858276sbatch 1forward..batch cost: 66.658864736557sbatch 2forward..batch cost: 100.14951348304749sbatch 3forward..batch cost: 133.81750106811523sbatch 4forward..batch cost: 167.04582691192627sbatch 5forward..batch cost: 200.2293918132782sbatch 6forward..batch cost: 234.01417636871338sbatch 7forward..batch cost: 267.5254740715027sbatch 8forward..batch cost: 300.99416971206665sbatch 9forward..batch cost: 334.22635769844055sbatch 10forward..batch cost: 367.8727812767029sbatch 11forward..batch cost: 401.2970085144043sbatch 12forward..batch cost: 434.6180865764618sbatch 13forward..batch cost: 467.99720430374146sbatch 14forward..batch cost: 501.21396493911743sbatch 15forward..batch cost: 534.6781454086304sbatch 16forward..batch cost: 567.9620091915131sbatch 17forward..batch cost: 595.3735458850861s
+Epoch 49, batch sum loss: 0.6914377511374837 Time: 595.3747396469116s
+batch 0forward..batch cost: 33.28329825401306sbatch 1forward..batch cost: 66.69171643257141sbatch 2forward..batch cost: 100.11729454994202sbatch 3forward..batch cost: 133.8549017906189sbatch 4forward..batch cost: 167.17488384246826sbatch 5forward..batch cost: 200.3209969997406sbatch 6forward..batch cost: 233.89802432060242sbatch 7forward..batch cost: 267.1120138168335sbatch 8forward..batch cost: 300.57238936424255sbatch 9forward..batch cost: 334.2255907058716sbatch 10forward..batch cost: 367.9345910549164sbatch 11forward..batch cost: 401.57520365715027sbatch 12forward..batch cost: 435.03640365600586sbatch 13forward..batch cost: 468.71600580215454sbatch 14forward..batch cost: 502.18418550491333sbatch 15forward..batch cost: 535.7364518642426sbatch 16forward..batch cost: 569.5783288478851sbatch 17forward..batch cost: 597.4554219245911s
+Epoch 50, batch sum loss: 0.6914367491966932 Time: 597.4565889835358s
+batch 0forward..batch cost: 34.30823302268982sbatch 1forward..batch cost: 68.44735741615295sbatch 2forward..batch cost: 102.46186637878418sbatch 3forward..batch cost: 136.58770394325256sbatch 4forward..batch cost: 170.65927171707153sbatch 5forward..batch cost: 204.73963499069214sbatch 6forward..batch cost: 238.70121502876282sbatch 7forward..batch cost: 272.4004716873169sbatch 8forward..batch cost: 305.93392157554626sbatch 9forward..batch cost: 339.7843952178955sbatch 10forward..batch cost: 391.57788705825806sbatch 11forward..batch cost: 450.7175135612488sbatch 12forward..batch cost: 513.4646315574646sbatch 13forward..batch cost: 581.551064491272sbatch 14forward..batch cost: 645.9199416637421sbatch 15forward..batch cost: 714.7003874778748sbatch 16forward..batch cost: 784.9510643482208sbatch 17forward..batch cost: 842.5137462615967s
+Epoch 51, batch sum loss: 0.691435766848156 Time: 842.5156223773956s
+convergence--wa1 shape:  (1, 307)
+convergence--wb1 shape:  (1, 717)
+wa1,wa2:  [[33343.57871082618 41551.11729008649 27891.994680105297
+  43799.912727703726 51756.076290533165 -15802.303007652605
+  57500.36391937729 9323.170229459522 48315.83426609421
+  40775.961596940986 44932.432439435004 14694.226919185181
+  -6504.039259448022 -2094.3871078375655 -13200.590585888418
+  44007.235720111436 17112.50445516205 18564.72021059141
+  36839.193668202686 -19208.05189713827 5773.787696087975
+  19192.6914838266 -26413.26230497439 24751.059015904717
+  42569.93009667995 9398.64007803032 46557.18959050867 16812.10172153472
+  -11907.609756335292 18975.69256560303 -6987.729184283595
+  30083.98322271957 13569.74179683907 30441.42956101966 23757.97480379296
+  -3926.0845699443116 23150.139095935196 -22620.01799148713
+  36336.3786171607 1421.5099556853943 49212.406145253466
+  13777.46625043214 11378.218704096347 3136.4744709200913
+  49639.77344508603 -20637.296549174822 25823.65223584086
+  -2442.31085493337 24578.741192155667 57174.352049359346
+  21921.046084226302 4232.725384781771 39300.47770919654
+  20906.135614257753 36097.45065228743 -3035.8312831435446
+  38869.0064108377 48495.428504621195 23619.648037528317
+  -3613.788872182867 -24459.115133137933 13857.098783919462
+  19024.64465105889 39801.54583834684 -923.7631535047007
+  24106.652073374797 24899.700361947656 19444.296651376026
+  2224.4606705806664 2568.4110388143063 7225.377116055616
+  29036.4383928249 2686.2183362327587 28135.529042185113
+  27012.71224304182 -7063.6617348592945 32253.39188571495
+  42162.72570986951 9185.11626833688 223.33484875731034
+  47315.186938038925 -188.67403501397845 -12896.30223342507
+  -2777.5633491084614 13020.317635380941 1721.4746772975834
+  11641.389545607917 -1953.2799702525351 33453.47786618069
+  -12134.507352488252 48983.32549727175 3662.487082760782
+  28375.11838678267 28459.567826857794 25484.095191596443
+  31053.18616687048 49759.895129423094 -19666.168763532063
+  -5219.68291617534 18597.959831012635 -14244.529327095906
+  27919.647338731244 -4022.896085701052 56112.24973822535
+  24508.668997311564 30243.671893599378 12966.648198619485
+  -4791.359405929615 -12136.800054641404 21272.406370130546
+  33591.15726897519 51709.07553779523 2720.79257512317 24007.67104710882
+  -428.4911983227549 18922.396070232135 29881.056765635694
+  37634.62061434113 40769.87795586169 9716.940417693282
+  18592.480257721498 40009.62693922743 48560.395607922335
+  -9405.055998687118 -2404.0481122132082 28522.210767898487
+  41336.837811296835 6384.040530941742 -13860.207545764788
+  24575.850342518574 55941.82001652652 -6922.969704212613
+  43319.18010927943 25336.544697288493 32672.132271214075
+  -7197.482932107965 1107.7891517325354 -20236.91788226498
+  34687.26224455639 17294.12364787517 -6229.160045145422
+  20774.70446281266 30709.244284262993 52895.734689598445
+  58247.03664587979 24230.98927548041 16245.513409860385
+  39174.49239019695 31647.005945534973 58677.85341285607
+  30381.94302930704 19632.477169559163 -3622.7580599632142
+  30412.546704090895 7504.783600452203 11527.502625847186
+  36536.23672694646 12221.533097602158 26052.394922911786
+  -4301.393733218015 26163.47440589631 7174.234679158451
+  26780.82096991462 38400.17606097791 9051.391541775842 2881.714433830484
+  36091.26697132105 26827.643125854007 53281.45979589093
+  -3042.041659020214 -15312.50150748658 34809.2123558514
+  -4357.062738500051 9565.727462927638 42232.13038575581
+  32650.47910373372 25635.843146956668 44252.876737869636
+  17084.09031625907 41766.67246105112 42299.423732334464
+  17031.675184443204 25945.4848571717 11984.911645347036
+  -2961.2068236221803 36016.57015386675 34014.699941705825
+  43937.1061096579 35139.915750018336 13328.030992737653
+  19662.245547293856 -3980.0405981142194 27645.011659073694
+  31135.900697456407 35328.2094478256 -15745.758783481782
+  11527.976532901184 35982.1071646017 59779.26161744509
+  -20756.882345582657 9399.232882705663 -2079.406221149909
+  42157.65762140877 42573.96515370269 1473.245483226592 55765.24012585109
+  52559.61486724683 -4923.3348436783845 32288.276485988015
+  19459.232191810792 33049.331972662556 -10157.041192781635
+  -8805.622097226695 21114.147215829456 39569.93922494381
+  48958.041957139714 25332.54687602758 36612.0640850329
+  -13199.005650718605 22366.760550691488 29288.178428657706
+  9226.671768452907 58565.05775531551 -6696.893552724601 61922.7767082292
+  31706.54316167385 -18614.713101938352 45672.72585741501
+  -7510.592057152472 -9111.623349730791 24287.331729945323
+  -11220.517241127443 14684.37250069121 -6819.679310013695
+  -14773.723510076308 14893.460788918532 50566.58461221792
+  22723.52518725615 -3874.457973914084 -22264.697764331697
+  35290.2789272967 19998.20192892831 24614.966997194322
+  11213.730543108713 46279.421927153315 35745.02060394841
+  15848.832839906594 28947.250955405336 10076.863323299773
+  9264.335268843575 35894.509964259676 21456.369134230812
+  12025.071448382407 4376.649350715398 -21331.785486845023
+  43591.048607538294 10269.830250462652 -2162.726585011373
+  -1922.772294970789 36945.466556622385 -3800.0077489837586
+  27679.15484675584 16715.983836710697 28573.326086974317
+  -11122.017150916703 48963.50834397607 51663.49213997163
+  32017.61764409596 -6713.24831982687 41944.8376351357 38850.24421610279
+  -1151.1256244950348 19071.317757229863 -1911.8359369254545
+  46400.3766929337 -4443.04722443892 45041.60398139204 3791.371166712875
+  22011.134873311854 40421.00511902986 28034.292290640602
+  8379.667480276168 -19678.817720169016 39989.59879271181
+  35657.9363896277 12094.79357480207 -4774.018602200725
+  40081.876602520715 -5287.361978919865 -1293.6592320046284
+  -6250.8508546041485 2743.655531068186 23144.31256661011
+  5287.378315104857 45856.55601074912 38506.58280699172
+  -2532.2479673385133 -7527.930238489253 47353.671595712876
+  3362.959236105399 17292.709778918994 30610.900549415175
+  7551.831173763369 242.7697003373596 7033.775803461601
+  -20267.37301789954 -8792.264094512408]] [[-33343.581227195056 -41551.12123075238 -27891.997539545744
+  -43799.9163252981 -51756.07946975044 15802.299729834958
+  -57500.36322482679 -9323.177381044552 -48315.831878872064
+  -40775.97044119762 -44932.42088498213 -14694.244930672592
+  6504.042865731128 2094.377044519693 13200.585856132637
+  -44007.23744739012 -17112.510594663738 -18564.72052812459
+  -36839.19590398968 19208.047675890637 -5773.7908363225515
+  -19192.6948006269 26413.259772441954 -24751.062940407148
+  -42569.93199355493 -9398.644638190157 -46557.20592972312
+  -16812.09183935489 11907.60790044379 -18975.697166746224
+  6987.727166461631 -30083.987661932388 -13569.74651448457
+  -30441.431300409124 -23757.977859361454 3926.081168478133
+  -23150.143357036664 22620.015795553805 -36336.37974206397
+  -1421.5152878171614 -49212.40933709382 -13777.46951562655
+  -11378.214969510169 -3136.4846625410987 -49639.77946688858
+  20637.296113942557 -25823.65899825732 2442.311160315162
+  -24578.74181908923 -57174.35787946041 -21921.04668531588
+  -4232.731240726768 -39300.481298273924 -20906.138482215094
+  -36097.45054487861 3035.824718700098 -38869.016356496206
+  -48495.4250159974 -23619.645749183426 3613.7801268032795
+  24459.111303383423 -13857.101411199677 -19024.637724131073
+  -39801.559222309465 923.7613533552479 -24106.656730260034
+  -24899.704434311672 -19444.299036046745 -2224.4662902329687
+  -2568.4118761968775 -7225.379347236212 -29036.44261867898
+  -2686.227259801337 -28135.526575651485 -27012.711163671884
+  7063.654198454587 -32253.393025000958 -42162.73102761839
+  -9185.120986558675 -223.33658757020632 -47315.19701841221
+  188.67765835252888 12896.289860946792 2777.5692645520276
+  -13020.319301063479 -1721.4794686496873 -11641.396562788806
+  1953.2805303988425 -33453.49680879798 12134.519838070966
+  -48983.32682670397 -3662.4922103633626 -28375.124250941873
+  -28459.568419733303 -25484.096941502343 -31053.19087399965
+  -49759.90063044603 19666.16780752 5219.685872706417 -18597.969244578304
+  14244.527855906794 -27919.652324576964 4022.8944608089796
+  -56112.25457036811 -24508.663735766688 -30243.6836121789
+  -12966.644912247451 4791.349662522639 12136.798296022991
+  -21272.41106854697 -33591.155127423976 -51709.08413638125
+  -2720.792465476511 -24007.67761379021 428.48652651365654
+  -18922.397855457773 -29881.05752608777 -37634.62631092397
+  -40769.881555731496 -9716.94327485847 -18592.47800854481
+  -40009.635645438924 -48560.39574024145 9405.049673971182
+  2404.0418587396134 -28522.210971459564 -41336.846296111435
+  -6384.0385031619635 13860.198635938317 -24575.847889726876
+  -55941.82100037906 6922.964231030509 -43319.18542896373
+  -25336.5458346391 -32672.118609546527 7197.462813405797
+  -1107.79122307086 20236.913496568566 -34687.2636108335
+  -17294.128738632746 6229.149324858384 -20774.70019956036
+  -30709.24934502545 -52895.73608587057 -58247.039029363994
+  -24230.99334903111 -16245.514185024651 -39174.498072067545
+  -31647.008778029653 -58677.85703739645 -30381.944999500483
+  -19632.48165640048 3622.7470598991617 -30412.542161061592
+  -7504.78978895683 -11527.502894377223 -36536.2419536182
+  -12221.534327965057 -26052.40528633276 4301.397639604176
+  -26163.474778883763 -7174.2407632058075 -26780.809816993482
+  -38400.193670934124 -9051.395853280439 -2881.7165793607155
+  -36091.27247684178 -26827.644077368033 -53281.46103079776
+  3042.0364368922023 15312.499469409931 -34809.216774809436
+  4357.06805597018 -9565.739237432621 -42232.12702314869
+  -32650.488923375575 -25635.849013594387 -44252.877328266644
+  -17084.093148501466 -41766.6760858433 -42299.4300921114
+  -17031.675281701464 -25945.48904984696 -11984.913909706485
+  2961.208101164842 -36016.57788844411 -34014.704806173686
+  -43937.107702224814 -35139.93299289281 -13328.02020689802
+  -19662.247621284925 3980.0362150705105 -27645.017000320862
+  -31135.901813243945 -35328.215391710386 15745.758270332128
+  -11527.97947870434 -35982.11067583317 -59779.26722375072
+  20756.88149485365 -9399.238762920202 2079.4056443297845
+  -42157.65757705532 -42573.97165509087 -1473.2491253071248
+  -55765.24294080552 -52559.6162245938 4923.329743990693
+  -32288.27797094188 -19459.237163891456 -33049.33591638115
+  10157.038679465582 8805.62467538407 -21114.15625102151
+  -39569.94672584114 -48958.040913277095 -25332.540461775763
+  -36612.076956319266 13199.002291524688 -22366.7636485323
+  -29288.18288528132 -9226.673768863971 -58565.061424646025
+  6696.890765020499 -61922.78259865634 -31706.54372828142
+  18614.714060151502 -45672.733272662896 7510.593637543562
+  9111.615312304939 -24287.333042359583 11220.512096506955
+  -14684.375180697953 6819.675532985638 14773.720634680778
+  -14893.464370557675 -50566.58589155386 -22723.530364954935
+  3874.457741312698 22264.69153989829 -35290.2807068867
+  -19998.20660637314 -24614.980816925363 -11213.723180412497
+  -46279.43085143677 -35745.01813669971 -15848.838873580744
+  -28947.251378766065 -10076.865248387727 -9264.339800790473
+  -35894.51553664629 -21456.370018878737 -12025.078306585523
+  -4376.648949546971 21331.77994520248 -43591.04952293034
+  -10269.83397110437 2162.723848618351 1922.7681806659668
+  -36945.468899352294 3800.0061023252492 -27679.15965713203
+  -16715.982128862048 -28573.334251857654 11122.024319396081
+  -48963.521969490146 -51663.49520432765 -32017.62103677475
+  6713.24396466783 -41944.839737011454 -38850.244978094735
+  1151.1199294521675 -19071.32134829375 1911.8330709546096
+  -46400.38298554881 4443.047060019325 -45041.60725722165
+  -3791.3743479178656 -22011.13621976182 -40421.01022961486
+  -28034.306788382422 -8379.659439569032 19678.814001816074
+  -39989.60153139372 -35657.93860568101 -12094.797815783342
+  4774.014528405424 -40081.878985759904 5287.357261571038
+  1293.657492318716 6250.849684746135 -2743.660818244925
+  -23144.31741886464 -5287.379919885121 -45856.558320470074
+  -38506.58695430546 2532.246231646186 7527.925517146816
+  -47353.6731501923 -3362.964138660458 -17292.71407740226
+  -30610.902707966598 -7551.8430141426725 -242.7643169928501
+  -7033.776566204653 20267.367323607825 8792.261166880777]]
+self.model_weights2:  [[-0.002516368876968045 -0.003940665890695527 -0.002859440446627559 ...
+  -0.0011135796303278767 -0.003999330878286855 -0.002457703954860335]]
+Done.
+Done.
+Total time cost:  30910.912194013596 s
+score:  4319
+len(y):  4560
+Predict precision:  0.9471491228070176

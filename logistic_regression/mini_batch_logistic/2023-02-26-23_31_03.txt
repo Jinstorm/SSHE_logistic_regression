@@ -1,3 +1,8 @@
+## 两进程模拟两方通信，终于tmd写出来了
+数据集：Splice
+time cost: 113s
+Precision: 0.8629
+
 Time: 0.5148067474365234s
 
 Iteration 0, batch sum loss: 0.6931436329956395Time: 0.49522972106933594s
@@ -399,8 +404,3 @@ Iteration 197, batch sum loss: 0.6922662532992233Time: 0.5172951221466064s
 Iteration 198, batch sum loss: 0.6922641279189672Time: 0.5084421634674072s
 
 Iteration 199, batch sum loss: 0.6922620430556626
-
-## 两进程模拟两方通信，终于tmd写出来了
-数据集：Splice
-time cost: 113s
-Precision: 0.8629

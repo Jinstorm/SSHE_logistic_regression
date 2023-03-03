@@ -4,6 +4,9 @@ TODO:
 2.training with two-process communication ok done. 2023.2.25 23:37
 3.regularization
 
+possible for altering:
+__init__: FixedPointEndec(n = 1e10) # n = 1e14
+
 '''
 import numpy as np
 import time

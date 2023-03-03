@@ -114,7 +114,7 @@ class SecureML:
         return XdatalistA, XdatalistB, Ydatalist
 
 
-    def secret_share_vector_plaintext(self, share_target, flag):
+    def secret_share_vector_plaintext(self, share_target):
         '''
         Desc: 秘密分享(输入的share_target是明文)
         '''
@@ -122,14 +122,7 @@ class SecureML:
         _pre = urand_tensor(q_field = self.fixedpoint_encoder.n, tensor = share_target)
         tmp = self.fixedpoint_encoder.decode(_pre)  # 对每一个元素decode再返回, shape不变
         share = share_target - tmp
-        if flag == "A":
-            self.comm_Queue_B.put(share)
-            return tmp # 返回的第一个参数是留在本方的share, 第二个参数是需要分享的share
-        elif flag =="B":
-            self.comm_Queue_A.put(share)
-            return tmp # 返回的第一个参数是留在本方的share, 第二个参数是需要分享的share
-        else:
-            return tmp, share # 返回的第一个参数是留在本方的share, 第二个参数是需要分享的share
+        return tmp, share # 返回的第一个参数是留在本方的share, 第二个参数是需要分享的share
         
 
 
@@ -210,100 +203,235 @@ class SecureML:
         else: raise NotImplementedError
 
 
-    def secure_distributed_compute_loss_cross_entropy(self, label, batch_num):
+    def secure_distributed_compute_loss_cross_entropy(self, label, Y_predictA, Y_predictB, batch_num):
         """
+        Input
+        -----
+        label, Y_predictA(wxa), Y_predictB(wxb), batch_num
+
+        Desc
+        -----
             Use Taylor series expand log loss:
             Loss = - y * log(h(x)) - (1-y) * log(1 - h(x)) where h(x) = 1/(1+exp(-wx))
-            Then loss' = - (1/N)*∑(log(1/2) - 1/2*wx + ywx -1/8(wx)^2)
+            Then loss' = - (1/N)*∑ ( log(1/2) - 1/2*wx + ywx -1/8(wx)^2 )
         """
         # self.encrypted_wx = self.wx_self_A + self.wx_self_B
-        half_wx = -0.5 * self.encrypt_wx
-        assert(self.encrypt_wx.shape[0] == label.shape[0])
-        ywx = self.encrypt_wx * label
+        wx = Y_predictA + Y_predictB
+        print("wx: ", wx)
+        print("wx shape: ", wx.shape)
+        print("label: ", label)
+        print("label shape: ", label.shape)
 
-        # print()
-        self.za = self.comm_Queue_B.get()
-        # self.comm_Queue_B.get()
+        import sys
+        sys.exit()
 
-        wx_square = (self.za * self.za + 2 * self.za * self.zb + self.zb * self.zb) * -0.125
-        # wx_square = (2*self.wx_self_A * self.wx_self_B + self.wx_self_A * self.wx_self_A + self.wx_self_B * self.wx_self_B) * -0.125 
+        half_wx = -0.5 * wx
+        assert(wx.shape[0] == label.shape[0])
+        ywx = wx * label
+
+        # wx_square = (self.za * self.za + 2 * self.za * self.zb + self.zb * self.zb) * -0.125
+        wx_square = (Y_predictA * Y_predictA + 2 * Y_predictA * Y_predictB + Y_predictB * Y_predictB) * -0.125
         # wx_square = np.dot(self.wx_self.T, self.wx_self) * -0.125 # 这里后续要修改，两方平方，有交叉项
-        # wx_square2 = self.encrypted_wx * self.encrypted_wx * -0.125
         # assert all(wx_square == wx_square2)  # 数组比较的返回值为: 类似[True False False]
 
         loss = np.sum( (half_wx + ywx + wx_square) * (-1 / batch_num) - np.log(0.5) )
         # loss = np.sum( (half_wx + ywx + wx_square) * (-1 / batch_num) )
         return loss
+    
+    def secretSharing_Data_and_Labels(self, data_matrixA, data_matrixB, Y_train):
+        '''
+        将数据X和标签Y, 分享到两方.
+        '''
+        local_dataA, share_dataA = self.secret_share_vector_plaintext(data_matrixA)
+        local_dataB, share_dataB = self.secret_share_vector_plaintext(data_matrixB)
+        local_Y, share_Y = self.secret_share_vector_plaintext(Y_train)
+        
 
+        self.local_matrix_A = np.hstack((local_dataA, share_dataB))
+        self.local_matrix_B = np.hstack((share_dataA, local_dataB))
+        self.Y_A = local_Y
+        self.Y_B = share_Y
+        assert(self.local_matrix_A.shape == self.local_matrix_B.shape)
+        print("Sharing raw data: \033[32mOK\033[0m")
 
-    def fit_model_secure_2process(self, X_trainA, X_trainB, Y_train, instances_count, indice_littleside):
+    def fit_model_secure_distributed_input(self, X_trainA, X_trainB, Y_train, instances_count, feature_count, indice_littleside):
+        # indice_littleside 用于划分权重, 得到特征数值较小的那一部分的权重-或者左侧 默认X1一侧
+        # mini-batch 数据集处理
+        print("ratio: ", self.ratio)
+        self.indice = indice_littleside
 
-        # print("ratio: ", self.ratio)
-        # self.indice = indice_littleside # math.floor(self.ratio * ( X_trainA.shape[1]+X_trainB.shape[1] ) ) # 纵向划分数据集，位于label一侧的特征数量
-        # if self.data_tag == None: 
-        #     self.X_batch_listA, self.X_batch_listB, self.y_batch_list = self._generate_batch_data_for_distributed_parts(X_trainA, X_trainB, Y_train, self.batch_size)
-        #     self.weightA, self.weightB = np.hsplit(self.model_weights, [self.indice]) # 权重向量是一个列向量，需要横向划分
-        #     print(self.weightA.shape, self.weightB.shape)
-        # else:
-        #     raise Exception("[fit model] No proper entry for batch data generation. Check the data_tag or the fit function.")
-            
-        self.n_iteration = 1
-        # self.loss_history = []
-        # test = 0
-        self.terminal = False
+        # generate shared data and labels for two parties
+        self.secretSharing_Data_and_Labels(X_trainA, X_trainB, Y_train)
+        # label: self.Y_A self.Y_B
+        # data: self.local_matrix_A self.local_matrix_B
 
+        # split the model weight according to data distribution
+        self.weightA = self.model_weights
+        self.weightB = self.model_weights
 
-        ########## IPC ###########
-        self.comm_Queue_A = Queue() # A party message box
-        self.comm_Queue_B = Queue() # B party message box
-        self.comm_Queue_C = Queue() # B party message box
-        # import multiprocessing
-        # m = multiprocessing.Manager()
-        # arr = m.list()
+        # generate triples: U V Z V' Z'
+        # print("len n/|B|: ", len(self.batch_num))
+        # print(self.batch_num)
+        # import sys
+        # sys.exit()
+        import math
+        t = int(math.ceil(instances_count/self.batch_size))
+        print("t: ", t)
+        self.generate_UVZV_Z_multTriplets_beaver_triplets(instances_count, feature_count, 
+                                                          t, self.batch_size)
+        # Mask X0 X1 and reconstruct E
+        E0 = self.local_matrix_A - self.U0
+        E1 = self.local_matrix_B - self.U1
+        E = self.reconstruct(E0, E1)
 
+        # generate batch data:
+        X_batch_listA, X_batch_listB, y_batch_listA, y_batch_listB, E_batch_list, Z0_batch_list, Z1_batch_list, U0_batch_list, U1_batch_list = self._generate_batch_data_and_triples(E, self.batch_size)
+        # X_batch_listA, X_batch_listB, y_batch_listA, y_batch_listB, E_batch_list, Z0_batch_list, Z1_batch_list, Zp1_batch_list, Zp2_batch_list = self._generate_batch_data_and_triples(E, self.batch_size)
+        # 这些batch data可以在过程中计算得到: Z_batch_list, Z_p_batch_list (算了一起生成吧)
+
+        self.n_iteration = 0
+        self.loss_history = []
+        test = 0
+
+        print("[CHECK] weight: ", self.weightA, self.weightB)
+        self.weightA = self.weightA.reshape(-1, 1)
+        self.weightB = self.weightB.reshape(-1, 1)
+
+        ############################
         import time
-        name = "sketch_time.txt"
+        filename = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime(time.time()))
+        name = filename + ".txt"
         file = open(name, mode='w+') #  写入记录
-        time_start_training = time.time()
+        # time_start_training = time.time()
+        ############################
         
-        host_A = Process(target = self.fit_model_secure_Host_A,args=(X_trainA,) )
-        guest_B = Process(target = self.fit_model_secure_Guest_B,args=(instances_count, X_trainB, Y_train, self.comm_Queue_C) )
+        print("[Hint] Training model...")
+        while self.n_iteration < self.max_iter:
+            time_start_training = time.time()
+            loss_list = []
+            batch_label_A = None
+            batch_label_B = None
+            # distributed
+            test = 0
+            for batch_dataA, batch_dataB, batch_label_A, batch_label_B, batch_E, batch_Z0, batch_Z1, batch_U0, batch_U1, batch_num in zip(X_batch_listA, X_batch_listB, y_batch_listA, y_batch_listB, 
+                                                                         E_batch_list, Z0_batch_list, Z1_batch_list, U0_batch_list, U1_batch_list, self.batch_num):
+                ############################
+                # file.write("batch " + str(test) + "\n")
+                ############################
+                test += 1
+                
+                batch_label_A = batch_label_A.reshape(-1, 1)
+                batch_label_B = batch_label_B.reshape(-1, 1)
 
-        # 开始
-        host_A.start()
-        guest_B.start()
-        
-        # while self.comm_Queue_C.empty(): time.sleep(5)
-        # self.model_weights = self.comm_Queue_C.get()
+                j = 0
+                # ?
+                # print("[CHECK] self.V0 self.V1 shape: ", self.V0.shape, self.V1.shape)
+                # import sys
+                # sys.exit(0)
+                batch_F0 = self.weightA - self.V0[:,j].reshape(-1, 1)
+                batch_F1 = self.weightB - self.V1[:,j].reshape(-1, 1)
+                batch_F = self.reconstruct(batch_F0, batch_F1)
+                # print("batch_F shape: ", batch_F.shape, batch_F0.shape, batch_F1.shape, self.weightA.shape, self.weightB.shape, self.V0[:,j].reshape(-1, 1).shape)
 
-        
-        guest_B.join()
-        
-        print("Done.")
-        host_A.terminate()
-        host_A.join()
-        print("Done.")
+                # compute the predict Y*
+                # ???????????????????????????????????????????????? 按理说加起来应该等于Xw的, 检查一下原理公式和代码
+                Y_predictA = np.dot(batch_dataA, batch_F) + np.dot(batch_E, self.weightA) + batch_Z0[:,j].reshape(-1, 1)
+                Y_predictB = np.dot(batch_dataB, batch_F) + np.dot(batch_E, self.weightB) + batch_Z1[:,j].reshape(-1, 1) + -1 * np.dot(batch_E, batch_F)
+                # print("shape: ", np.dot(batch_dataA, batch_F).shape, np.dot(batch_E, self.weightA).shape, batch_Z0[:,j].reshape(-1, 1).shape)
+                # print("shape: ", np.dot(batch_dataB, batch_F).shape, np.dot(batch_E, self.weightB).shape, batch_Z1[:,j].reshape(-1, 1).shape, np.dot(batch_E, batch_F).shape)
 
-        time_end_training = time.time()
-        file.write("Total Train time: " + str(time_end_training-time_start_training) + "s\n")
-        file.close()
+                # compute the difference
+                # print("Y_predictA shape: ", Y_predictA.shape)
+                # print("Y_predictB shape: ", Y_predictB.shape)
+                # print("batch_label_A shape: ", batch_label_A.shape)
 
-        # print(arr)
-        # self.model_weights = np.asarray(arr)
-        # print("self.model_weights3: ", self.model_weights)
-        
-        # print("self.model_weights4: ", self.model_weights)
+                batch_D0 = Y_predictA - batch_label_A
+                batch_D1 = Y_predictB - batch_label_B
 
-    def reconstruct(self, Ei, flag):
-        if flag == "A":
-            self.comm_Queue_B.put(Ei)
-            Ei_ = self.comm_Queue_A.get()
-        elif flag == "B":
-            self.comm_Queue_A.put(Ei)
-            Ei_ = self.comm_Queue_B.get()
-        
+                # print("batch_D0 shape: ", batch_D0.shape)
+                # print("batch_D1 shape: ", batch_D1.shape)
+
+                # import sys
+                # sys.exit()
+
+                if len(batch_D0) != self.batch_size:
+                    # 最后一个不足一个batchsize的数据片
+                    end = len(batch_D0)
+                    batch_Fp0 = batch_D0 - self.V0_[0:end,j].reshape(-1, 1)
+                    batch_Fp1 = batch_D1 - self.V1_[0:end,j].reshape(-1, 1)
+                    batch_Fp = self.reconstruct(batch_Fp0, batch_Fp1)
+
+                    delta0 = np.dot(batch_dataA.T, batch_Fp) + np.dot(batch_E.T, batch_D0) + np.dot(batch_U0.T, self.V0_[0:end,j]).reshape(-1, 1)
+                    delta1 = np.dot(batch_dataB.T, batch_Fp) + np.dot(batch_E.T, batch_D1) + np.dot(batch_U1.T, self.V1_[0:end,j]).reshape(-1, 1) + -1 * np.dot(batch_E.T, batch_Fp)
+                else:
+                    batch_Fp0 = batch_D0 - self.V0_[:,j].reshape(-1, 1)
+                    batch_Fp1 = batch_D1 - self.V1_[:,j].reshape(-1, 1)
+                    batch_Fp = self.reconstruct(batch_Fp0, batch_Fp1)
+                    # print("batch_Fp shape: ", batch_Fp.shape)
+
+                    # print("shape: ", np.dot(batch_dataA.T, batch_Fp).shape, np.dot(batch_E.T, batch_D0).shape, np.dot(batch_U0.T, self.V0_[:,j]).reshape(-1, 1).shape)
+                    delta0 = np.dot(batch_dataA.T, batch_Fp) + np.dot(batch_E.T, batch_D0) + np.dot(batch_U0.T, self.V0_[:,j]).reshape(-1, 1)
+                    delta1 = np.dot(batch_dataB.T, batch_Fp) + np.dot(batch_E.T, batch_D1) + np.dot(batch_U1.T, self.V1_[:,j]).reshape(-1, 1) + -1 * np.dot(batch_E.T, batch_Fp)
+                
+                # truncates
+                # ......
+
+                # update
+                self.weightA = self.weightA - self.alpha / batch_num * (delta0)
+                self.weightB = self.weightB - self.alpha / batch_num * (delta1)
+
+                j = j + 1
+                # print()
+
+                ########################## compute loss #######################
+                # print("computing loss ...")
+                batch_loss = self.secure_distributed_compute_loss_cross_entropy(label = batch_label_A + batch_label_B, 
+                                                                        Y_predictA=Y_predictA, Y_predictB=Y_predictB, batch_num = batch_num)
+                loss_list.append(batch_loss)
+
+            # # 打乱数据集的batch
+            # X_batch_listA, X_batch_listB, y_batch_list = self.shuffle_distributed_data(X_batch_listA, 
+            #                     X_batch_listB, y_batch_list)
+            
+            ## 计算 sum loss
+            loss = np.sum(loss_list) / instances_count
+            print("\rIteration {}, batch sum loss: {}".format(self.n_iteration, loss))
+            # self.loss_history.append(loss_decrypt)
+            
+            ############################
+            time_end_training = time.time()
+            # print('time cost: ',time_end_training-time_start_training,'s')
+            file.write("Time: " + str(time_end_training-time_start_training) + "s\n")
+
+            # file.write("loss shape: " + str(loss.shape) + "\n")
+            file.write("\rIteration {}, batch sum loss: {}".format(self.n_iteration, loss))
+            # file.close()
+            ############################
+
+            # import sys
+            # sys.exit(0)
+
+
+            ## 判断是否停止
+            self.is_converged = self.check_converge_by_loss(loss)
+            if self.is_converged:
+                # self.weightA, self.weightB = np.hsplit(self.model_weights, [self.indice]) # 权重向量是一个列向量，需要横向划分
+                if self.ratio is not None: 
+                    # self.weightA = self.cipher.recursive_decrypt(wa1 + wa2)
+                    # self.weightB = self.cipher.recursive_decrypt(wb1 + wb2)
+
+                    # self.weightA = wa1 + wa2
+                    # self.weightB = wb1 + wb2
+
+                    self.model_weights = np.hstack((self.weightA, self.weightB))
+                    print("self.model_weights: ", self.model_weights)
+                break
+
+            self.n_iteration += 1
+
+
+    def reconstruct(self, Ei, Ei_):
         E = Ei + Ei_ # 两方都各自重建E
-        
         return E
 
     def generate_UVZV_Z_multTriplets_beaver_triplets(self, n, d, t, B):
@@ -320,50 +448,24 @@ class SecureML:
 
         Return
         ---------
-        `U0`, `U1`, `V0`, `V1`, `Z0`, `Z1`; _0 for Party 0 and _1 for Party 1.
+        `U0`, `U1`, `V0`, `V1`, `V0_`, `V1_`, `Z0`, `Z1`, `Z0_`, `Z1_`; _0 for Party 0 and _1 for Party 1.
         """
-        flag = "fuzz"
         U = np.random.rand(n, d)
         V = np.random.rand(d, t)
         V_ = np.random.rand(B, t)
-        self.U0, self.U1 = self.secret_share_vector_plaintext(self, U, flag)
-        self.V0, self.V1 = self.secret_share_vector_plaintext(self, V, flag)
-        self.V0_, self.V1_ = self.secret_share_vector_plaintext(self, V_, flag)
+        self.U0, self.U1 = self.secret_share_vector_plaintext(U)
+        self.V0, self.V1 = self.secret_share_vector_plaintext(V)
+        self.V0_, self.V1_ = self.secret_share_vector_plaintext(V_)
 
         self.Z0 = np.dot(self.U0, self.V0)
         self.Z1 = np.dot(self.U1, self.V1)
-        self.Z0_ = np.dot(self.U0.transpose(), self.V0_)
-        self.Z1_ = np.dot(self.U0.transpose(), self.V1_)
+        # 这里Z_必须在训练中生成, 因为Z_对应的是每个的batch, 而不是整个数据集, Z_的维度: (|B|, t)
+        # 注意遇到某个列不足|B|的长度时, Z_的生成需要注意维度: 此时Z
+        # self.Z0_ = np.dot(self.U0.transpose(), self.V0_)
+        # self.Z1_ = np.dot(self.U0.transpose(), self.V1_)
 
         # return U0, U1, V0, V1, Z0, Z1, V0_, V1_, Z0_, Z1_
         # 参考FATE或
-    
-    def secretSharingTrainData_A(self, data_matrix):
-        import time
-        time_start = time.time()
-        flag = "A"
-        data_A1 = self.secret_share_vector(data_matrix, flag)
-        print("A did SS, and waiting for get from B...")
-        data_B2 = self.comm_Queue_A.get()
-        print("Done.(A)")
-
-        time_end = time.time()
-        print("Total Comm time: " + str(time_end-time_start) + "s\n")
-
-        self.local_matrix_A = np.hstack((data_A1, data_B2))
-        print("shape local A: ", self.local_matrix_A.shape)
-        
-    def secretSharingTrainData_B(self, data_matrix):
-        flag = "B"
-        data_B1 = self.secret_share_vector(data_matrix, flag)
-        print("B did SS, and waiting for get from A...")
-        data_A2 = self.comm_Queue_B.get()
-        print("Done.(B)")
-
-        self.local_matrix_B = np.hstack((data_A2, data_B1))
-        print("shape local B: ", self.local_matrix_B.shape)
-
-        # 后续各自生成batch数据
 
     """
     TODO
@@ -401,264 +503,61 @@ class SecureML:
     reconstruction
     Y...
 
+    现在的问题: wx出来的值不对 和 Y 差的远了
+
     """
-    # def forward_Host_A(self, X, wa1, wb1, party):
-    #     self._cal_z(X, wa1, party = party, encrypt = "paillier") # self.za1
-        
-    #     # Matrix multiplication
-    #     self.comm_Queue_B.put(wb1)
-    #     wa2 = self.comm_Queue_A.get()
-    #     if wa2 is None: 
-    #         # convergence B处检查到已满足收敛条件
-    #         print("convergence--wa1 shape: ", wa1.shape)
-    #         print("convergence--wb1 shape: ", wb1.shape)
-    #         self.comm_Queue_B.put(wa1)
-    #         import time
-    #         time.sleep(1)
-
-    #         self.comm_Queue_B.put(wb1)
-    #         self.terminal = True
-    #         return
-
-    #     self.za2_1 = self.secure_Matrix_Multiplication(X, wa2, stage = "forward", flag = "A")
-    #     # B : get self.za2_2
-
-    #     self.zb1_1 = self.comm_Queue_A.get()
-
-    #     self.za = self.za1.T + self.za2_1 + self.zb1_1
-    #     ## Line 14
-
-    # def forward_Guest_B(self, X, wb2, wa2, party):
-    #     self._cal_z(X, wb2, party = party, encrypt = "paillier") # self.zb2
-        
-    #     # Matrix multiplication
-    #     self.comm_Queue_A.put(wa2)
-    #     wb1 = self.comm_Queue_B.get()
-    #     self.zb1_2 = self.secure_Matrix_Multiplication(X, wb1, stage = "forward", flag = "B")
-    #     # A : get self.zb1_1
-
-    #     self.za2_2 = self.comm_Queue_B.get()
-
-    #     self.zb = self.zb2.T + self.za2_2 + self.zb1_2
-    #     ## Line 14
     
 
-    def fit_model_secure_Host_A(self, X_trainA):
-        # SS generate wa1 wa2, 
-        # Host A keeps wa1 and sent wa2 to Guest B
-        # Host A get wb1 from B
-        flag = "A"
-        print("secret sharing data A...")
-        self.secretSharingTrainData_A(X_trainA)
-
-        # initiate weight A
-        wa = np.zeros(self.local_matrix_A.shape[1]).reshape(1, -1)
-        print("Weight A: ", wa, wa.shape)
-
-        # reconstruct E
-        E0 = self.local_matrix_A - self.U0
-        E = self.reconstruct(E0, flag)
-
-        # need to get Y_A
-        y = self.comm_Queue_A.get()
-        X_batch_listA, E_batch_list, Z_batch_list, y_batch_listA = self._generate_batch_data_for_localparts(self.local_matrix_A, y, E, self.batch_size)
-        
-
-        while self.n_iteration <= self.max_iter:
-            # print("wa111 shape: ", wa1.shape)
-            for batch_dataA, batch_E, batch_Z, batch_Y, batch_num in zip(X_batch_listA, E_batch_list, Z_batch_list, y_batch_listA, self.batch_num):
-                # print("forward..")
-                j = 0
-                Fj0 = wa - self.V0[:,j]
-                j = j + 1
-
-                Fj = self.reconstruct(Fj0)
-                
-                Y_predict = np.dot(batch_dataA, Fj) + np.dot(batch_E, wa) + batch_Z
-
-                # self.comm_Queue_B.put(self.cipher.recursive_encrypt(self.za))
-
-                # ya_s = self.comm_Queue_A.get()
-                # error_a = ya_s
-
-                # # backward
-                # # print("backward..")
-                # ga = np.dot(error_a.T, batch_dataA) * (1 / batch_num)
-                # gb1 = self.comm_Queue_A.get()
-
-                # error_1_n = self.comm_Queue_A.get()
-                # ga2_1 = self.secure_Matrix_Multiplication(batch_dataA, error_1_n, stage = "backward", flag = "A")
-                
-                # # compute loss
-                # self.comm_Queue_B.put(self.za)
-
-                # # update model
-                # ga_new = ga + ga2_1
-                # # print("ga_new: ", ga_new.shape)
-                
-                # wa1 = wa1 - self.alpha * ga_new - self.lambda_para * self.alpha * wa1 / batch_num
-                # wb1 = wb1 - self.alpha * gb1 - self.lambda_para * self.alpha * wb1 / batch_num
-                # # print("wa1,wb1: ", wa1,wb1)
-                # # print("wa1 shape: ", wa1.shape)
-                # # import sys
-                # # sys.exit()
-            
-                # # self.comm_Queue_A.get()
-            if self.terminal == True: 
-                print("A return while")
-                break
-            
-
-
-    def fit_model_secure_Guest_B(self, instances_count, X_trainB, Y_train, q):
-        # Guest B keeps features and labels
-
-        flag = "B"
-
-        print("secret sharing data B...")
-        self.secretSharingTrainData_B(X_trainB)
-
-        # weight 初始化, 不需要通信, 两边分别随机初始化 1*d, 最后加起来重建即可.
-        wb = np.zeros(self.local_matrix_B.shape[1]).reshape(1,-1)
-        print("Weight B: ", wb, wb.shape)
-        
-        # reconstruct E
-        E1 = self.local_matrix_B - self.U1
-        E = self.reconstruct(E1, flag)
-
-        # share Y_train
-        y = self.secret_share_vector_plaintext(Y_train, flag)
-        X_batch_listB, y_batch_listB = self._generate_batch_data_for_localparts(self.local_matrix_B, y, self.batch_size)
-        
-        # import time
-        # filename = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime(time.time()))
-        # name1 = filename + "_Epoch.txt"
-        # file = open(name1, mode='w+') #  写入记录每个epoch的时间和loss
-        # name2 = filename + "_Batch.txt"
-        # file2 = open(name2, mode='w+') #  写入 some trash or useful words
-        # file.write("sketch data." + "\n")
-        
-        while self.n_iteration <= self.max_iter:
-            time_start_training = time.time()
-            loss_list = []
-            batch_labels = None
-            i_batch = 0
-            for batch_dataB, batch_labels, batch_num in zip(X_batch_listB, y_batch_listB, self.batch_num):
-                j = 0
-                Fj1 = wb - self.V1[:,j]
-                j = j + 1
-
-                self.reconstruct(Fj1)
-        #         # file.write("batch ", i_batch)
-        #         file2.write("batch " + str(i_batch))
-        #         print("batch " + str(i_batch), end = '')
-        #         print("forward..", end = '')
-
-        #         batch_labels = batch_labels.reshape(-1, 1)
-        #         self.forward_Guest_B(batch_dataB, wb2, wa2, party = "B")
-        #         encrypt_za = self.comm_Queue_B.get()
-        #         self.encrypt_wx = self.zb + encrypt_za
-        #         self.encrypted_sigmoid_wx = self._compute_sigmoid(self.encrypt_wx)
-
-        #         # self.backward_Guest_B(batch_labels, batch_num)
-                
-        #         # backward
-        #         # print("backward..")
-        #         yb_s = self.secret_share_vector(self.encrypted_sigmoid_wx, flag)
-        #         error_b = yb_s - batch_labels
-
-        #         self.encrypted_error = (self.encrypted_sigmoid_wx - batch_labels).T
-
-        #         encrypt_gb = np.dot(self.encrypted_error, batch_dataB) * (1 / batch_num)
-        #         gb2 = self.secret_share_vector(encrypt_gb, flag)         # 前面一个返回值是留在本方的值, 后面一个是share给对方的值
-        #         error_1_n = error_b * (1 / batch_num)
-
-        #         self.comm_Queue_A.put(error_1_n)
-        #         ga2_2 = self.comm_Queue_B.get()
-
-        #         # compute loss
-        #         batch_loss = self.secure_distributed_compute_loss_cross_entropy(label = batch_labels, batch_num = batch_num)
-        #         loss_list.append(batch_loss)
-
-        #         # update model
-        #         wa2 = wa2 - self.alpha * ga2_2 - self.lambda_para * self.alpha * wa2 / batch_num
-        #         wb2 = wb2 - self.alpha * gb2 - self.lambda_para * self.alpha * wb2 / batch_num
-        #         # print("wa2,wb2: ", wa2,wb2)
-
-        #         # 对应一下get和put的数量和顺序
-        #         time_end_training = time.time()
-        #         file2.write('batch cost: ' + str(time_end_training-time_start_training)+'s')
-        #         print("batch cost: " + str(time_end_training-time_start_training)+'s', end = '')
-
-        #         i_batch += 1
-
-        #     # 打乱数据集的batch
-        #     # self.X_batch_listA, self.X_batch_listB, self.y_batch_list = self.shuffle_distributed_data(self.X_batch_listA, 
-        #     #                     self.X_batch_listB, self.y_batch_list)
-            
-        #     # self.comm_Queue_A.put("\n")
-
-        #     ## 计算 sum loss
-        #     loss = np.sum(loss_list) / instances_count
-        #     loss_decrypt = self.cipher.recursive_decrypt(loss)
-        #     time_end_training = time.time()
-
-        #     print("\nEpoch {}, batch sum loss: {}".format(self.n_iteration, loss_decrypt), end='')
-        #     print(" Time: " + str(time_end_training-time_start_training) + "s")
-        #     file.write("Time: " + str(time_end_training-time_start_training) + "s\n")
-        #     # file.write("loss shape: " + str(loss.shape) + "\n")
-        #     file.write("Epoch {}, batch sum loss: {}\n".format(self.n_iteration, loss_decrypt))
-        #     file2.write("\nEpoch {}, batch sum loss: {}\n".format(self.n_iteration, loss_decrypt))
-            
-            
-        #     self.is_converged = self.check_converge_by_loss(loss_decrypt)
-        #     if self.is_converged or self.n_iteration == self.max_iter:
-        #         # self.weightA, self.weightB = np.hsplit(self.model_weights, [self.indice]) # 权重向量是一个列向量，需要横向划分
-        #         if self.ratio is not None: 
-        #             # self.weightA = self.cipher.recursive_decrypt(wa1 + wa2)
-        #             # self.weightB = self.cipher.recursive_decrypt(wb1 + wb2)
-        #             self.comm_Queue_A.put(None)
-                    
-        #             self.wb1 = self.comm_Queue_B.get()
-        #             self.wa1 = self.comm_Queue_B.get()
-                    
-        #             # print("wa1 shape: ", wa1.shape)
-                    
-        #             # print("wb1 shape: ", wb1.shape)
-
-        #             self.weightA = self.wa1 + wa2
-        #             self.weightB = self.wb1 + wb2
-        #             print("wa1,wa2: ", self.wa1, wa2)
-
-        #             self.model_weights = np.hstack((self.weightA, self.weightB))
-        #             print("self.model_weights2: ", self.model_weights)
-        #             self.comm_Queue_C.put(self.model_weights)
-                    
-        #         break
-
-        #     self.n_iteration += 1
-    
-
-    def _generate_batch_data_for_localparts(self, X, y, batch_size):
+    def _generate_batch_data_and_triples(self, E, batch_size):
         # for two parties in secureML model to generate the batches
         # E X Y (V V',校对在迭代过程中,列序号能对应batch序号即可) Z Z'
-        X_batch_list = []
-        y_batch_list = []
-
-        for i in range(len(y) // batch_size):
+        X_batch_listA = []
+        X_batch_listB = []
+        y_batch_listA = []
+        y_batch_listB = []
+        E_batch_list = []
+        Z0_batch_list = []
+        Z1_batch_list = []
+        U0_batch_list = []
+        U1_batch_list = []
+        # Z_p0_batch_list = []
+        # Z_p1_batch_list = []
+        # self.indice = math.floor(ratio * X.shape[1]) # 纵向划分数据集，位于label一侧的特征数量
+        
+        for i in range(len(self.Y_A) // batch_size):
             # X_tmpA = X1[i * batch_size : i * batch_size + batch_size, :]
-            X_batch_list.append(X[i * batch_size : i * batch_size + batch_size, :])
-            y_batch_list.append(y[i * batch_size : i * batch_size + batch_size])
+            X_batch_listA.append(self.local_matrix_A[i * batch_size : i * batch_size + batch_size, :])
+            X_batch_listB.append(self.local_matrix_B[i * batch_size : i * batch_size + batch_size, :])
+            y_batch_listA.append(self.Y_A[i * batch_size : i * batch_size + batch_size])
+            y_batch_listB.append(self.Y_B[i * batch_size : i * batch_size + batch_size])
+            
+            # E, Z0, Z1, Z'0, Z'1, batch_num
+            E_batch_list.append(E[i * batch_size : i * batch_size + batch_size])
+            
+            Z0_batch_list.append(self.Z0[i * batch_size : i * batch_size + batch_size])
+            Z1_batch_list.append(self.Z1[i * batch_size : i * batch_size + batch_size])
+            U0_batch_list.append(self.U0[i * batch_size : i * batch_size + batch_size])
+            U1_batch_list.append(self.U1[i * batch_size : i * batch_size + batch_size])
             self.batch_num.append(batch_size)
 
-        if (len(y) % batch_size > 0):
+        if (len(self.Y_A) % batch_size > 0):
             # X_tmpA, X_tmpB = np.hsplit(X[len(y) // batch_size * batch_size:, :], [self.indice])
             # X_batch_list.append(X[len(y) // batch_size * batch_size:, :])
-            X_batch_list.append(X[len(y) // batch_size * batch_size:, :])
-            y_batch_list.append(y[len(y) // batch_size * batch_size:])
-            self.batch_num.append(len(y) % batch_size)
+            X_batch_listA.append(self.local_matrix_A[len(self.Y_A) // batch_size * batch_size:, :])
+            X_batch_listB.append(self.local_matrix_B[len(self.Y_A) // batch_size * batch_size:, :])
+            y_batch_listA.append(self.Y_A[len(self.Y_A) // batch_size * batch_size:])
+            y_batch_listB.append(self.Y_B[len(self.Y_A) // batch_size * batch_size:])
+            
+            # E, Z0, Z1, Z'0, Z'1, batch_num
+            E_batch_list.append(E[len(self.Y_A) // batch_size * batch_size:])
+            Z0_batch_list.append(self.Z0[len(self.Y_A) // batch_size * batch_size:])
+            Z1_batch_list.append(self.Z1[len(self.Y_A) // batch_size * batch_size:])
+            U0_batch_list.append(self.U0[len(self.Y_A) // batch_size * batch_size:])
+            U1_batch_list.append(self.U1[len(self.Y_A) // batch_size * batch_size:])
+            self.batch_num.append(len(self.Y_A) % batch_size)
 
-        return X_batch_list, y_batch_list # listA——持有label一侧，较多样本; listB——无label一侧
+        print("Batch data generation: \033[32mOK\033[0m")
+        return X_batch_listA, X_batch_listB, y_batch_listA, y_batch_listB, E_batch_list, Z0_batch_list, Z1_batch_list, U0_batch_list, U1_batch_list # listA——持有label一侧，较多样本; listB——无label一侧
 
 
 
@@ -873,9 +772,9 @@ if __name__ == "__main__":
     # X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_encoded_data()
 
     # Raw data
-    X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_data()
+    # X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_data()
     # Sketch data
-    # X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_squeeze_data()
+    X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_squeeze_data()
 
     print(X_train1.shape, X_train2.shape, X_train1.shape[1], X_train2.shape[1], Y_train.shape, X_test1.shape, Y_test.shape)
 
@@ -910,7 +809,7 @@ if __name__ == "__main__":
                     # splice 集中 0.9062068965517242
     # 纵向划分分布式
     SecureMLModel = SecureML(weight_vector = weight_vector, batch_size = 256, 
-                    max_iter = 200, alpha = 0.001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
+                    max_iter = 10, alpha = 0.001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
                     # splice 分布式 0.9062068965517242
     # LogisticRegressionModel = LogisticRegression(weight_vector = weight_vector, batch_size = 20, 
     #                 max_iter = 600, alpha = 0.0001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
@@ -937,8 +836,8 @@ if __name__ == "__main__":
 
     # 纵向分布保护隐私的分布式
     indice_littleside = X_train1.shape[1]
-    # LogisticRegressionModel.fit_model_secure_distributed_input(X_train1, X_train2, Y_train, X_train1.shape[0], indice_littleside)
-    SecureMLModel.fit_model_secure_2process(X_train1, X_train2, Y_train, X_train1.shape[0], indice_littleside)
+    SecureMLModel.fit_model_secure_distributed_input(X_train1, X_train2, Y_train, X_train1.shape[0], (X_train1.shape[1]+X_train2.shape[1]), indice_littleside)
+    # SecureMLModel.fit_model_secure_2process(X_train1, X_train2, Y_train, X_train1.shape[0], indice_littleside)
 
     time_end = time.time()
     print('Total time cost: ', time_end-time_start,'s')
