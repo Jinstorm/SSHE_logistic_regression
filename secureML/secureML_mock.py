@@ -40,6 +40,12 @@ class SecureML:
         self.penalty = penalty # 正则化策略
         self.lambda_para = lambda_para # 正则化系数
         self.data_tag = data_tag # 输入数据的格式 (目前支持两种格式: sparse和dense)
+        
+        # WAN(Wide area network) Bandwidth, unit: 使用单位: Mbps (1 MB/s = 8 Mbps); 带宽测试: 40Mbps (5MB/s)
+        self.WAN_bandwidth = 40 # Mbps
+        self.train_time_account = 0
+        self.mem_occupancy = 4 # B 字节 
+        # 计算时: 元素个数 * 4 B / 1024 / 1024 MB  / (40/8) s = object_num * self.mem_occupancy / (1024*1024) / (self.WAN_bandwidth/8)
 
         # 加密部分的初始化
         self.cipher = PaillierEncrypt() # Paillier初始化
@@ -86,6 +92,7 @@ class SecureML:
         _pre = urand_tensor(q_field = self.fixedpoint_encoder.n, tensor = share_target)
         tmp = self.fixedpoint_encoder.decode(_pre)  # 对每一个元素decode再返回, shape不变
         share = share_target - tmp
+        self.time_counting(share)
         return tmp, share # 返回的第一个参数是留在本方的share, 第二个参数是需要分享的share
 
 
@@ -124,6 +131,15 @@ class SecureML:
         # loss = np.sum( (half_wx + ywx + wx_square) * (-1 / batch_num) )
         return loss
     
+    def time_counting(self, tensor):
+        # 计算tensor在WAN下传输的时间
+        if tensor.ndim == 2:
+            object_num = tensor.shape[0] * tensor.shape[1]
+        else:
+            object_num = tensor.shape[0]
+        commTime = object_num * self.mem_occupancy / (1024*1024) / (self.WAN_bandwidth/8)
+        self.train_time_account += commTime
+
     def secretSharing_Data_and_Labels(self, data_matrixA, data_matrixB, Y_train):
         '''
         将数据X和标签Y, 分享到两方.
@@ -142,7 +158,6 @@ class SecureML:
 
     def fit_model_secure_distributed_input(self, X_trainA, X_trainB, Y_train, instances_count, feature_count, indice_littleside):
         # indice_littleside 用于划分权重, 得到特征数值较小的那一部分的权重-或者左侧 默认X1一侧
-        # mini-batch 数据集处理
         print("ratio: ", self.ratio)
         self.indice = indice_littleside
 
@@ -156,10 +171,6 @@ class SecureML:
         self.weightB = self.model_weights
 
         # generate triples: U V Z V' Z'
-        # print("len n/|B|: ", len(self.batch_num))
-        # print(self.batch_num)
-        # import sys
-        # sys.exit()
         import math
         t = int(math.ceil(instances_count/self.batch_size))
         print("t: ", t)
@@ -220,7 +231,6 @@ class SecureML:
                 # print("batch_F shape: ", batch_F.shape, batch_F0.shape, batch_F1.shape, self.weightA.shape, self.weightB.shape, self.V0[:,j].reshape(-1, 1).shape)
 
                 # compute the predict Y*
-                # ???????????????????????????????????????????????? 按理说加起来应该等于Xw的, 检查一下原理公式和代码
                 Y_predictA = np.dot(batch_dataA, batch_F) + np.dot(batch_E, self.weightA) + batch_Z0[:,j].reshape(-1, 1)
                 Y_predictB = np.dot(batch_dataB, batch_F) + np.dot(batch_E, self.weightB) + batch_Z1[:,j].reshape(-1, 1) + -1 * np.dot(batch_E, batch_F)
                 # print("shape: ", np.dot(batch_dataA, batch_F).shape, np.dot(batch_E, self.weightA).shape, batch_Z0[:,j].reshape(-1, 1).shape)
@@ -239,9 +249,6 @@ class SecureML:
 
                 # print("batch_D0 shape: ", batch_D0.shape)
                 # print("batch_D1 shape: ", batch_D1.shape)
-
-                # import sys
-                # sys.exit()
 
                 if len(batch_D0) != self.batch_size:
                     # 最后一个不足一个batchsize的数据片
@@ -280,19 +287,12 @@ class SecureML:
                 # ......
 
                 # update
-                # print("value: ", self.weightA, (self.alpha / batch_num * (delta0)))
-                # print("shape: ", self.weightA.shape, (self.alpha / batch_num * (delta0)).shape)
                 self.weightA = self.weightA - self.alpha / batch_num * (delta0)
                 self.weightB = self.weightB - self.alpha / batch_num * (delta1)
-                
-                # print("weight: ", self.weightA + self.weightB)
-                # import sys
-                # sys.exit()
 
                 j = j + 1
-                # print()
 
-                ########################## compute loss #######################
+                # compute loss
                 # print("computing loss ...")
                 batch_loss = self.secure_distributed_compute_loss_cross_entropy(label = batch_label_A + batch_label_B, 
                                                                         Y_predictA=Y_predictA, Y_predictB=Y_predictB, batch_num = batch_num)
@@ -305,7 +305,6 @@ class SecureML:
             ## 计算 sum loss
             loss = np.sum(loss_list) / instances_count
             print("\rIteration {}, batch sum loss: {}".format(self.n_iteration, loss))
-            # self.loss_history.append(loss_decrypt)
             
             ############################
             time_end_training = time.time()
@@ -324,14 +323,7 @@ class SecureML:
             ## 判断是否停止
             self.is_converged = self.check_converge_by_loss(loss)
             if self.is_converged:
-                # self.weightA, self.weightB = np.hsplit(self.model_weights, [self.indice]) # 权重向量是一个列向量，需要横向划分
                 if self.ratio is not None: 
-                    # self.weightA = self.cipher.recursive_decrypt(wa1 + wa2)
-                    # self.weightB = self.cipher.recursive_decrypt(wb1 + wb2)
-
-                    # self.weightA = wa1 + wa2
-                    # self.weightB = wb1 + wb2
-
                     self.model_weights = self.weightA + self.weightB
                     print("self.model_weights: ", self.model_weights)
                 break
@@ -341,6 +333,8 @@ class SecureML:
 
     def reconstruct(self, Ei, Ei_):
         E = Ei + Ei_ # 两方都各自重建E
+        self.time_counting(Ei)
+        self.time_counting(Ei_)
         return E
 
     def generate_UVZV_Z_multTriplets_beaver_triplets(self, n, d, t, B):
@@ -483,7 +477,7 @@ class SecureML:
             z = x_test.dot(self.model_weights.T) # np.dot(features, weights.T)
         elif self.data_tag == None:
             # SecureML
-            z = np.dot(x_test, self.model_weights)
+            z = np.dot(x_test, self.model_weights.T)
 
         y = self._compute_sigmoid(z)
 
@@ -498,7 +492,7 @@ class SecureML:
         print("score: ", score)
         print("len(y): ", len(y))
         rate = float(score)/float(len(y))
-        print("Predict precision: ", rate)
+        print("\nPredict precision: ", rate)
 
         self.file.write("Predict precision: {}".format(rate))
         self.file.close()
@@ -697,7 +691,7 @@ if __name__ == "__main__":
                     # splice 集中 0.9062068965517242
     # 纵向划分分布式
     SecureMLModel = SecureML(weight_vector = weight_vector, batch_size = 256, 
-                    max_iter = 50, alpha = 0.001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
+                    max_iter = 10, alpha = 0.001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
                     # splice 分布式 0.9062068965517242
     # LogisticRegressionModel = LogisticRegression(weight_vector = weight_vector, batch_size = 20, 
     #                 max_iter = 600, alpha = 0.0001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
@@ -728,7 +722,8 @@ if __name__ == "__main__":
     # SecureMLModel.fit_model_secure_2process(X_train1, X_train2, Y_train, X_train1.shape[0], indice_littleside)
 
     time_end = time.time()
-    print('Total time cost: ', time_end-time_start,'s')
+    print("SecureMLModel.train_time_account: ", SecureMLModel.train_time_account)
+    print('Total time cost: ', time_end - time_start + SecureMLModel.train_time_account,'s')
 
     # plt.plot(LogisticRegressionModel.loss_history)
     # plt.show()

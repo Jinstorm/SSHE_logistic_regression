@@ -55,10 +55,27 @@ def test_Mul():
     res = np.dot(mat1, mat2[:,0])
     print(res)
 
+def size_of_variable():
+    import sys
+    a = 1
+    b = np.array([1])
+    print("a size: ", sys.getsizeof(a))
+    print("b size: ", sys.getsizeof(b))
+    print("b[0] size: ", sys.getsizeof(b[0]))
+
+def time_counting(tensor):
+    # 计算tensor在WAN下传输的时间
+    object_num = tensor.shape[0] * tensor.shape[1]
+    commTime = object_num * 4 / (1024*1024) / (40/8)
+    print(commTime)
+
 if __name__ == "__main__":
     # transpose_np()
     # matrix_shape()
     # array_length()
     # numpy_row_col()
-    test_Mul()
+    # test_Mul()
+    # size_of_variable()
+    time_counting(np.random.randint(0,10,size=(5000,4000)))
+    time_counting(np.random.randint(0,10,size=(5,4)))
     pass
