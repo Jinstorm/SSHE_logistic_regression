@@ -49,54 +49,18 @@ class SecureML:
         # 进程池
         # self.pool = Pool()
 
-    def _cal_z(self, weights, features, party = None, encrypt = None):
-        if encrypt is not None:
-            if party == "A":  
-                self.za1 = np.dot(features, weights.T)
-                # print("za1: ", self.za1)
-            elif party == "B": 
-                self.zb2 = np.dot(features, weights.T)
-                # print("zb2: ", self.zb2)
-            else: raise NotImplementedError
-
-        elif party == "A":
-            if self.data_tag == 'sparse': self.wx_self_A = features.dot(weights.T)
-            else: self.wx_self_A = np.dot(features, weights.T)
-        elif party == "B": 
-            if self.data_tag == 'sparse': self.wx_self_B = features.dot(weights.T)
-            else: self.wx_self_B = np.dot(features, weights.T)
-            
-        else: 
-            if self.data_tag == 'sparse':
-                self.wx_self = features.dot(weights.T)# np.dot(features, weights.T)
-            elif self.data_tag == None:
-                self.wx_self = np.dot(features, weights.T)
-
     def _compute_sigmoid(self, z):
         # return 1 / (1 + np.exp(-z))
         # print(type(z))
         # if self.data_tag == None: 
         return z * 0.25 + 0.5
         # elif self.data_tag == 'sparse': return z.todense() * 0.25 + 0.5
-
-    def distributed_compute_loss_cross_entropy(self, label, batch_num):
-        """
-            Use Taylor series expand log loss:
-            Loss = - y * log(h(x)) - (1-y) * log(1 - h(x)) where h(x) = 1/(1+exp(-wx))
-            Then loss' = - (1/N)*∑(log(1/2) - 1/2*wx + ywx -1/8(wx)^2)
-        """
-        self.encrypted_wx = self.wx_self_A + self.wx_self_B
-        half_wx = -0.5 * self.encrypted_wx
-        ywx = self.encrypted_wx * label
-
-        wx_square = (2*self.wx_self_A * self.wx_self_B + self.wx_self_A * self.wx_self_A + self.wx_self_B * self.wx_self_B) * -0.125 # wx_square = np.dot(self.wx_self.T, self.wx_self) * -0.125 # 这里后续要修改，两方平方，有交叉项
-        # wx_square2 = self.encrypted_wx * self.encrypted_wx * -0.125
-        # assert all(wx_square == wx_square2)  # 数组比较的返回值为: 类似[True False False]
-
-        loss = np.sum( (half_wx + ywx + wx_square) * (-1 / batch_num) - np.log(0.5) )
-        # loss = np.sum( (half_wx + ywx + wx_square) * (-1 / batch_num) )
-        return loss
-
+    
+    def _compute_sigmoid_dual_distributed(self, z):
+        # return 1 / (1 + np.exp(-z))
+        # print(type(z))
+        # if self.data_tag == None: 
+        return z * 0.25
 
     def check_converge_by_loss(self, loss):
         converge_flag = False
@@ -123,84 +87,6 @@ class SecureML:
         tmp = self.fixedpoint_encoder.decode(_pre)  # 对每一个元素decode再返回, shape不变
         share = share_target - tmp
         return tmp, share # 返回的第一个参数是留在本方的share, 第二个参数是需要分享的share
-        
-
-
-    def secret_share_vector(self, share_target, flag):
-        '''
-        Desc: 秘密分享(输入的share_target是个加密的)
-        '''
-        # 生成本地share向量
-        # print("share_target shape: ", share_target.shape)
-        
-        _pre = urand_tensor(q_field = self.fixedpoint_encoder.n, tensor = share_target)
-        tmp = self.fixedpoint_encoder.decode(_pre)  # 对每一个元素decode再返回, shape不变
-        # print("pre shape: ", _pre.shape)
-        share = share_target - tmp
-        if flag == "A":
-            self.comm_Queue_B.put(self.cipher.recursive_decrypt(share))
-            return tmp # 返回的第一个参数是留在本方的share, 第二个参数是需要分享的share
-        elif flag =="B":
-            self.comm_Queue_A.put(self.cipher.recursive_decrypt(share))
-            return tmp # 返回的第一个参数是留在本方的share, 第二个参数是需要分享的share
-        else:
-            return tmp, self.cipher.recursive_decrypt(share) # 返回的第一个参数是留在本方的share, 第二个参数是需要分享的share
-
-    def secure_Matrix_Multiplication(self, matrix, vector, stage = None, flag = None):
-        '''
-        输入:   数据矩阵和向量
-        返回值: share的两个分片
-        向量加密后做矩阵乘法, 然后 secret share 乘积结果的矩阵分成2个sharings
-        '''
-        # import time
- 
-        # time_start = time.time()
-    
-        if stage == "forward":
-            encrypt_vec = self.cipher.recursive_encrypt(vector)
-            # encrypt_vec = np.asarray(self.pool.map(self.cipher.recursive_encrypt, vector))
-            # self.pool.close()
-            # self.pool.join()
-            # print("forward vector shape: ", vector.shape)
-            assert(matrix.shape[1] == encrypt_vec.shape[1])
-            mul_result = np.dot(matrix, encrypt_vec.T)
-        elif stage == "backward":
-            encrypt_vec = self.cipher.recursive_encrypt(vector)
-            # encrypt_vec = np.asarray(self.pool.map(self.cipher.recursive_encrypt, vector))
-            # self.pool.close()
-            # print("backward vector shape: ", vector.shape)
-            assert(encrypt_vec.shape[0] == matrix.shape[0])
-            mul_result = np.dot(encrypt_vec.T, matrix)
-
-        else: raise NotImplementedError
-        return self.secret_share_vector(mul_result, flag)
-
-    def secure_distributed_cal_z(self, X, w1, w2, party = None):
-        """
-        Do the X·w and split into two sharings.
-
-        Parameters
-        ----------
-        X: ndarray - numpy
-           data to use for multiplication
-        w1: ndarray ``1 * m1``
-           piece 1 of the model weight
-        w2: ndarray ``1 * m2``
-           piece 2 of the model weight
-
-        Returns
-        -------
-        Two sharings of the result (X·w)
-        """
-        if party == "A":
-            self._cal_z(X, w1, party = party, encrypt = "paillier")
-            assert(X.shape[1] == w2.shape[1])
-            self.za2_1, self.za2_2 = self.secure_Matrix_Multiplication(X, w2, stage = "forward")
-
-        elif party == "B":
-            self._cal_z(X, w2, party = party, encrypt = "paillier")
-            self.zb1_1, self.zb1_2 = self.secure_Matrix_Multiplication(X, w1, stage = "forward")
-        else: raise NotImplementedError
 
 
     def secure_distributed_compute_loss_cross_entropy(self, label, Y_predictA, Y_predictB, batch_num):
@@ -217,13 +103,13 @@ class SecureML:
         """
         # self.encrypted_wx = self.wx_self_A + self.wx_self_B
         wx = Y_predictA + Y_predictB
-        print("wx: ", wx)
-        print("wx shape: ", wx.shape)
-        print("label: ", label)
-        print("label shape: ", label.shape)
+        # print("wx: ", wx)
+        # print("wx shape: ", wx.shape)
+        # print("label: ", label)
+        # print("label shape: ", label.shape)
 
-        import sys
-        sys.exit()
+        # import sys
+        # sys.exit()
 
         half_wx = -0.5 * wx
         assert(wx.shape[0] == label.shape[0])
@@ -301,7 +187,7 @@ class SecureML:
         import time
         filename = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime(time.time()))
         name = filename + ".txt"
-        file = open(name, mode='w+') #  写入记录
+        self.file = open(name, mode='w+') #  写入记录
         # time_start_training = time.time()
         ############################
         
@@ -339,6 +225,9 @@ class SecureML:
                 Y_predictB = np.dot(batch_dataB, batch_F) + np.dot(batch_E, self.weightB) + batch_Z1[:,j].reshape(-1, 1) + -1 * np.dot(batch_E, batch_F)
                 # print("shape: ", np.dot(batch_dataA, batch_F).shape, np.dot(batch_E, self.weightA).shape, batch_Z0[:,j].reshape(-1, 1).shape)
                 # print("shape: ", np.dot(batch_dataB, batch_F).shape, np.dot(batch_E, self.weightB).shape, batch_Z1[:,j].reshape(-1, 1).shape, np.dot(batch_E, batch_F).shape)
+                Y_predictA = self._compute_sigmoid(Y_predictA)
+                Y_predictB = self._compute_sigmoid_dual_distributed(Y_predictB)
+
 
                 # compute the difference
                 # print("Y_predictA shape: ", Y_predictA.shape)
@@ -357,28 +246,48 @@ class SecureML:
                 if len(batch_D0) != self.batch_size:
                     # 最后一个不足一个batchsize的数据片
                     end = len(batch_D0)
+
+                    batch_Z_ = np.dot((batch_U0+batch_U1).T, self.V_[0:end,j].reshape(-1, 1))
+                    batch_Z0_, batch_Z1_ = self.secret_share_vector_plaintext(batch_Z_)
+
                     batch_Fp0 = batch_D0 - self.V0_[0:end,j].reshape(-1, 1)
                     batch_Fp1 = batch_D1 - self.V1_[0:end,j].reshape(-1, 1)
                     batch_Fp = self.reconstruct(batch_Fp0, batch_Fp1)
 
-                    delta0 = np.dot(batch_dataA.T, batch_Fp) + np.dot(batch_E.T, batch_D0) + np.dot(batch_U0.T, self.V0_[0:end,j]).reshape(-1, 1)
-                    delta1 = np.dot(batch_dataB.T, batch_Fp) + np.dot(batch_E.T, batch_D1) + np.dot(batch_U1.T, self.V1_[0:end,j]).reshape(-1, 1) + -1 * np.dot(batch_E.T, batch_Fp)
+                    # delta0 = np.dot(batch_dataA.T, batch_Fp) + np.dot(batch_E.T, batch_D0) + np.dot(batch_U0.T, self.V0_[0:end,j]).reshape(-1, 1)
+                    # delta1 = np.dot(batch_dataB.T, batch_Fp) + np.dot(batch_E.T, batch_D1) + np.dot(batch_U1.T, self.V1_[0:end,j]).reshape(-1, 1) + -1 * np.dot(batch_E.T, batch_Fp)
+                    delta0 = np.dot(batch_dataA.T, batch_Fp) + np.dot(batch_E.T, batch_D0) + batch_Z0_
+                    delta1 = np.dot(batch_dataB.T, batch_Fp) + np.dot(batch_E.T, batch_D1) + batch_Z1_ + -1 * np.dot(batch_E.T, batch_Fp)
+                    
                 else:
+                    batch_Z_ = np.dot((batch_U0+batch_U1).T, self.V_[:,j].reshape(-1, 1))
+                    batch_Z0_, batch_Z1_ = self.secret_share_vector_plaintext(batch_Z_)
+
                     batch_Fp0 = batch_D0 - self.V0_[:,j].reshape(-1, 1)
                     batch_Fp1 = batch_D1 - self.V1_[:,j].reshape(-1, 1)
                     batch_Fp = self.reconstruct(batch_Fp0, batch_Fp1)
                     # print("batch_Fp shape: ", batch_Fp.shape)
 
                     # print("shape: ", np.dot(batch_dataA.T, batch_Fp).shape, np.dot(batch_E.T, batch_D0).shape, np.dot(batch_U0.T, self.V0_[:,j]).reshape(-1, 1).shape)
-                    delta0 = np.dot(batch_dataA.T, batch_Fp) + np.dot(batch_E.T, batch_D0) + np.dot(batch_U0.T, self.V0_[:,j]).reshape(-1, 1)
-                    delta1 = np.dot(batch_dataB.T, batch_Fp) + np.dot(batch_E.T, batch_D1) + np.dot(batch_U1.T, self.V1_[:,j]).reshape(-1, 1) + -1 * np.dot(batch_E.T, batch_Fp)
+                    # delta0 = np.dot(batch_dataA.T, batch_Fp) + np.dot(batch_E.T, batch_D0) + np.dot(batch_U0.T, self.V0_[:,j].reshape(-1, 1))
+                    # print("value: ", np.dot(batch_dataA.T, batch_Fp),np.dot(batch_E.T, batch_D0),np.dot(batch_U0.T, self.V0_[:,j].reshape(-1, 1)))
+                    # delta1 = np.dot(batch_dataB.T, batch_Fp) + np.dot(batch_E.T, batch_D1) + np.dot(batch_U1.T, self.V1_[:,j].reshape(-1, 1)) + -1 * np.dot(batch_E.T, batch_Fp)
+                    
+                    delta0 = np.dot(batch_dataA.T, batch_Fp) + np.dot(batch_E.T, batch_D0) + batch_Z0_
+                    delta1 = np.dot(batch_dataB.T, batch_Fp) + np.dot(batch_E.T, batch_D1) + batch_Z1_ + -1 * np.dot(batch_E.T, batch_Fp)
                 
                 # truncates
                 # ......
 
                 # update
+                # print("value: ", self.weightA, (self.alpha / batch_num * (delta0)))
+                # print("shape: ", self.weightA.shape, (self.alpha / batch_num * (delta0)).shape)
                 self.weightA = self.weightA - self.alpha / batch_num * (delta0)
                 self.weightB = self.weightB - self.alpha / batch_num * (delta1)
+                
+                # print("weight: ", self.weightA + self.weightB)
+                # import sys
+                # sys.exit()
 
                 j = j + 1
                 # print()
@@ -401,11 +310,11 @@ class SecureML:
             ############################
             time_end_training = time.time()
             # print('time cost: ',time_end_training-time_start_training,'s')
-            file.write("Time: " + str(time_end_training-time_start_training) + "s\n")
+            self.file.write("Time: " + str(time_end_training-time_start_training) + "s\n")
 
             # file.write("loss shape: " + str(loss.shape) + "\n")
-            file.write("\rIteration {}, batch sum loss: {}".format(self.n_iteration, loss))
-            # file.close()
+            self.file.write("\rIteration {}, batch sum loss: {}".format(self.n_iteration, loss))
+            # self.file.close()
             ############################
 
             # import sys
@@ -423,7 +332,7 @@ class SecureML:
                     # self.weightA = wa1 + wa2
                     # self.weightB = wb1 + wb2
 
-                    self.model_weights = np.hstack((self.weightA, self.weightB))
+                    self.model_weights = self.weightA + self.weightB
                     print("self.model_weights: ", self.model_weights)
                 break
 
@@ -452,13 +361,17 @@ class SecureML:
         """
         U = np.random.rand(n, d)
         V = np.random.rand(d, t)
-        V_ = np.random.rand(B, t)
+        self.V_ = np.random.rand(B, t)
         self.U0, self.U1 = self.secret_share_vector_plaintext(U)
         self.V0, self.V1 = self.secret_share_vector_plaintext(V)
-        self.V0_, self.V1_ = self.secret_share_vector_plaintext(V_)
+        self.V0_, self.V1_ = self.secret_share_vector_plaintext(self.V_)
 
-        self.Z0 = np.dot(self.U0, self.V0)
-        self.Z1 = np.dot(self.U1, self.V1)
+
+        self.Z = np.dot(U, V) # 按照下面两行写, 乘法缺项
+        # self.Z0 = np.dot(self.U0, self.V0)
+        # self.Z1 = np.dot(self.U1, self.V1)
+        self.Z0, self.Z1 = self.secret_share_vector_plaintext(self.Z)
+
         # 这里Z_必须在训练中生成, 因为Z_对应的是每个的batch, 而不是整个数据集, Z_的维度: (|B|, t)
         # 注意遇到某个列不足|B|的长度时, Z_的生成需要注意维度: 此时Z
         # self.Z0_ = np.dot(self.U0.transpose(), self.V0_)
@@ -550,6 +463,7 @@ class SecureML:
             
             # E, Z0, Z1, Z'0, Z'1, batch_num
             E_batch_list.append(E[len(self.Y_A) // batch_size * batch_size:])
+
             Z0_batch_list.append(self.Z0[len(self.Y_A) // batch_size * batch_size:])
             Z1_batch_list.append(self.Z1[len(self.Y_A) // batch_size * batch_size:])
             U0_batch_list.append(self.U0[len(self.Y_A) // batch_size * batch_size:])
@@ -558,37 +472,7 @@ class SecureML:
 
         print("Batch data generation: \033[32mOK\033[0m")
         return X_batch_listA, X_batch_listB, y_batch_listA, y_batch_listB, E_batch_list, Z0_batch_list, Z1_batch_list, U0_batch_list, U1_batch_list # listA——持有label一侧，较多样本; listB——无label一侧
-
-
-
-    def _generate_batch_data_for_distributed_parts(self, X1, X2, y, batch_size):
-        '''
-        输入的数据就是两部分的
-        目的是将这两部分横向ID对齐的数据 划分成一个个batch (可用于实验中的分别采样输入数据)
-        ratio: 决定划分到含有标签的一方的数据的比例,对划分的数量下取整,例如 0.8 * 63 -> 50
-        '''
-        X_batch_listA = []
-        X_batch_listB = []
-        y_batch_list = []
-        # self.indice = math.floor(ratio * X.shape[1]) # 纵向划分数据集，位于label一侧的特征数量
-        
-        for i in range(len(y) // batch_size):
-            # X_tmpA = X1[i * batch_size : i * batch_size + batch_size, :]
-            X_batch_listA.append(X1[i * batch_size : i * batch_size + batch_size, :])
-            X_batch_listB.append(X2[i * batch_size : i * batch_size + batch_size, :])
-            y_batch_list.append(y[i * batch_size : i * batch_size + batch_size])
-            self.batch_num.append(batch_size)
-
-        if (len(y) % batch_size > 0):
-            # X_tmpA, X_tmpB = np.hsplit(X[len(y) // batch_size * batch_size:, :], [self.indice])
-            # X_batch_list.append(X[len(y) // batch_size * batch_size:, :])
-            X_batch_listA.append(X1[len(y) // batch_size * batch_size:, :])
-            X_batch_listB.append(X2[len(y) // batch_size * batch_size:, :])
-            y_batch_list.append(y[len(y) // batch_size * batch_size:])
-            self.batch_num.append(len(y) % batch_size)
-
-        return X_batch_listA, X_batch_listB, y_batch_list # listA——持有label一侧，较多样本; listB——无label一侧
-
+    
     
     def predict_distributed(self, x_test1, x_test2, y_test):
         # z = np.dot(x_test, self.model_weights.T)
@@ -598,7 +482,8 @@ class SecureML:
         if self.data_tag == 'sparse':
             z = x_test.dot(self.model_weights.T) # np.dot(features, weights.T)
         elif self.data_tag == None:
-            z = np.dot(x_test, self.model_weights.T)
+            # SecureML
+            z = np.dot(x_test, self.model_weights)
 
         y = self._compute_sigmoid(z)
 
@@ -614,6 +499,9 @@ class SecureML:
         print("len(y): ", len(y))
         rate = float(score)/float(len(y))
         print("Predict precision: ", rate)
+
+        self.file.write("Predict precision: {}".format(rate))
+        self.file.close()
 
 def read_distributed_data():
     from sklearn.datasets import load_svmlight_file
@@ -809,7 +697,7 @@ if __name__ == "__main__":
                     # splice 集中 0.9062068965517242
     # 纵向划分分布式
     SecureMLModel = SecureML(weight_vector = weight_vector, batch_size = 256, 
-                    max_iter = 10, alpha = 0.001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
+                    max_iter = 50, alpha = 0.001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
                     # splice 分布式 0.9062068965517242
     # LogisticRegressionModel = LogisticRegression(weight_vector = weight_vector, batch_size = 20, 
     #                 max_iter = 600, alpha = 0.0001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)

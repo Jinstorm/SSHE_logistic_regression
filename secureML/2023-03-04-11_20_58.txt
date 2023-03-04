@@ -1,0 +1,23 @@
+Time: 1.3951632976531982s
+
+Iteration 0, batch sum loss: 0.6932247805756518Time: 1.5443291664123535s
+
+Iteration 1, batch sum loss: 0.6932318024887537Time: 1.5467357635498047s
+
+Iteration 2, batch sum loss: 0.6932243901482826Time: 1.688420057296753s
+
+Iteration 3, batch sum loss: 0.6932187055941319Time: 1.5537605285644531s
+
+Iteration 4, batch sum loss: 0.6932142109603638Time: 1.4143290519714355s
+
+Iteration 5, batch sum loss: 0.6932105626097228Time: 1.4870023727416992s
+
+Iteration 6, batch sum loss: 0.6932075216892187Time: 1.5747995376586914s
+
+Iteration 7, batch sum loss: 0.6932049195351929Time: 1.5045886039733887s
+
+Iteration 8, batch sum loss: 0.6932026519534596Time: 1.4510831832885742s
+
+Iteration 9, batch sum loss: 0.6932006373902218
+
+SecureML训练无bug版本, 第一次测试 (模型重建和收敛还有一些bugsa)
