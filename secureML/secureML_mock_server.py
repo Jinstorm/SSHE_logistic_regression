@@ -9,14 +9,14 @@ import sys
 import os
 dir_path = os.path.dirname(os.path.realpath(__file__))
 abs_pardir = os.path.join(dir_path, os.pardir)
-# abs_parpardir = os.path.join(abs_pardir, os.pardir)
-sys.path.append(abs_pardir)
+abs_parpardir = os.path.join(abs_pardir, os.pardir)
+sys.path.append(abs_parpardir)
 # print(abs_parpardir)
 from paillierm.encrypt import PaillierEncrypt
 from paillierm.fixedpoint import FixedPointEndec
 from paillierm.utils import urand_tensor
 
-PATH_DATA = '../data/' # '../../data/'
+PATH_DATA = '../../data/' # '../../data/'
 # flag = '' # sketch or raw
 
 class SecureML:
@@ -197,8 +197,8 @@ class SecureML:
         ############################
         import time
         filename = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime(time.time()))
-        name = "SecureML_" + filename + ".txt"
-        self.file = open(name, mode='w+') #  写入记录
+        self.name = "SecureML_" + filename + ".txt"
+        file = open(self.name, mode='w+') #  写入记录
         # time_start_training = time.time()
         ############################
         
@@ -309,10 +309,10 @@ class SecureML:
             ############################
             time_end_training = time.time()
             # print('time cost: ',time_end_training-time_start_training,'s')
-            self.file.write("Time: " + str(time_end_training-time_start_training) + "s\n")
+            file.write("Time: " + str(time_end_training-time_start_training) + "s\n")
 
             # file.write("loss shape: " + str(loss.shape) + "\n")
-            self.file.write("\rIteration {}, batch sum loss: {}".format(self.n_iteration, loss))
+            file.write("\rIteration {}, batch sum loss: {}".format(self.n_iteration, loss))
             # self.file.close()
             ############################
 
@@ -493,9 +493,10 @@ class SecureML:
         print("len(y): ", len(y))
         rate = float(score)/float(len(y))
         print("\nPredict precision: ", rate)
-
-        self.file.write("Predict precision: {}".format(rate))
-        self.file.close()
+        
+        file = open(self.name, mode='a+') #  写入记录
+        file.write("\nPredict precision: {}".format(rate))
+        file.close()
 
 def read_distributed_data():
     from sklearn.datasets import load_svmlight_file
@@ -768,7 +769,7 @@ if __name__ == "__main__":
                     # splice 集中 0.9062068965517242
     # 纵向划分分布式
     SecureMLModel = SecureML(weight_vector = weight_vector, batch_size = 256, 
-                    max_iter = 10, alpha = 0.0001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
+                    max_iter = 200, alpha = 0.0001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
                     # splice 分布式 0.9062068965517242
     # LogisticRegressionModel = LogisticRegression(weight_vector = weight_vector, batch_size = 20, 
     #                 max_iter = 600, alpha = 0.0001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)

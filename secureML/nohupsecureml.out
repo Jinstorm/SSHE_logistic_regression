@@ -1,0 +1,33 @@
+nohup: 忽略输入
+processing dataset...
+loading dataset...
+X_train1 type:  <class 'numpy.ndarray'>
+X_train1 shape:  (4560, 614)
+X_train2 type:  <class 'numpy.ndarray'>
+X_train2 shape:  (4560, 1434)
+X_test1 type:  <class 'numpy.ndarray'>
+X_test1 shape:  (4560, 614)
+X_test2 type:  <class 'numpy.ndarray'>
+X_test2 shape:  (4560, 1434)
+ratio:  0.7
+Sharing raw data: [32mOK[0m
+t:  18
+Batch data generation: [32mOK[0m
+[CHECK] weight:  [[0. 0. 0. ... 0. 0. 0.]] [[0. 0. 0. ... 0. 0. 0.]]
+[Hint] Training model...
+Iteration 0, batch sum loss: 0.694019505031044
+Iteration 1, batch sum loss: 0.693795107926619
+Iteration 2, batch sum loss: 0.6936390167674018
+Iteration 3, batch sum loss: 0.6935291906049702
+Iteration 4, batch sum loss: 0.6934512156880875
+Iteration 5, batch sum loss: 0.693395434749297
+Iteration 6, batch sum loss: 0.6933552862270517
+Iteration 7, batch sum loss: 0.6933262163911416
+Iteration 8, batch sum loss: 0.693305072659024
+Iteration 9, batch sum loss: 0.6932895969828013
+SecureMLModel.train_time_account:  29.511071777343197
+Total time cost:  141.10243902206366 s
+score:  241
+len(y):  4560
+
+Predict precision:  0.052850877192982454
