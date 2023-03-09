@@ -1,0 +1,74 @@
+2023.3.7
+raw
+bandwidth = 10
+mem_occupancy = 4
+batch_size = 256, 
+max_iter = 200, alpha = 0.0001, eps = 1e-6, ratio = 0.7,
+Dailysport
+
+nohup: 忽略输入
+X_train type:  <class 'numpy.ndarray'>
+X_train shape:  (4560, 5625)
+X_test type:  <class 'numpy.ndarray'>
+X_test shape:  (4560, 5625)
+processing dataset...
+X_train1 and 2 shape:  (4560, 1687) (4560, 3938)
+ratio:  0.7
+Sharing raw data: [32mOK[0m
+t:  18
+Batch data generation: [32mOK[0m
+[CHECK] weight:  [[0. 0. 0. ... 0. 0. 0.]] [[0. 0. 0. ... 0. 0. 0.]]
+[Hint] Training model...
+
+Iteration 0, batch sum loss: 0.6933220168534212
+ Time: 9.827762842178345s
+
+
+Iteration 1, batch sum loss: 0.6932405740605485
+ Time: 9.95837116241455s
+
+
+Iteration 2, batch sum loss: 0.6932309743443011
+ Time: 10.056656837463379s
+
+
+Iteration 3, batch sum loss: 0.6932263661740438
+ Time: 9.921725988388062s
+
+
+Iteration 4, batch sum loss: 0.693223520549105
+ Time: 9.763097763061523s
+
+
+Iteration 5, batch sum loss: 0.693221451338322
+ Time: 9.769460201263428s
+
+
+Iteration 6, batch sum loss: 0.693219811473204
+ Time: 9.856941938400269s
+
+
+Iteration 7, batch sum loss: 0.6932184458390258
+ Time: 9.88838791847229s
+
+
+Iteration 8, batch sum loss: 0.693217289056203
+ Time: 9.995627164840698s
+
+
+Iteration 9, batch sum loss: 0.6932162968191911
+ Time: 9.991261005401611s
+
+self.model_weights:  [[2.838798081938876e-06]
+ [0.000227807174269401]
+ [9.424533072888153e-05]
+ ...
+ [7.016462222964037e-05]
+ [3.922960343061277e-05]
+ [3.132024016849755e-05]]
+SecureMLModel.train_time_account:  323.245843505856
+Total time cost:  616.6234601497616 s
+score:  4319
+len(y):  4560
+
+Predict precision:  0.9471491228070176

@@ -1,0 +1,12 @@
+ Time: 9.827762842178345s
+Iteration 0, batch sum loss: 0.6933220168534212 Time: 9.95837116241455s
+Iteration 1, batch sum loss: 0.6932405740605485 Time: 10.056656837463379s
+Iteration 2, batch sum loss: 0.6932309743443011 Time: 9.921725988388062s
+Iteration 3, batch sum loss: 0.6932263661740438 Time: 9.763097763061523s
+Iteration 4, batch sum loss: 0.693223520549105 Time: 9.769460201263428s
+Iteration 5, batch sum loss: 0.693221451338322 Time: 9.856941938400269s
+Iteration 6, batch sum loss: 0.693219811473204 Time: 9.88838791847229s
+Iteration 7, batch sum loss: 0.6932184458390258 Time: 9.995627164840698s
+Iteration 8, batch sum loss: 0.693217289056203 Time: 9.991261005401611s
+Iteration 9, batch sum loss: 0.6932162968191911
+Predict precision: 0.9471491228070176

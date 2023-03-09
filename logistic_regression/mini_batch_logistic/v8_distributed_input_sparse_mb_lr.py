@@ -598,7 +598,9 @@ class LogisticRegression:
                 score += 1
             else:
                 pass
-        rate = score/len(y)
+        print("score: ", score)
+        print("len(y): ", len(y))
+        rate = float(score)/float(len(y))
         print("Predict precision: ", rate)
 
 
@@ -803,7 +805,91 @@ def read_distributed_encoded_data():
     # print(type(X_train), type(X_test))
     
     return X_train1, X_train2, Y_train, X_test1, X_test2, Y_test # matrix转array
+
+
+
+def read_distributed_squeeze_data():
+    ## countsketch
+    from sklearn.datasets import load_svmlight_file
+    import os
+
+    dataset_file_name = 'kits'  
+    train_file_name = 'kits_train.txt' 
+    test_file_name = 'kits_test.txt'
+    # dataset_file_name = 'DailySports'  
+    # train_file_name = 'DailySports_train.txt' 
+    # test_file_name = 'DailySports_test.txt'
+    main_path = PATH_DATA
+    # main_path = '/Users/zbz/code/vscodemac_python/hetero_sshe_logistic_regression/data/'
+
+    # dataset_file_name = 'a6a'
+    # train_file_name = 'a6a.txt'
+    # test_file_name = 'a6a.t'
+    # main_path = '/Users/zbz/data/'
+    train_data = load_svmlight_file(os.path.join(main_path, dataset_file_name, train_file_name))
+    test_data = load_svmlight_file(os.path.join(main_path, dataset_file_name, test_file_name))
+    # X_train = train_data[0]
+    Y_train = train_data[1].astype(int)
+    # X_test = test_data[0]
+    Y_test = test_data[1].astype(int)
+    # print(type(X_train)) # 1000 * 60
+    # print(Y_train[0]) # 1000 * 1
+
+    ##### 判断标签是(1;-1)还是 (1;0), 将-1的标签全部转化成0标签
+    # if -1 in Y_train:  
+    #     Y_train[Y_train == -1] = 0
+    #     Y_test[Y_test == -1] = 0
     
+    # 针对SprotsNews, 多分类修改成二分类
+    print("processing dataset...")
+    Y_train[Y_train != 1] = 0
+    Y_test[Y_test != 1] = 0
+    # print(Y_train)
+    # print(Y_test)
+
+    # #a6a a7a
+    # X_train = X_train.todense().A
+    # X_train = np.hstack( (X_train, np.zeros(X_train.shape[0]).reshape(-1, 1)) )
+    # return ss.fit_transform(X_train), Y_train, ss.fit_transform(X_test.todense().A), Y_test # matrix转array
+
+    # #splice
+    # return ss.fit_transform(X_train.todense().A), Y_train, ss.fit_transform(X_test.todense().A), Y_test # matrix转array
+    # # return X_train.todense().A, Y_train, X_test.todense().A, Y_test # matrix转array
+    print("loading dataset...")
+
+    dataset_file_name = 'kits/portion37_pminhash/sketch1024/countsketch/'
+    train_file_name1 = 'X1_squeeze_train37_Countsketch.txt'
+    train_file_name2 = 'X2_squeeze_train37_Countsketch.txt'
+    test_file_name1 = 'X1_squeeze_test37_Countsketch.txt'
+    test_file_name2 = 'X2_squeeze_test37_Countsketch.txt'
+    # main_path = '/Users/zbz/code/vscodemac_python/hetero_sshe_logistic_regression/data/'
+    main_path = PATH_DATA
+    X_train1 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name1), delimiter=',') #, dtype = float)
+    X_train2 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name2), delimiter=',') #, dtype = float)
+    X_test1 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name1), delimiter=',') #, dtype = float)
+    X_test2 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name2), delimiter=',') #, dtype = float)
+    # X = normalize(X,'l2')
+    # X_train = ss.fit_transform(X_train)
+    # print(X_train1.shape)         #查看特征形状
+    # print(type(X_train1), type(X_test1))
+    # print(X_test1.shape)         #查看测试特征形状
+    print("X_train1 type: ", type(X_train1)) # 1000 * 60
+    print("X_train1 shape: ", X_train1.shape)
+    print("X_train2 type: ", type(X_train2)) # 1000 * 60
+    print("X_train2 shape: ", X_train2.shape)
+    print("X_test1 type: ", type(X_test1)) # 1000 * 60
+    print("X_test1 shape: ", X_test1.shape)
+    print("X_test2 type: ", type(X_test2)) # 1000 * 60
+    print("X_test2 shape: ", X_test2.shape)
+
+    # print("Constructing sparse matrix...") # 使用COO格式高效创建稀疏矩阵, 以线性时间复杂度转化为CSR格式用于高效的矩阵乘法或转置运算.
+    # X_train = lil_matrix(X_train)
+    # # X_train.tocsr()
+    # X_test = lil_matrix(X_test)
+    # # X_test.tocsr()
+    # print(type(X_train), type(X_test))
+    
+    return X_train1, X_train2, Y_train, X_test1, X_test2, Y_test # matrix转array
 
 if __name__ == "__main__":
     ########## 读取数据 ##########
@@ -815,8 +901,9 @@ if __name__ == "__main__":
     # print(X_data.shape, X_data.shape[0], X_data.shape[1], y_data.shape, X_test.shape, y_test.shape)
 
     # 纵向划分的数据集
-    X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_encoded_data()
-    print(X_train1.shape, X_train2.shape, X_train1.shape[1], X_train2.shape[1], Y_train.shape, X_test1.shape, Y_test.shape)
+    # X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_encoded_data()
+    X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_squeeze_data()
+    # print(X_train1.shape, X_train2.shape, X_train1.shape[1], X_train2.shape[1], Y_train.shape, X_test1.shape, Y_test.shape)
 
     ########## 权重初始化 ##########
     np.random.seed(100)
@@ -848,8 +935,8 @@ if __name__ == "__main__":
                     # splice: 0.8482758620689655
                     # splice 集中 0.9062068965517242
     # 纵向划分分布式(这里的ratio控制的是weight的划分比例, 需要根据输入的数据的划分比例手动确定)——ratio没有用, 容易和数据集的两部分数量不对应, 后面还要修改
-    LogisticRegressionModel = LogisticRegression(weight_vector = weight_vector, batch_size = 50, 
-                    max_iter = 2000, alpha = 0.0001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = 'sparse')
+    LogisticRegressionModel = LogisticRegression(weight_vector = weight_vector, batch_size = 20, 
+                    max_iter = 500, alpha = 0.001, eps = 1e-5, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = 'sparse')
                     # splice 分布式 0.9062068965517242
 
     # 两部分数据集
@@ -874,8 +961,8 @@ if __name__ == "__main__":
     time_end = time.time()
     print('time cost: ',time_end-time_start,'s')
 
-    plt.plot(LogisticRegressionModel.loss_history)
-    plt.show()
+    # plt.plot(LogisticRegressionModel.loss_history)
+    # plt.show()
 
     ########## 测试 ##########
     # 理想集中和伪分布式

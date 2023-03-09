@@ -1,0 +1,132 @@
+nohup: 忽略输入
+processing dataset...
+loading dataset...
+X_train1 type:  <class 'numpy.ndarray'>
+X_train1 shape:  (4560, 307)
+X_train2 type:  <class 'numpy.ndarray'>
+X_train2 shape:  (4560, 717)
+X_test1 type:  <class 'numpy.ndarray'>
+X_test1 shape:  (4560, 307)
+X_test2 type:  <class 'numpy.ndarray'>
+X_test2 shape:  (4560, 717)
+ratio:  0.7
+Sharing raw data: [32mOK[0m
+t:  18
+Batch data generation: [32mOK[0m
+[CHECK] weight:  [[0. 0. 0. ... 0. 0. 0.]] [[0. 0. 0. ... 0. 0. 0.]]
+[Hint] Training model...
+Iteration 0, batch sum loss: 0.694081513763235
+ Time: 1.8465263843536377s
+
+Iteration 1, batch sum loss: 0.6939470037708173
+ Time: 1.8613009452819824s
+
+Iteration 2, batch sum loss: 0.6938355787042033
+ Time: 1.8098652362823486s
+
+Iteration 3, batch sum loss: 0.69374296102993
+ Time: 1.8100745677947998s
+
+Iteration 4, batch sum loss: 0.6936657279752507
+ Time: 1.836043357849121s
+
+Iteration 5, batch sum loss: 0.6936011434716597
+ Time: 1.7996695041656494s
+
+Iteration 6, batch sum loss: 0.693547002909314
+ Time: 1.7938990592956543s
+
+Iteration 7, batch sum loss: 0.6935015150851296
+ Time: 1.829871416091919s
+
+Iteration 8, batch sum loss: 0.6934632194880155
+ Time: 1.82657790184021s
+
+Iteration 9, batch sum loss: 0.6934309143775867
+ Time: 1.7929527759552002s
+
+Iteration 10, batch sum loss: 0.6934036251230603
+ Time: 1.8196663856506348s
+
+Iteration 11, batch sum loss: 0.6933805356135736
+ Time: 1.8082523345947266s
+
+Iteration 12, batch sum loss: 0.6933609706929716
+ Time: 1.8005237579345703s
+
+Iteration 13, batch sum loss: 0.6933443678102973
+ Time: 1.808497428894043s
+
+Iteration 14, batch sum loss: 0.6933302636519514
+ Time: 1.8251745700836182s
+
+Iteration 15, batch sum loss: 0.6933182640655781
+ Time: 1.7969682216644287s
+
+Iteration 16, batch sum loss: 0.693308043615987
+ Time: 1.801227331161499s
+
+Iteration 17, batch sum loss: 0.6932993250538011
+ Time: 1.8289642333984375s
+
+Iteration 18, batch sum loss: 0.6932918800998034
+ Time: 1.8026835918426514s
+
+Iteration 19, batch sum loss: 0.6932855091593736
+ Time: 1.7959222793579102s
+
+Iteration 20, batch sum loss: 0.693280050845409
+ Time: 1.822859525680542s
+
+Iteration 21, batch sum loss: 0.6932753667376153
+ Time: 1.7981581687927246s
+
+Iteration 22, batch sum loss: 0.6932713366020222
+ Time: 1.7931053638458252s
+
+Iteration 23, batch sum loss: 0.6932678654966652
+ Time: 1.7939879894256592s
+
+Iteration 24, batch sum loss: 0.6932648655395849
+ Time: 1.841137170791626s
+
+Iteration 25, batch sum loss: 0.6932622669555121
+ Time: 1.8048152923583984s
+
+Iteration 26, batch sum loss: 0.6932600095175503
+ Time: 1.7973403930664062s
+
+Iteration 27, batch sum loss: 0.6932580412530452
+ Time: 1.7896897792816162s
+
+Iteration 28, batch sum loss: 0.6932563203351888
+ Time: 1.834392786026001s
+
+Iteration 29, batch sum loss: 0.6932548081645222
+ Time: 1.8076186180114746s
+
+Iteration 30, batch sum loss: 0.69325347519722
+ Time: 1.801452875137329s
+
+Iteration 31, batch sum loss: 0.6932522947312831
+ Time: 1.7892167568206787s
+
+Iteration 32, batch sum loss: 0.6932512431376175
+ Time: 1.836169719696045s
+
+Iteration 33, batch sum loss: 0.6932503020889734
+ Time: 1.8144068717956543s
+
+self.model_weights:  [[-0.0024469044474244583]
+ [-0.002757139843652112]
+ [-0.0012145714863436297]
+ ...
+ [-0.0010606102623569313]
+ [-0.004526317610725528]
+ [-0.0006777267044526525]]
+SecureMLModel.train_time_account:  64.01850585937315
+Total time cost:  162.61870627403073 s
+score:  4319
+len(y):  4560
+
+Predict precision:  0.9471491228070176

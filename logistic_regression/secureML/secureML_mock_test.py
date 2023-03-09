@@ -18,6 +18,7 @@ from paillierm.utils import urand_tensor
 
 PATH_DATA = '../../data/' # '../../data/'
 # flag = '' # sketch or raw
+flag = "data source"
 
 class SecureML:
     """
@@ -197,8 +198,8 @@ class SecureML:
         ############################
         import time
         filename = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime(time.time()))
-        self.name = "SecureML_" + filename + ".txt"
-        file = open(self.name, mode='w+') #  写入记录
+        name = "SecureML_" + filename + ".txt"
+        self.file = open(name, mode='w+') #  写入记录
         # time_start_training = time.time()
         ############################
         
@@ -309,10 +310,10 @@ class SecureML:
             ############################
             time_end_training = time.time()
             # print('time cost: ',time_end_training-time_start_training,'s')
-            file.write("Time: " + str(time_end_training-time_start_training) + "s\n")
+            self.file.write("Time: " + str(time_end_training-time_start_training) + "s\n")
 
             # file.write("loss shape: " + str(loss.shape) + "\n")
-            file.write("\rIteration {}, batch sum loss: {}".format(self.n_iteration, loss))
+            self.file.write("\rIteration {}, batch sum loss: {}".format(self.n_iteration, loss))
             # self.file.close()
             ############################
 
@@ -477,6 +478,7 @@ class SecureML:
             z = x_test.dot(self.model_weights.T) # np.dot(features, weights.T)
         elif self.data_tag == None:
             # SecureML
+            self.model_weights = self.model_weights.reshape(-1, 1)
             z = np.dot(x_test, self.model_weights)
 
         y = self._compute_sigmoid(z)
@@ -493,10 +495,9 @@ class SecureML:
         print("len(y): ", len(y))
         rate = float(score)/float(len(y))
         print("\nPredict precision: ", rate)
-        
-        file = open(self.name, mode='a+') #  写入记录
-        file.write("\nPredict precision: {}".format(rate))
-        file.close()
+
+        self.file.write("Predict precision: {}".format(rate))
+        self.file.close()
 
 def read_distributed_data():
     from sklearn.datasets import load_svmlight_file
@@ -569,9 +570,12 @@ def read_distributed_squeeze_data():
     from sklearn.datasets import load_svmlight_file
     import os
 
-    dataset_file_name = 'DailySports'  
-    train_file_name = 'DailySports_train.txt' 
-    test_file_name = 'DailySports_test.txt'
+    dataset_file_name = 'kits'  
+    train_file_name = 'kits_train.txt' 
+    test_file_name = 'kits_test.txt'
+    # dataset_file_name = 'DailySports'  
+    # train_file_name = 'DailySports_train.txt' 
+    # test_file_name = 'DailySports_test.txt'
     main_path = PATH_DATA
     # main_path = '/Users/zbz/code/vscodemac_python/hetero_sshe_logistic_regression/data/'
 
@@ -610,7 +614,7 @@ def read_distributed_squeeze_data():
     # # return X_train.todense().A, Y_train, X_test.todense().A, Y_test # matrix转array
     print("loading dataset...")
 
-    dataset_file_name = 'DailySports/portion37_pminhash/sketch1024/countsketch/'
+    dataset_file_name = 'kits/portion37_pminhash/sketch1024/countsketch/'
     train_file_name1 = 'X1_squeeze_train37_Countsketch.txt'
     train_file_name2 = 'X2_squeeze_train37_Countsketch.txt'
     test_file_name1 = 'X1_squeeze_test37_Countsketch.txt'
@@ -651,6 +655,9 @@ def read_distributed_encoded_data():
     from sklearn.preprocessing import MinMaxScaler, StandardScaler, normalize
     mm = MinMaxScaler()
     ss = StandardScaler()
+
+    global flag
+    flag = "Splice encoded data - splice/distrubuted/encoded/"
 
     dataset_file_name = 'splice'  
     train_file_name = 'splice_train.txt' 
@@ -702,6 +709,83 @@ def read_distributed_encoded_data():
     X_test2 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name2), delimiter=',') #, dtype = float)
     # X = normalize(X,'l2')
     # X_train = ss.fit_transform(X_train)
+
+    print("X_train1 type: ", type(X_train1)) # 1000 * 60
+    print("X_train1 shape: ", X_train1.shape)
+    print("X_train2 type: ", type(X_train2)) # 1000 * 60
+    print("X_train2 shape: ", X_train2.shape)
+    print("X_test1 type: ", type(X_test1)) # 1000 * 60
+    print("X_test1 shape: ", X_test1.shape)
+    print("X_test2 type: ", type(X_test2)) # 1000 * 60
+    print("X_test2 shape: ", X_test2.shape)
+
+    # print("Constructing sparse matrix...") # 使用COO格式高效创建稀疏矩阵, 以线性时间复杂度转化为CSR格式用于高效的矩阵乘法或转置运算.
+    # X_train = lil_matrix(X_train)
+    # # X_train.tocsr()
+    # X_test = lil_matrix(X_test)
+    # # X_test.tocsr()
+    # print(type(X_train), type(X_test))
+    
+    return X_train1, X_train2, Y_train, X_test1, X_test2, Y_test # matrix转array
+
+
+def read_distributed_squeeze_data_splice():
+    ## countsketch
+    from sklearn.datasets import load_svmlight_file
+    import os
+    from sklearn.preprocessing import MinMaxScaler, StandardScaler, normalize
+    mm = MinMaxScaler()
+    ss = StandardScaler()
+
+    dataset_file_name = 'kits'  
+    train_file_name = 'kits_train.txt' 
+    test_file_name = 'kits_test'
+    main_path = PATH_DATA
+    # main_path = '/Users/zbz/code/vscodemac_python/hetero_sshe_logistic_regression/data/'
+
+    # dataset_file_name = 'a6a'
+    # train_file_name = 'a6a.txt'
+    # test_file_name = 'a6a.t'
+    # main_path = '/Users/zbz/data/'
+    train_data = load_svmlight_file(os.path.join(main_path, dataset_file_name, train_file_name))
+    test_data = load_svmlight_file(os.path.join(main_path, dataset_file_name, test_file_name))
+    # X_train = train_data[0]
+    Y_train = train_data[1].astype(int)
+    # X_test = test_data[0]
+    Y_test = test_data[1].astype(int)
+    # print(type(X_train)) # 1000 * 60
+    # print(Y_train[0]) # 1000 * 1
+
+    # 判断标签是(1;-1)还是 (1;0), 将-1的标签全部转化成0标签
+    if -1 in Y_train:  
+        Y_train[Y_train == -1] = 0
+        Y_test[Y_test == -1] = 0
+    # print(Y_train)
+    # print(Y_test)
+
+    # #a6a a7a
+    # X_train = X_train.todense().A
+    # X_train = np.hstack( (X_train, np.zeros(X_train.shape[0]).reshape(-1, 1)) )
+    # return ss.fit_transform(X_train), Y_train, ss.fit_transform(X_test.todense().A), Y_test # matrix转array
+
+    # #splice
+    # return ss.fit_transform(X_train.todense().A), Y_train, ss.fit_transform(X_test.todense().A), Y_test # matrix转array
+    # # return X_train.todense().A, Y_train, X_test.todense().A, Y_test # matrix转array
+    print("loading dataset...")
+
+    dataset_file_name = 'splice/distrubuted/countsketch/'  
+    train_file_name1 = 'X1_squeeze_train37_Countsketch.txt'
+    train_file_name2 = 'X2_squeeze_train37_Countsketch.txt'
+    test_file_name1 = 'X1_squeeze_test37_Countsketch.txt'
+    test_file_name2 = 'X2_squeeze_test37_Countsketch.txt'
+    # main_path = '/Users/zbz/code/vscodemac_python/hetero_sshe_logistic_regression/data/'
+    main_path = PATH_DATA
+    X_train1 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name1), delimiter=',') #, dtype = float)
+    X_train2 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name2), delimiter=',') #, dtype = float)
+    X_test1 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name1), delimiter=',') #, dtype = float)
+    X_test2 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name2), delimiter=',') #, dtype = float)
+    # X = normalize(X,'l2')
+    # X_train = ss.fit_transform(X_train)
     print(X_train1.shape)         #查看特征形状
     print(type(X_train1), type(X_test1))
     print(X_test1.shape)         #查看测试特征形状
@@ -716,6 +800,17 @@ def read_distributed_encoded_data():
     return X_train1, X_train2, Y_train, X_test1, X_test2, Y_test # matrix转array
 
 
+
+def logger_info(objectmodel):
+    global flag
+    # flag = "Raw data"
+    print("batch size: ", objectmodel.batch_size)
+    print("alpha: ", objectmodel.alpha)
+    print("max_iter: ", objectmodel.max_iter)
+    print("WAN_bandwidth: ", objectmodel.WAN_bandwidth)
+    print("mem_occupancy: ", objectmodel.mem_occupancy)
+    print("data source: " + flag)
+
 if __name__ == "__main__":
     # print("Hi.")
     # import sys
@@ -729,12 +824,15 @@ if __name__ == "__main__":
     # print(X_data.shape, X_data.shape[0], X_data.shape[1], y_data.shape, X_test.shape, y_test.shape)
 
     # 纵向划分的数据集
-    # X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_encoded_data()
+    X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_encoded_data()
 
     # Raw data
-    X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_data()
+    # X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_data()
     # Sketch data
     # X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_squeeze_data()
+
+    # splice
+    # X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_squeeze_data_splice()
 
     # print(X_train1.shape, X_train2.shape, X_train1.shape[1], X_train2.shape[1], Y_train.shape, X_test1.shape, Y_test.shape)
 
@@ -768,8 +866,8 @@ if __name__ == "__main__":
                     # splice: 0.8482758620689655
                     # splice 集中 0.9062068965517242
     # 纵向划分分布式
-    SecureMLModel = SecureML(weight_vector = weight_vector, batch_size = 256, 
-                    max_iter = 200, alpha = 0.0001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
+    SecureMLModel = SecureML(weight_vector = weight_vector, batch_size = 20, 
+                    max_iter = 150, alpha = 0.001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
                     # splice 分布式 0.9062068965517242
     # LogisticRegressionModel = LogisticRegression(weight_vector = weight_vector, batch_size = 20, 
     #                 max_iter = 600, alpha = 0.0001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
@@ -780,6 +878,9 @@ if __name__ == "__main__":
 
     # 集中：
     # sparse:  14.546779870986938 s   Predict precision:  0.9062068965517242
+
+
+    logger_info(SecureMLModel)
 
 
     ########## 训练 ##########

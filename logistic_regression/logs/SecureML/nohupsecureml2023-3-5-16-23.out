@@ -1,3 +1,4 @@
+raw data
 nohup: 忽略输入
 X_train type:  <class 'numpy.ndarray'>
 X_train shape:  (4560, 5625)
@@ -11,16 +12,26 @@ t:  18
 Batch data generation: [32mOK[0m
 [CHECK] weight:  [[0. 0. 0. ... 0. 0. 0.]] [[0. 0. 0. ... 0. 0. 0.]]
 [Hint] Training model...
-Iteration 0, batch sum loss: 0.6933220019585128
-Iteration 1, batch sum loss: 0.6932405694757816
-Iteration 2, batch sum loss: 0.6932309755929112
-Iteration 3, batch sum loss: 0.6932263675969023
-Iteration 4, batch sum loss: 0.6932235189474366
-Iteration 5, batch sum loss: 0.6932214533670034
-Iteration 6, batch sum loss: 0.6932198084799011
-Iteration 7, batch sum loss: 0.6932184465325433
-Iteration 8, batch sum loss: 0.6932172911691982
-Iteration 9, batch sum loss: 0.693216292993816
+
+Iteration 0, batch sum loss: 0.6933220019585128
+
+Iteration 1, batch sum loss: 0.6932405694757816
+
+Iteration 2, batch sum loss: 0.6932309755929112
+
+Iteration 3, batch sum loss: 0.6932263675969023
+
+Iteration 4, batch sum loss: 0.6932235189474366
+
+Iteration 5, batch sum loss: 0.6932214533670034
+
+Iteration 6, batch sum loss: 0.6932198084799011
+
+Iteration 7, batch sum loss: 0.6932184465325433
+
+Iteration 8, batch sum loss: 0.6932172911691982
+
+Iteration 9, batch sum loss: 0.693216292993816
 self.model_weights:  [[2.8387928523443406e-06]
  [0.0002278071679029381]
  [9.4245317086461e-05]

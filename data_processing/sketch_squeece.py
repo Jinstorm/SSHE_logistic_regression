@@ -47,8 +47,8 @@ def Dis_samples_to_sketch(m, n, n1, k, b, c, samples1, samples2):
                 index = n * t + n - (sample_value2 + n1)   # 一个one-hot编码中唯一的1对应的标号：例如对j=1（对应cws的第一个sample:i1），对应one-hot编码中为1的位置：n - i1
                 X[i, index] = 1
 
-        print('采样为0的情况出现的次数：', sum_zero_sample1, sum_zero_sample2)
-        print('全0instance：', sum_zero_instance1, sum_zero_instance2)
+        print('采样为0的情况出现的次数: ', sum_zero_sample1, sum_zero_sample2)
+        print('全0instance: ', sum_zero_instance1, sum_zero_instance2)
         X = X.tocsr()
         return X
     # 2 进行Count Sketch特征压缩
@@ -85,8 +85,8 @@ def Dis_samples_to_sketch(m, n, n1, k, b, c, samples1, samples2):
                 hash_value2 = (a_lst[t] * (sample_value2 + n1) + b_lst[t]) % c + 1
                 index = c * t + c - hash_value2
                 X[i, index] = 1
-        print('采样为0的情况出现的次数：', sum_zero_sample1, sum_zero_sample2)
-        print('全0instance：', sum_zero_instance1, sum_zero_instance2)
+        print('采样为0的情况出现的次数: ', sum_zero_sample1, sum_zero_sample2)
+        print('全0instance: ', sum_zero_instance1, sum_zero_instance2)
         X = X.tocsr()
         return X
     # 3 进行b-bit minwise hash特征压缩
@@ -120,70 +120,32 @@ def Dis_samples_to_sketch(m, n, n1, k, b, c, samples1, samples2):
                 minwise_value2 = (sample_value2 + n1) % (2 ** b) + 1
                 index = 2 ** b * t + 2 ** b - minwise_value2
                 X[i, index] = 1
-        print('采样为0的情况出现的次数：', sum_zero_sample1, sum_zero_sample2)
-        print('全0instance：', sum_zero_instance1, sum_zero_instance2)
+        print('采样为0的情况出现的次数: ', sum_zero_sample1, sum_zero_sample2)
+        print('全0instance: ', sum_zero_instance1, sum_zero_instance2)
         X = X.tocsr()
         return X
 
     else:
-        print('参数b,c错误！')
+        print('参数b,c错误!')
         return 'ERROR'
+
+
 
 PATH_DATA = '../data/'
 
+def sketch_to_countsketch(tag, b, division, dataset, portion_method, sampling_rate, sketching_method):
+    """
+    dataset结构:
+    dataset_name/portion比例_近似方法/采样次数/4个数据集文件
+    """
+    sketch_name = "sketch" + str(sampling_rate) # sketch1024 or sketch512
+    dataset_file_name = os.path.join(dataset, portion_method, sketch_name)
+    # example: dataset_file_name = "DailySports/portion37_pminhash/sketch1024/""
 
-# def sketch_to_squeeze_dataset():
-#     print("loading dataset...")
-
-#     dataset_file_name = 'splice/distrubuted/'  
-#     train_file_name1 = 'X1_train_sketch.txt'
-#     train_file_name2 = 'X2_train_sketch.txt'
-#     test_file_name1 = 'X1_test_sketch.txt'
-#     test_file_name2 = 'X2_test_sketch.txt'
-#     # main_path = '/Users/zbz/code/vscodemac_python/hetero_sshe_logistic_regression/data/'
-#     main_path = PATH_DATA
-#     # X_train1 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name1), delimiter=',', dtype = int)
-#     # X_train2 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name2), delimiter=',', dtype = int)
-#     X_test1 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name1), delimiter=',', dtype = int) #, dtype = float)
-#     X_test2 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name2), delimiter=',', dtype = int) #, dtype = float)
-
-#     # X_train = np.loadtxt('../data/splice/X_train_sketch.txt', delimiter=',') #, dtype = float)
-#     X_test = np.loadtxt('../data/splice/X_test_sketch.txt', delimiter=',')
-
-#     # Train dataset sketch squeeze
-#     print(X_test.shape[0], X_test.shape[1])
-#     print(X_test1.shape[0], X_test1.shape[1])
-#     print(X_test2.shape[0], X_test2.shape[1])
-#     m = X_test1.shape[0]
-#     n = X_test1.shape[1] + X_test2.shape[1]
-#     n1 = X_test1.shape[1]
-#     k = n
-#     b = 8
-#     c = 0
-
-#     sketch = Dis_samples_to_sketch(m, n, n1, k, b, c, X_test1, X_test2).toarray()
-#     print(sketch.shape[0], sketch.shape[1])
-
-#     k = sketch.shape[1]
-#     partition = 3/10
-#     k1 = np.floor(k * partition).astype(int)
-#     result_X_test1, result_X_test2 = sketch[:,0:k1], sketch[:,k1:]
-
-#     print(result_X_test1.shape[0], result_X_test1.shape[1])
-#     print(result_X_test2.shape[0], result_X_test2.shape[1])
-
-#     # 测试集
-#     np.savetxt("../data/splice/distrubuted/squeeze/X1_squeeze_test37_8.txt",
-#                 result_X_test1, delimiter=',')
-#     np.savetxt("../data/splice/distrubuted/squeeze/X2_squeeze_test37_8.txt",
-#                 result_X_test2, delimiter=',')
-
-
-def sketch_to_countsketch(tag, b, division, dataset, rate):
-    if rate == 1024:
-        dataset_file_name = 'DailySports/portion37_pminhash/sketch1024/'
-    elif rate == 512:
-        dataset_file_name = 'DailySports/portion37_pminhash/sketch512/'
+    # if sampling_rate == 1024:
+    #     dataset_file_name = 'DailySports/portion37_pminhash/sketch1024/'
+    # elif sampling_rate == 512:
+    #     dataset_file_name = 'DailySports/portion37_pminhash/sketch512/'
     
     train_file_name1 = 'X1_train_samples.txt'
     train_file_name2 = 'X2_train_samples.txt'
@@ -227,25 +189,31 @@ def sketch_to_countsketch(tag, b, division, dataset, rate):
         result_X_train1, result_X_train2 = sketch[:,0:k1], sketch[:,k1:]
 
         # 训练集
-        if dataset == "DailySports":
-            if rate == 1024:
-                np.savetxt("../data/DailySports/portion37_pminhash/sketch1024/countsketch/X1_squeeze_train37_Countsketch.txt",
-                            result_X_train1, delimiter=',', fmt='%d')
-                np.savetxt("../data/DailySports/portion37_pminhash/sketch1024/countsketch/X2_squeeze_train37_Countsketch.txt",
-                            result_X_train2, delimiter=',', fmt='%d')
-            elif rate == 512:
-                np.savetxt("../data/DailySports/portion37_pminhash/sketch512/countsketch/X1_squeeze_train37_Countsketch.txt",
-                            result_X_train1, delimiter=',', fmt='%d')
-                np.savetxt("../data/DailySports/portion37_pminhash/sketch512/countsketch/X2_squeeze_train37_Countsketch.txt",
-                            result_X_train2, delimiter=',', fmt='%d')
-            else:
-                raise NotImplementedError("Invalid rate.")
-        # np.savetxt("../data/splice/distrubuted/countsketch/X1_squeeze_train37_Countsketch.txt",
-        #             result_X_train1, delimiter=',', fmt='%d')
-        # np.savetxt("../data/splice/distrubuted/countsketch/X2_squeeze_train37_Countsketch.txt",
-        #             result_X_train2, delimiter=',', fmt='%d')
+        train_sketch_savepath = str(sketching_method) # "countsketch"
+        train_save_name1 = "X1_squeeze_train37_Countsketch.txt"
+        train_save_name2 = "X2_squeeze_train37_Countsketch.txt"
+        
+        np.savetxt(os.path.join(main_path, dataset_file_name, train_sketch_savepath, train_save_name1),
+                    result_X_train1, delimiter=',', fmt='%d')
+        np.savetxt(os.path.join(main_path, dataset_file_name, train_sketch_savepath, train_save_name2),
+                    result_X_train2, delimiter=',', fmt='%d')
+        
 
-            print("Train count-sketch data saved.")
+        # if dataset == "DailySports":
+        #     if sampling_rate == 1024:
+        #         np.savetxt("../data/DailySports/portion37_pminhash/sketch1024/countsketch/X1_squeeze_train37_Countsketch.txt",
+        #                     result_X_train1, delimiter=',', fmt='%d')
+        #         np.savetxt("../data/DailySports/portion37_pminhash/sketch1024/countsketch/X2_squeeze_train37_Countsketch.txt",
+        #                     result_X_train2, delimiter=',', fmt='%d')
+        #     elif sampling_rate == 512:
+        #         np.savetxt("../data/DailySports/portion37_pminhash/sketch512/countsketch/X1_squeeze_train37_Countsketch.txt",
+        #                     result_X_train1, delimiter=',', fmt='%d')
+        #         np.savetxt("../data/DailySports/portion37_pminhash/sketch512/countsketch/X2_squeeze_train37_Countsketch.txt",
+        #                     result_X_train2, delimiter=',', fmt='%d')
+        #     else:
+        #         raise NotImplementedError("Invalid sampling_rate.")
+
+        print("Train count-sketch data saved.")
 
     elif tag == "test":
         X_test1 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name1), delimiter=',', dtype = int)
@@ -271,25 +239,30 @@ def sketch_to_countsketch(tag, b, division, dataset, rate):
         print(result_X_test2.shape[0], result_X_test2.shape[1])
 
         # 测试集
-        if dataset == "DailySports":
-            if rate == 1024:
-                np.savetxt("../data/DailySports/portion37_pminhash/sketch1024/countsketch/X1_squeeze_test37_Countsketch.txt",
-                            result_X_test1, delimiter=',', fmt='%d')
-                np.savetxt("../data/DailySports/portion37_pminhash/sketch1024/countsketch/X2_squeeze_test37_Countsketch.txt",
-                            result_X_test2, delimiter=',', fmt='%d')
-            elif rate == 512:
-                np.savetxt("../data/DailySports/portion37_pminhash/sketch512/countsketch/X1_squeeze_test37_Countsketch.txt",
-                            result_X_test1, delimiter=',', fmt='%d')
-                np.savetxt("../data/DailySports/portion37_pminhash/sketch512/countsketch/X2_squeeze_test37_Countsketch.txt",
-                            result_X_test2, delimiter=',', fmt='%d')
-            else:
-                raise NotImplementedError("Invalid rate.")
-        # np.savetxt("../data/splice/distrubuted/countsketch/X1_squeeze_test37_Countsketch.txt",
-        #             result_X_test1, delimiter=',', fmt='%d')
-        # np.savetxt("../data/splice/distrubuted/countsketch/X2_squeeze_test37_Countsketch.txt",
-        #             result_X_test2, delimiter=',', fmt='%d')
+        test_sketch_savepath = str(sketching_method) # "countsketch"
+        test_save_name1 = "X1_squeeze_test37_Countsketch.txt"
+        test_save_name2 = "X2_squeeze_test37_Countsketch.txt"
+        
+        np.savetxt(os.path.join(main_path, dataset_file_name, test_sketch_savepath, test_save_name1),
+                    result_X_test1, delimiter=',', fmt='%d')
+        np.savetxt(os.path.join(main_path, dataset_file_name, test_sketch_savepath, test_save_name2),
+                    result_X_test2, delimiter=',', fmt='%d')
+        
+        # if dataset == "DailySports":
+        #     if sampling_rate == 1024:
+        #         np.savetxt("../data/DailySports/portion37_pminhash/sketch1024/countsketch/X1_squeeze_test37_Countsketch.txt",
+        #                     result_X_test1, delimiter=',', fmt='%d')
+        #         np.savetxt("../data/DailySports/portion37_pminhash/sketch1024/countsketch/X2_squeeze_test37_Countsketch.txt",
+        #                     result_X_test2, delimiter=',', fmt='%d')
+        #     elif sampling_rate == 512:
+        #         np.savetxt("../data/DailySports/portion37_pminhash/sketch512/countsketch/X1_squeeze_test37_Countsketch.txt",
+        #                     result_X_test1, delimiter=',', fmt='%d')
+        #         np.savetxt("../data/DailySports/portion37_pminhash/sketch512/countsketch/X2_squeeze_test37_Countsketch.txt",
+        #                     result_X_test2, delimiter=',', fmt='%d')
+        #     else:
+        #         raise NotImplementedError("Invalid sampling_rate.")
 
-            print("Test count-sketch data saved.")
+        print("Test count-sketch data saved.")
     else:
         raise Exception('[Exception] tag error occurred.')
     
@@ -299,61 +272,11 @@ def sketch_to_countsketch(tag, b, division, dataset, rate):
 if __name__ == '__main__':
     # X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_encoded_data()
     print("loading dataset...")
-    c = 2
-    dataset_name = "DailySports"
-    rate = 1024
-    sketch_to_countsketch("train", 0, c, dataset_name, rate)
-    sketch_to_countsketch("test", 0, c, dataset_name, rate)
-
-
-
-
-    # dataset_file_name = 'splice/distrubuted/'  
-    # train_file_name1 = 'X1_train_sketch.txt'
-    # train_file_name2 = 'X2_train_sketch.txt'
-    # # test_file_name1 = 'X1_encoded_test37.txt'
-    # # test_file_name2 = 'X2_encoded_test37.txt'
-    # # main_path = '/Users/zbz/code/vscodemac_python/hetero_sshe_logistic_regression/data/'
-    # main_path = PATH_DATA
-    # X_train1 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name1), delimiter=',', dtype = int)
-    # X_train2 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name2), delimiter=',', dtype = int)
-    # # X_test1 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name1), delimiter=',') #, dtype = float)
-    # # X_test2 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name2), delimiter=',') #, dtype = float)
-
-    # X_train = np.loadtxt('../data/splice/X_train_sketch.txt', delimiter=',') #, dtype = float)
-    # # X_test = np.loadtxt('../data/splice/X_train_test.txt', delimiter=',')
-
-    # # Train dataset sketch squeeze
-    # print(X_train.shape[0], X_train.shape[1])
-    # print(X_train1.shape[0], X_train1.shape[1])
-    # print(X_train2.shape[0], X_train2.shape[1])
-    # m = X_train1.shape[0]
-    # n = X_train1.shape[1] + X_train2.shape[1]
-    # n1 = X_train1.shape[1]
-    # k = n
-    # b = 8
-    # c = 0
-
-    # sketch_to_squeeze_dataset()
-
-    # sketch = Dis_samples_to_sketch(m, n, n1, k, b, c, X_train1, X_train2).toarray()
-    # print(sketch.shape[0], sketch.shape[1])
-
-    # k = sketch.shape[1]
-    # partition = 3/10
-    # k1 = np.floor(k * partition).astype(int)
-    # result_X_train1, result_X_train2 = sketch[:,0:k1], sketch[:,k1:]
-
-    # # print(result_X_train1.shape[0], result_X_train1.shape[1])
-    # # print(result_X_train2.shape[0], result_X_train2.shape[1])
-
-
-
-    # # 训练集
-    # np.savetxt("../data/splice/distrubuted/squeeze/X1_squeeze_train37_8.txt",
-    #             result_X_train1, delimiter=',')
-    # np.savetxt("../data/splice/distrubuted/squeeze/X2_squeeze_train37_8.txt",
-    #             result_X_train2, delimiter=',')
-
-    # # b=2 c=0 k=1024
+    c = 4
+    dataset_name = "kits"
+    sampling_rate = 1024
+    portion_method = "portion37_pminhash"
+    sketching_method = "countsketch"
+    sketch_to_countsketch("train", 0, c, dataset_name, portion_method, sampling_rate, sketching_method)
+    sketch_to_countsketch("test", 0, c, dataset_name, portion_method, sampling_rate, sketching_method)
     
