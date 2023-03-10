@@ -1,0 +1,113 @@
+
+# ================== # Dataset info # ================== #
+Data source: kits - sketch
+Sketching method: pminhash
+Data Portion: 37
+Sampling k: 1024
+Using Counsketch: True
+# ================== # Training info # ================== #
+batch size: 40
+alpha: 0.001
+max_iter: 200
+WAN_bandwidth: 10
+mem_occupancy: 4
+# ================== #   Info End   # ================== #
+
+Iteration 0, batch sum loss: 0.6943407552521161 Time: 0.5169172286987305s
+Iteration 1, batch sum loss: 0.6942854100972249 Time: 0.5160772800445557s
+Iteration 2, batch sum loss: 0.694261292288673 Time: 0.5083680152893066s
+Iteration 3, batch sum loss: 0.6942379541706434 Time: 0.5327422618865967s
+Iteration 4, batch sum loss: 0.6942149854816758 Time: 0.5124802589416504s
+Iteration 5, batch sum loss: 0.6941923569038492 Time: 0.5365073680877686s
+Iteration 6, batch sum loss: 0.6941700713042702 Time: 0.5575466156005859s
+Iteration 7, batch sum loss: 0.6941481076701083 Time: 0.5854663848876953s
+Iteration 8, batch sum loss: 0.6941264565931096 Time: 0.6149344444274902s
+Iteration 9, batch sum loss: 0.6941051053297131 Time: 0.6374812126159668s
+Iteration 10, batch sum loss: 0.6940840508379714 Time: 0.5185518264770508s
+Iteration 11, batch sum loss: 0.6940632811193514 Time: 0.509558916091919s
+Iteration 12, batch sum loss: 0.694042785416566 Time: 0.5227804183959961s
+Iteration 13, batch sum loss: 0.6940225573184651 Time: 0.5257084369659424s
+Iteration 14, batch sum loss: 0.6940025944563732 Time: 0.6716811656951904s
+Iteration 15, batch sum loss: 0.6939828807708311 Time: 0.5896580219268799s
+Iteration 16, batch sum loss: 0.6939634130626572 Time: 0.5348262786865234s
+Iteration 17, batch sum loss: 0.6939441856161951 Time: 0.5115559101104736s
+Iteration 18, batch sum loss: 0.6939251908991269 Time: 0.5415999889373779s
+Iteration 19, batch sum loss: 0.693906426921884 Time: 0.5773561000823975s
+Iteration 20, batch sum loss: 0.6938878844749282 Time: 0.6328821182250977s
+Iteration 21, batch sum loss: 0.693869553748795 Time: 0.7299454212188721s
+Iteration 22, batch sum loss: 0.6938514358279267 Time: 0.5665113925933838s
+Iteration 23, batch sum loss: 0.6938335253168663 Time: 0.5386676788330078s
+Iteration 24, batch sum loss: 0.6938158171127167 Time: 0.5247204303741455s
+Iteration 25, batch sum loss: 0.6937983055831638 Time: 0.5629818439483643s
+Iteration 26, batch sum loss: 0.693780984312551 Time: 0.5759267807006836s
+Iteration 27, batch sum loss: 0.6937638531752982 Time: 0.5549921989440918s
+Iteration 28, batch sum loss: 0.6937469084056332 Time: 0.5440411567687988s
+Iteration 29, batch sum loss: 0.6937301404980185 Time: 0.5396194458007812s
+Iteration 30, batch sum loss: 0.6937135537863234 Time: 0.5528500080108643s
+Iteration 31, batch sum loss: 0.6936971390228407 Time: 0.5600781440734863s
+Iteration 32, batch sum loss: 0.6936808912497404 Time: 0.5591404438018799s
+Iteration 33, batch sum loss: 0.693664811745323 Time: 0.5637500286102295s
+Iteration 34, batch sum loss: 0.6936488980080986 Time: 0.5449597835540771s
+Iteration 35, batch sum loss: 0.6936331432000129 Time: 0.5161049365997314s
+Iteration 36, batch sum loss: 0.6936175467714563 Time: 0.5699870586395264s
+Iteration 37, batch sum loss: 0.6936021033142933 Time: 0.5699722766876221s
+Iteration 38, batch sum loss: 0.6935868109986411 Time: 0.5724961757659912s
+Iteration 39, batch sum loss: 0.6935716705818853 Time: 0.5735037326812744s
+Iteration 40, batch sum loss: 0.6935566728131926 Time: 0.559565544128418s
+Iteration 41, batch sum loss: 0.693541823239322 Time: 0.5806705951690674s
+Iteration 42, batch sum loss: 0.6935271129077768 Time: 0.507479190826416s
+Iteration 43, batch sum loss: 0.6935125403707469 Time: 0.5598223209381104s
+Iteration 44, batch sum loss: 0.6934981073146935 Time: 0.5642080307006836s
+Iteration 45, batch sum loss: 0.6934838092696475 Time: 0.5451891422271729s
+Iteration 46, batch sum loss: 0.6934696399916087 Time: 0.5406079292297363s
+Iteration 47, batch sum loss: 0.6934556026632553 Time: 0.5782811641693115s
+Iteration 48, batch sum loss: 0.6934416923083668 Time: 0.5226402282714844s
+Iteration 49, batch sum loss: 0.6934279115568528 Time: 0.5698027610778809s
+Iteration 50, batch sum loss: 0.6934142532226146 Time: 0.5407509803771973s
+Iteration 51, batch sum loss: 0.6934007138268015 Time: 0.6826825141906738s
+Iteration 52, batch sum loss: 0.6933872991860666 Time: 0.5581932067871094s
+Iteration 53, batch sum loss: 0.6933739991957271 Time: 0.5276463031768799s
+Iteration 54, batch sum loss: 0.6933608192533856 Time: 0.543208122253418s
+Iteration 55, batch sum loss: 0.693347756308502 Time: 0.5264995098114014s
+Iteration 56, batch sum loss: 0.6933348028912014 Time: 0.5263745784759521s
+Iteration 57, batch sum loss: 0.6933219613941121 Time: 0.5262293815612793s
+Iteration 58, batch sum loss: 0.6933092325439713 Time: 0.566274881362915s
+Iteration 59, batch sum loss: 0.6932966125073544 Time: 0.5402815341949463s
+Iteration 60, batch sum loss: 0.6932840991473712 Time: 0.5195169448852539s
+Iteration 61, batch sum loss: 0.6932716890779098 Time: 0.5494813919067383s
+Iteration 62, batch sum loss: 0.6932593867079297 Time: 0.5737581253051758s
+Iteration 63, batch sum loss: 0.6932471847838774 Time: 0.5329480171203613s
+Iteration 64, batch sum loss: 0.6932350853042234 Time: 0.5146324634552002s
+Iteration 65, batch sum loss: 0.6932230880418265 Time: 0.5249295234680176s
+Iteration 66, batch sum loss: 0.693211186002356 Time: 0.5058832168579102s
+Iteration 67, batch sum loss: 0.6931993802246595 Time: 0.5429749488830566s
+Iteration 68, batch sum loss: 0.6931876748650033 Time: 0.5267171859741211s
+Iteration 69, batch sum loss: 0.6931760626229785 Time: 0.5240552425384521s
+Iteration 70, batch sum loss: 0.6931645433535794 Time: 0.540693998336792s
+Iteration 71, batch sum loss: 0.6931531184495652 Time: 0.5249786376953125s
+Iteration 72, batch sum loss: 0.6931417815310518 Time: 0.522477388381958s
+Iteration 73, batch sum loss: 0.6931305387595189 Time: 0.5483460426330566s
+Iteration 74, batch sum loss: 0.6931193807590363 Time: 0.5081620216369629s
+Iteration 75, batch sum loss: 0.6931083139030513 Time: 0.533149003982544s
+Iteration 76, batch sum loss: 0.6930973324169242 Time: 0.5197694301605225s
+Iteration 77, batch sum loss: 0.6930864397104306 Time: 0.5200765132904053s
+Iteration 78, batch sum loss: 0.6930756278154135 Time: 0.5292937755584717s
+Iteration 79, batch sum loss: 0.6930649012406446 Time: 0.5151317119598389s
+Iteration 80, batch sum loss: 0.6930542561346821 Time: 0.5322494506835938s
+Iteration 81, batch sum loss: 0.6930436947224168 Time: 0.5215048789978027s
+Iteration 82, batch sum loss: 0.6930332132161551 Time: 0.534820556640625s
+Iteration 83, batch sum loss: 0.6930228114861071 Time: 0.5271179676055908s
+Iteration 84, batch sum loss: 0.6930124886200434 Time: 0.5360879898071289s
+Iteration 85, batch sum loss: 0.6930022421257653 Time: 0.5237832069396973s
+Iteration 86, batch sum loss: 0.6929920755858875 Time: 0.5431628227233887s
+Iteration 87, batch sum loss: 0.6929819838300055 Time: 0.5094873905181885s
+Iteration 88, batch sum loss: 0.6929719655780819 Time: 0.5452454090118408s
+Iteration 89, batch sum loss: 0.6929620249307313 Time: 0.5257599353790283s
+
+
+# ================== #  Test Model  # ================== #
+score: 216
+len(y): 300
+Predict precision: 0.72
+SecureMLModel.train_time_account: 96.40230712892006
+Total time cost: 154.55452284814308 s
