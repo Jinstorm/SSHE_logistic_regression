@@ -3,7 +3,6 @@ TODO:
 time accounting.
 '''
 import numpy as np
-import time
 import math
 import matplotlib.pyplot as plt
 from scipy.sparse import csr_matrix, lil_matrix, coo_matrix
@@ -311,17 +310,17 @@ class LogisticRegression:
         return loss
 
 
-    def fit_model(self, X_trainA, X_trainB, Y_train, instances_count, indice_littleside):
+    def fit_model_secure_distributed_input(self, X_trainA, X_trainB, Y_train, instances_count, indice_littleside):
         # indice_littleside 用于划分权重, 得到特征数值较小的那一部分的权重-或者左侧 默认X1一侧
         # mini-batch 数据集处理
-        # print("ratio: ", self.ratio)
+        print("ratio: ", self.ratio)
         self.indice = indice_littleside # math.floor(self.ratio * ( X_trainA.shape[1]+X_trainB.shape[1] ) ) # 纵向划分数据集，位于label一侧的特征数量
         # if self.ratio is None:
         #     X_batch_list, y_batch_list = self._generate_batch_data(X_train, Y_train, self.batch_size)
         if self.data_tag == None: 
             X_batch_listA, X_batch_listB, y_batch_list = self._generate_batch_data_for_distributed_parts(X_trainA, X_trainB, Y_train, self.batch_size)
             self.weightA, self.weightB = np.hsplit(self.model_weights, [self.indice]) # 权重向量是一个列向量，需要横向划分
-            # print(self.weightA.shape, self.weightB.shape)
+            print(self.weightA.shape, self.weightB.shape)
         elif self.data_tag == 'sparse':
             print('sprase data batch generating...')
             X_batch_listA, X_batch_listB, y_batch_list = self._generate_Sparse_batch_data_for_distributed_parts(X_trainA, X_trainB, Y_train, self.batch_size)
@@ -329,36 +328,30 @@ class LogisticRegression:
             print('Generation done.')
         else:
             raise Exception("[fit model] No proper entry for batch data generation. Check the data_tag or the fit function.")
-        
-        """ Train Model """
-        self.fit_model_secure_distributed_input(X_batch_listA, X_batch_listB, y_batch_list, instances_count)
-
-
-    def fit_model_secure_distributed_input(self, X_batch_listA, X_batch_listB, y_batch_list, instances_count):
-        
-        self.n_iteration = 1
+            
+        self.n_iteration = 0
         self.loss_history = []
         test = 0
 
-        # print("[CHECK] weight: ", self.weightA, self.weightB)
+        print("[CHECK] weight: ", self.weightA, self.weightB)
         
         #### Secret share model
-        # print("secret sharing model...")
+        print("secret sharing model...")
         wa1, wa2 = self.secret_share_vector_plaintext(self.weightA)
-        # print("wa1+wa2: ", wa1 + wa2)
+        print("wa1+wa2: ", wa1 + wa2)
         wb1, wb2 = self.secret_share_vector_plaintext(self.weightB)
 
         ############################
-        # import time
-        # filename = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime(time.time()))
-        # self.logname = "CAESAR_" + filename + ".txt"
-        # file = open(self.logname, mode='w+') #  写入记录
+        import time
+        filename = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime(time.time()))
+        self.logname = "CAESAR_" + filename + ".txt"
+        file = open(self.logname, mode='w+') #  写入记录
         # time_start_training = time.time()
         ############################
         
-        # print("training model...")
-        while self.n_iteration <= self.max_iter:
-            # time_start_training = time.time()
+        print("training model...")
+        while self.n_iteration < self.max_iter:
+            time_start_training = time.time()
             loss_list = []
             batch_labels = None
             # distributed
@@ -385,12 +378,12 @@ class LogisticRegression:
                 # print(type(self.za))
                 # print(type(self.zb))
 
-                encrypt_za = self.cipher.recursive_encrypt(self.za)
+                encrypt_zb = self.cipher.recursive_encrypt(self.zb)
                 # encrypt_zb = np.asarray(self.pool.map(self.cipher.recursive_encrypt, self.zb))
                 # print("type encrypt_zb: ", type(encrypt_zb))
 
                 # wx encrypt
-                self.encrypt_wx = self.zb + encrypt_za
+                self.encrypt_wx = self.za + encrypt_zb
                 # sigmoid
                 self.encrypted_sigmoid_wx = self._compute_sigmoid(self.encrypt_wx)
                 # error
@@ -453,28 +446,34 @@ class LogisticRegression:
                 # print('batch cost: ',time_end_training-time_start_training,'s')
 
             # 打乱数据集的batch
-            # X_batch_listA, X_batch_listB, y_batch_list = self.shuffle_distributed_data(X_batch_listA, 
-            #                     X_batch_listB, y_batch_list)
+            X_batch_listA, X_batch_listB, y_batch_list = self.shuffle_distributed_data(X_batch_listA, 
+                                X_batch_listB, y_batch_list)
             
             ## 计算 sum loss
             loss = np.sum(loss_list) / instances_count
             loss_decrypt = self.cipher.recursive_decrypt(loss)
-            print("\rEpoch {}, batch sum loss: {}".format(self.n_iteration, loss_decrypt), end='')
-            # # self.loss_history.append(loss_decrypt)
+            print("\rIteration {}, batch sum loss: {}".format(self.n_iteration, loss_decrypt))
+            # self.loss_history.append(loss_decrypt)
             
             ############################
-            # time_end_training = time.time()
-            # print(" Time: " + str(time_end_training-time_start_training) + "s")
-            # file.write("Time: " + str(time_end_training-time_start_training) + "s\n")
-            # file.write("\nEpoch {}, batch sum loss: {}".format(self.n_iteration, loss_decrypt))
+            time_end_training = time.time()
+            # print('time cost: ',time_end_training-time_start_training,'s')
+            print("\nEpoch {}, batch sum loss: {}".format(self.n_iteration, loss_decrypt), end='')
+            print(" Time: " + str(time_end_training-time_start_training) + "s")
+            file.write("Time: " + str(time_end_training-time_start_training) + "s\n")
 
+            # file.write("loss shape: " + str(loss.shape) + "\n")
+            file.write("\nEpoch {}, batch sum loss: {}".format(self.n_iteration, loss_decrypt))
+            # file.close()
             ############################
+
+            # import sys
+            # sys.exit(0)
 
 
             ## 判断是否停止
             self.is_converged = self.check_converge_by_loss(loss_decrypt)
-            if self.is_converged or self.n_iteration == self.max_iter:
-            # if self.n_iteration == self.max_iter:
+            if self.is_converged:
                 # self.weightA, self.weightB = np.hsplit(self.model_weights, [self.indice]) # 权重向量是一个列向量，需要横向划分
                 if self.ratio is not None: 
                     # self.weightA = self.cipher.recursive_decrypt(wa1 + wa2)
@@ -484,7 +483,6 @@ class LogisticRegression:
                     self.weightB = wb1 + wb2
 
                     self.model_weights = np.hstack((self.weightA, self.weightB))
-                    print("\r!Epoch {}, batch sum loss: {}".format(self.n_iteration, loss_decrypt), end='')
                     print("self.model_weights: ", self.model_weights)
                 break
 
@@ -525,7 +523,6 @@ class LogisticRegression:
         目的是将这两部分横向ID对齐的数据 划分成一个个batch (可用于实验中的分别采样输入数据)
         ratio: 决定划分到含有标签的一方的数据的比例,对划分的数量下取整,例如 0.8 * 63 -> 50
         '''
-        print("batch data generating...")
         X_batch_listA = []
         X_batch_listB = []
         y_batch_list = []
@@ -637,98 +634,6 @@ class LogisticRegression:
         file.close()
 
 
-
-    def predict_distributed_OVR(self, x_test1, x_test2):
-        x_test = np.hstack((x_test1, x_test2))
-        if self.data_tag == 'sparse':
-            z = x_test.dot(self.model_weights.T)    # np.array类型（此处其实需要严谨一点，避免数据类型不清晰影响后续运算）
-            if not isinstance(z, np.ndarray):
-                z = z.toarray()
-        elif self.data_tag == None:
-            z = np.dot(x_test, self.model_weights.T)
-
-        y = self._compute_sigmoid(z)
-
-        return y.reshape(1, -1) # list(y.reshape((1, -1)))
-
-
-
-    def OVRClassifier(self, X_train1, X_train2, X_test1, X_test2, Y_train, Y_test):
-        """
-        OVR: one vs rest 多分类
-        """
-        # indice_littleside = X_train1.shape[1]
-        self.indice = X_train1.shape[1]
-        instances_count = X_train1.shape[0]
-        label_lst = list(set(Y_train))   # 多分类的所有标签值集合
-        print('数据集标签值集合: ', label_lst)
-        prob_lst = []                    # 存储每个二分类模型的预测概率值
-
-        """ OVR Model Training """
-        # batch 数据生成
-        X_batch_listA, X_batch_listB, y_batch_list = self._generate_batch_data_for_distributed_parts(X_train1, X_train2, 
-                                                                                        Y_train, self.batch_size)
-        self.weightA, self.weightB = np.hsplit(self.model_weights, [self.indice]) # 权重向量是一个列向量，需要横向划分
-        
-        for i in range(len(label_lst)):
-            # 转换标签值为二分类标签值
-            pos_label = label_lst[i]                                        # 选定正样本的标签
-            print("Label: ", pos_label)
-
-            def label_reset_OVR(arr):
-                """ 依次将标签i设置为正样本, 其他为负样本 """
-                # global pos_label
-                return np.where(arr == pos_label, 1, 0)
-            
-            y_batch_list = list(map(label_reset_OVR, y_batch_list))
-            print("y_batch_list ok.")
-            # print(y_batch_list)
-            
-            # Y_train_new = np.where(Y_train == pos_label, 1, 0)              # 满足条件则为正样本1，否则为负样本0
-            # Y_test_new = np.where(Y_test == pos_label, 1, 0)
-            # print(Y_train_new)
-            self.fit_model_secure_distributed_input(X_batch_listA, X_batch_listB, y_batch_list, instances_count)
-            
-            print(" fit_model done.")
-            # print(self.model_weights)
-            prob = self.predict_distributed_OVR(X_test1, X_test2)   # 第i个二分类模型在测试数据集上，每个样本取正标签的概率（用决策函数值作为概率值）
-            prob = np.where(prob > 0, prob, 0).flatten()
-            prob_lst.append(prob.tolist())
-            # print(prob_lst)
-
-            # import sys
-            # sys.exit()
-        
-        # 多分类模型预测
-        print(np.shape(prob_lst))
-        y_predict = []                      # 存储多分类的预测标签值
-        prob_array = np.asarray(prob_lst).T   # (n_samples, n_classes)
-        print(prob_array.shape)
-        print(type(prob_array))
-        print(type(prob_array[0]))
-        print(type(prob_array[0][0]))
-
-        for i in range(len(Y_test)):
-            temp = list(prob_array[i])
-            index = temp.index(max(temp))
-            # print(index)
-            y_predict.append(label_lst[index])
-        print(y_predict)
-        # 模型预测准确率
-        score = 0
-        for i in range(len(y_predict)):
-            if y_predict[i] == Y_test[i]:
-                score += 1
-            else:
-                pass
-        rate = score / len(y_predict)
-        print("Predict precision: ", rate)
-
-
-
-
-
-
 def read_distributed_data():
     from sklearn.datasets import load_svmlight_file
     import os
@@ -799,8 +704,6 @@ def read_distributed_squeeze_data():
     ## countsketch
     from sklearn.datasets import load_svmlight_file
     import os
-    global flag
-    flag = "sketch"
 
     dataset_file_name = 'DailySports'  
     train_file_name = 'DailySports_train.txt' 
@@ -828,8 +731,10 @@ def read_distributed_squeeze_data():
     
     # 针对SprotsNews, 多分类修改成二分类
     print("processing dataset...")
-    # Y_train[Y_train != 1] = 0
-    # Y_test[Y_test != 1] = 0
+    Y_train[Y_train != 1] = 0
+    Y_test[Y_test != 1] = 0
+    # print(Y_train)
+    # print(Y_test)
 
     # #a6a a7a
     # X_train = X_train.todense().A
@@ -854,9 +759,17 @@ def read_distributed_squeeze_data():
     X_test2 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name2), delimiter=',') #, dtype = float)
     # X = normalize(X,'l2')
     # X_train = ss.fit_transform(X_train)
-    print(X_train1.shape)         #查看特征形状
-    print(type(X_train1), type(X_test1))
-    print(X_test1.shape)         #查看测试特征形状
+    # print(X_train1.shape)         #查看特征形状
+    # print(type(X_train1), type(X_test1))
+    # print(X_test1.shape)         #查看测试特征形状
+    print("X_train1 type: ", type(X_train1)) # 1000 * 60
+    print("X_train1 shape: ", X_train1.shape)
+    print("X_train2 type: ", type(X_train2)) # 1000 * 60
+    print("X_train2 shape: ", X_train2.shape)
+    print("X_test1 type: ", type(X_test1)) # 1000 * 60
+    print("X_test1 shape: ", X_test1.shape)
+    print("X_test2 type: ", type(X_test2)) # 1000 * 60
+    print("X_test2 shape: ", X_test2.shape)
 
     # print("Constructing sparse matrix...") # 使用COO格式高效创建稀疏矩阵, 以线性时间复杂度转化为CSR格式用于高效的矩阵乘法或转置运算.
     # X_train = lil_matrix(X_train)
@@ -917,8 +830,8 @@ if __name__ == "__main__":
                     # splice: 0.8482758620689655
                     # splice 集中 0.9062068965517242
     # 纵向划分分布式
-    LogisticRegressionModel = LogisticRegression(weight_vector = weight_vector, batch_size = 20, 
-                    max_iter = 100, alpha = 0.001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
+    LogisticRegressionModel = LogisticRegression(weight_vector = weight_vector, batch_size = 256, 
+                    max_iter = 25, alpha = 0.001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
                     # splice 分布式 0.9062068965517242
     # LogisticRegressionModel = LogisticRegression(weight_vector = weight_vector, batch_size = 20, 
     #                 max_iter = 600, alpha = 0.0001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
@@ -944,9 +857,7 @@ if __name__ == "__main__":
 
     # 纵向分布保护隐私的分布式
     indice_littleside = X_train1.shape[1]
-    # LogisticRegressionModel.fit_model_secure_distributed_input(X_train1, X_train2, Y_train, X_train1.shape[0], indice_littleside)
-    """ 多分类 """
-    LogisticRegressionModel.OVRClassifier(X_train1, X_train2, X_test1, X_test2, Y_train, Y_test)
+    LogisticRegressionModel.fit_model_secure_distributed_input(X_train1, X_train2, Y_train, X_train1.shape[0], indice_littleside)
 
     time_end = time.time()
     print("SecureMLModel.train_time_account: ", LogisticRegressionModel.train_time_account)
@@ -955,8 +866,8 @@ if __name__ == "__main__":
     # plt.plot(LogisticRegressionModel.loss_history)
     # plt.show()
 
-    ########## 二分类测试 ##########
+    ########## 测试 ##########
     # 理想集中和伪分布式
     # LogisticRegressionModel.predict(X_test, y_test)
     # 纵向划分分布式
-    # LogisticRegressionModel.predict_distributed(X_test1, X_test2, Y_test)
+    LogisticRegressionModel.predict_distributed(X_test1, X_test2, Y_test)

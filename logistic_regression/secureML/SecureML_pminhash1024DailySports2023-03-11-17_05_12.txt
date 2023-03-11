@@ -1,0 +1,23 @@
+
+# ================== # Dataset info # ================== #
+Data source: DailySports - sketch
+Sketching method: pminhash
+Data Portion: 37
+Sampling k: 1024
+Using Counsketch: True
+# ================== # Training info # ================== #
+batch size: 20
+alpha: 0.001
+max_iter: 10
+WAN_bandwidth: 10
+mem_occupancy: 4
+# ================== #   Info End   # ================== #
+
+
+
+# ================== #  Test Model  # ================== #
+score: 231
+len(y): 4560
+Predict precision: 0.0506578947368421
+SecureMLModel.train_time_account: 936.4281738304595
+Total time cost: 1502.3076088928678 s
