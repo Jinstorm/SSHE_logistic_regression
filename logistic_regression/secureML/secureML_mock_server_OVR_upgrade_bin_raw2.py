@@ -1,3 +1,7 @@
+"""
+SecureML OVR 版本, 尝试将数据处理部分放在循环外部
+"""
+
 import numpy as np
 import time
 # import matplotlib.pyplot as plt
@@ -25,7 +29,8 @@ class SecureML:
     SecureML Implementation
     """
     def __init__(self, weight_vector, batch_size, max_iter, alpha, 
-                        eps, ratio = None, penalty = None, lambda_para = 1, data_tag = None):
+                        eps, ratio = None, penalty = None, lambda_para = 1, data_tag = None, ovr = None,
+                        sketch_tag = None, countsketch_c = 0, dataset_name = None, kernel_method = None, sampling_k = None):
         """
         构造函数:初始化
         """
@@ -41,9 +46,11 @@ class SecureML:
         self.penalty = penalty # 正则化策略
         self.lambda_para = lambda_para # 正则化系数
         self.data_tag = data_tag # 输入数据的格式 (目前支持两种格式: sparse和dense)
+        self.ovr = ovr
+        self.countsketch_c = countsketch_c
         
         # WAN(Wide area network) Bandwidth, unit: 使用单位: Mbps (1 MB/s = 8 Mbps); 带宽测试: 40Mbps (5MB/s)
-        self.WAN_bandwidth = 40 # Mbps
+        self.WAN_bandwidth = 10 # Mbps
         self.train_time_account = 0
         self.mem_occupancy = 4 # B 字节 
         # 计算时: 元素个数 * 4 B / 1024 / 1024 MB  / (40/8) s = object_num * self.mem_occupancy / (1024*1024) / (self.WAN_bandwidth/8)
@@ -52,6 +59,13 @@ class SecureML:
         self.cipher = PaillierEncrypt() # Paillier初始化
         self.cipher.generate_key()  # Paillier生成公私钥
         self.fixedpoint_encoder = FixedPointEndec(n = 1e10) # 加密前的定点化编码器初始化
+
+        import time
+        filename = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime(time.time()))
+        if sketch_tag == "sketch":
+            self.logname = "SecureML_" + kernel_method + sampling_k + dataset_name + filename + ".txt"
+        else:
+            self.logname = "SecureML_" + "Raw" + dataset_name + filename + ".txt"
 
         # 进程池
         # self.pool = Pool()
@@ -157,66 +171,53 @@ class SecureML:
         assert(self.local_matrix_A.shape == self.local_matrix_B.shape)
         print("Sharing raw data: \033[32mOK\033[0m")
 
-    def fit_model_secure_distributed_input(self, X_trainA, X_trainB, Y_train, instances_count, feature_count, indice_littleside):
+    def fit_model_secure_distributed_input(self, X_batch_listA, X_batch_listB, y_batch_listA, y_batch_listB, E_batch_list, Z0_batch_list, Z1_batch_list, U0_batch_list, U1_batch_list, instances_count):
+        """
+        Input: 
+        --------
+            train data(vertically partition) 训练数据:  
+                        Batch data of Party A, 
+                        Batch data of Party B
+            label (Secret shared) 训练数据标签:         
+                        Batch y of Party A, 
+                        Batch y of Party B
+            Masked matrix (E = X - U):                 
+                        E_batch_list             
+            Triples (Z0 Z1 from Z's share, U0/U1 from U's share) 三元组: 
+                        Z0_batch_list, Z1_batch_list, 
+                        U0_batch_list, U1_batch_list
+            instances_count: 样本总量
+
+        Update: 
+        --------
+            self.model_weights 模型参数
+        """
         # indice_littleside 用于划分权重, 得到特征数值较小的那一部分的权重-或者左侧 默认X1一侧
-        print("ratio: ", self.ratio)
-        self.indice = indice_littleside
-
-        # generate shared data and labels for two parties
-        self.secretSharing_Data_and_Labels(X_trainA, X_trainB, Y_train)
-        # label: self.Y_A self.Y_B
-        # data: self.local_matrix_A self.local_matrix_B
-
-        # split the model weight according to data distribution
-        self.weightA = self.model_weights
-        self.weightB = self.model_weights
-
-        # generate triples: U V Z V' Z'
-        import math
-        t = int(math.ceil(instances_count/self.batch_size))
-        print("t: ", t)
-        self.generate_UVZV_Z_multTriplets_beaver_triplets(instances_count, feature_count, 
-                                                          t, self.batch_size)
-        # Mask X0 X1 and reconstruct E
-        E0 = self.local_matrix_A - self.U0
-        E1 = self.local_matrix_B - self.U1
-        E = self.reconstruct(E0, E1)
-
-        # generate batch data:
-        X_batch_listA, X_batch_listB, y_batch_listA, y_batch_listB, E_batch_list, Z0_batch_list, Z1_batch_list, U0_batch_list, U1_batch_list = self._generate_batch_data_and_triples(E, self.batch_size)
-        # X_batch_listA, X_batch_listB, y_batch_listA, y_batch_listB, E_batch_list, Z0_batch_list, Z1_batch_list, Zp1_batch_list, Zp2_batch_list = self._generate_batch_data_and_triples(E, self.batch_size)
-        # 这些batch data可以在过程中计算得到: Z_batch_list, Z_p_batch_list (算了一起生成吧)
+        # print("ratio: ", self.ratio)
 
         self.n_iteration = 1
         self.loss_history = []
-        test = 0
 
-        print("[CHECK] weight: ", self.weightA, self.weightB)
+        # print("[CHECK] weight: ", self.weightA, self.weightB)
         self.weightA = self.weightA.reshape(-1, 1)
         self.weightB = self.weightB.reshape(-1, 1)
 
         ############################
-        import time
-        filename = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime(time.time()))
-        name = "SecureML_" + filename + ".txt"
-        self.file = open(name, mode='w+') #  写入记录
-        # time_start_training = time.time()
+        file = open(self.logname, mode='a+') #  写入记录
+        time_start_training_epoch = time.time()
         ############################
         
-        print("[Hint] Training model...")
+        # print("[Hint] Training model...")
         while self.n_iteration <= self.max_iter:
             time_start_training = time.time()
             loss_list = []
             batch_label_A = None
             batch_label_B = None
-            # distributed
-            test = 0
             for batch_dataA, batch_dataB, batch_label_A, batch_label_B, batch_E, batch_Z0, batch_Z1, batch_U0, batch_U1, batch_num in zip(X_batch_listA, X_batch_listB, y_batch_listA, y_batch_listB, 
                                                                          E_batch_list, Z0_batch_list, Z1_batch_list, U0_batch_list, U1_batch_list, self.batch_num):
                 ############################
                 # file.write("batch " + str(test) + "\n")
                 ############################
-                test += 1
                 
                 batch_label_A = batch_label_A.reshape(-1, 1)
                 batch_label_B = batch_label_B.reshape(-1, 1)
@@ -305,20 +306,16 @@ class SecureML:
             
             ## 计算 sum loss
             loss = np.sum(loss_list) / instances_count
-            print("\rIteration {}, batch sum loss: {}".format(self.n_iteration, loss))
+            print("\rEpoch {}, batch sum loss: {}".format(self.n_iteration, loss), end = '')
             
             ############################
             time_end_training = time.time()
-            # print('time cost: ',time_end_training-time_start_training,'s')
-            self.file.write("Time: " + str(time_end_training-time_start_training) + "s\n")
-
-            # file.write("loss shape: " + str(loss.shape) + "\n")
-            self.file.write("\rIteration {}, batch sum loss: {}".format(self.n_iteration, loss))
+            # print(" Time: " + str(time_end_training-time_start_training) + "s\n")
+            if self.ovr == "bin":
+                file.write("\rEpoch {}, batch sum loss: {}".format(self.n_iteration, loss))
+                file.write(" Time: " + str(time_end_training-time_start_training) + "s\n")
             # self.file.close()
             ############################
-
-            # import sys
-            # sys.exit(0)
 
 
             ## 判断是否停止
@@ -327,6 +324,12 @@ class SecureML:
                 if self.ratio is not None: 
                     self.model_weights = self.weightA + self.weightB
                     print("self.model_weights: ", self.model_weights)
+
+                    """ 第i个类别的记录: 运行时间 """
+                    time_end_training = time.time()
+                    if self.ovr == "ovr":
+                        file.write("Epoch num: {}, last epoch loss: {}".format(self.n_iteration, loss))
+                        file.write(" Epoch Total Time: " + str(time_end_training-time_start_training_epoch) + "s\n")
                 break
 
             self.n_iteration += 1
@@ -467,8 +470,6 @@ class SecureML:
 
         print("Batch data generation: \033[32mOK\033[0m")
         return X_batch_listA, X_batch_listB, y_batch_listA, y_batch_listB, E_batch_list, Z0_batch_list, Z1_batch_list, U0_batch_list, U1_batch_list # listA——持有label一侧，较多样本; listB——无label一侧
-    
-    
     def predict_distributed(self, x_test1, x_test2, y_test):
         # z = np.dot(x_test, self.model_weights.T)
         # z = x_test.dot(self.model_weights.T)
@@ -483,25 +484,205 @@ class SecureML:
 
         y = self._compute_sigmoid(z)
 
-        score = 0
+        self.score = 0
         for i in range(len(y)):
             if y[i] >= 0.5: y[i] = 1
             else: y[i] = 0
             if y[i] == y_test[i]:
-                score += 1
+                self.score += 1
             else:
                 pass
-        print("score: ", score)
-        print("len(y): ", len(y))
-        rate = float(score)/float(len(y))
-        print("\nPredict precision: ", rate)
 
-        self.file.write("Predict precision: {}".format(rate))
-        self.file.close()
+        print("score: ", self.score)
+        self.total_num = len(y)
+        print("len(y): ", self.total_num)
+        self.accuracy = float(self.score)/float(len(y))
+        print("\nPredict precision: ", self.accuracy)
+
+
+    
+
+    def Binary_Secure_Classifier(self, X_trainA, X_trainB, Y_train, instances_count, feature_count, indice_littleside):
+        """ 二分类 """
+        # indice_littleside 用于划分权重, 得到特征数值较小的那一部分的权重-或者左侧 默认X1一侧
+        print("ratio: ", self.ratio)
+        self.indice = indice_littleside
+
+        # generate shared data and labels for two parties
+        self.secretSharing_Data_and_Labels(X_trainA, X_trainB, Y_train)
+        # label: self.Y_A self.Y_B
+        # data: self.local_matrix_A self.local_matrix_B
+
+        # split the model weight according to data distribution
+        self.weightA = self.model_weights
+        self.weightB = self.model_weights
+
+        # generate triples: U V Z V' Z'
+        import math
+        t = int(math.ceil(instances_count/self.batch_size))
+        print("t: ", t)
+        self.generate_UVZV_Z_multTriplets_beaver_triplets(instances_count, feature_count, 
+                                                          t, self.batch_size)
+        # Mask X0 X1 and reconstruct E
+        E0 = self.local_matrix_A - self.U0
+        E1 = self.local_matrix_B - self.U1
+        E = self.reconstruct(E0, E1)
+
+        # generate batch data:
+        X_batch_listA, X_batch_listB, y_batch_listA, y_batch_listB, E_batch_list, Z0_batch_list, Z1_batch_list, U0_batch_list, U1_batch_list = self._generate_batch_data_and_triples(E, self.batch_size)
+        # X_batch_listA, X_batch_listB, y_batch_listA, y_batch_listB, E_batch_list, Z0_batch_list, Z1_batch_list, Zp1_batch_list, Zp2_batch_list = self._generate_batch_data_and_triples(E, self.batch_size)
+        # 这些batch data可以在过程中计算得到: Z_batch_list, Z_p_batch_list (算了一起生成吧)
+
+        self.fit_model_secure_distributed_input(X_batch_listA, X_batch_listB, y_batch_listA, y_batch_listB, E_batch_list, Z0_batch_list, Z1_batch_list, U0_batch_list, U1_batch_list, instances_count)
+
+
+
+    def predict_distributed_OVR(self, x_test1, x_test2):
+        x_test = np.hstack((x_test1, x_test2))
+        if self.data_tag == 'sparse':
+            z = x_test.dot(self.model_weights.T)    # np.array类型（此处其实需要严谨一点，避免数据类型不清晰影响后续运算）
+            if not isinstance(z, np.ndarray):
+                z = z.toarray()
+        elif self.data_tag == None:
+            self.model_weights = self.model_weights.reshape(-1, 1)
+            z = np.dot(x_test, self.model_weights)
+
+        y = self._compute_sigmoid(z)
+
+        return y.reshape(1, -1) # list(y.reshape((1, -1)))
+
+
+    def y_update_OVR(self, Y_train, batch_size):
+        """ 依据OVR多分类原理, 依次将某一类设置为正样本, 其他类为负样本 """
+        local_Y, share_Y = self.secret_share_vector_plaintext(Y_train)
+        self.Y_A = local_Y
+        self.Y_B = share_Y
+
+        y_batch_listA = []
+        y_batch_listB = []
+
+        for i in range(len(self.Y_A) // batch_size):
+            # X_tmpA = X1[i * batch_size : i * batch_size + batch_size, :]
+            y_batch_listA.append(self.Y_A[i * batch_size : i * batch_size + batch_size])
+            y_batch_listB.append(self.Y_B[i * batch_size : i * batch_size + batch_size])
+            self.batch_num.append(batch_size)
+
+        if (len(self.Y_A) % batch_size > 0):
+            y_batch_listA.append(self.Y_A[len(self.Y_A) // batch_size * batch_size:])
+            y_batch_listB.append(self.Y_B[len(self.Y_A) // batch_size * batch_size:])
+            self.batch_num.append(len(self.Y_A) % batch_size)
+
+        # print("Batch data generation: \033[32mOK\033[0m")
+        return y_batch_listA, y_batch_listB
+
+
+    def OneVsRest_Secure_Classifier(self, X_train1, X_train2, X_test1, X_test2, Y_train, Y_test):
+        """
+        OVR: one vs rest 多分类
+        """
+        indice_littleside = X_train1.shape[1]
+        self.indice = X_train1.shape[1]
+        instances_count = X_train1.shape[0]
+        label_lst = list(set(Y_train))   # 多分类的所有标签值集合
+        print('数据集标签值集合: ', label_lst)
+        prob_lst = []                    # 存储每个二分类模型的预测概率值
+
+        """ OVR Model Training """
+        """ batch 数据生成 """
+        feature_count = X_train1.shape[1]+X_train2.shape[1]
+        self.indice = indice_littleside
+        # generate shared data and labels for two parties
+        self.secretSharing_Data_and_Labels(X_train1, X_train2, Y_train)
+        # label: self.Y_A self.Y_B
+        # data: self.local_matrix_A self.local_matrix_B
+
+        # split the model weight according to data distribution
+        self.weightA = self.model_weights
+        self.weightB = self.model_weights
+
+        # generate triples: U V Z V' Z'
+        import math
+        t = int(math.ceil(instances_count/self.batch_size))
+        # print("t: ", t)
+        self.generate_UVZV_Z_multTriplets_beaver_triplets(instances_count, feature_count, 
+                                                          t, self.batch_size)
+        # Mask X0 X1 and reconstruct E
+        E0 = self.local_matrix_A - self.U0
+        E1 = self.local_matrix_B - self.U1
+        E = self.reconstruct(E0, E1)
+
+        # generate batch data:
+        X_batch_listA, X_batch_listB, y_batch_listA, y_batch_listB, E_batch_list, Z0_batch_list, Z1_batch_list, U0_batch_list, U1_batch_list = self._generate_batch_data_and_triples(E, self.batch_size)
+        # X_batch_listA, X_batch_listB, y_batch_listA, y_batch_listB, E_batch_list, Z0_batch_list, Z1_batch_list, Zp1_batch_list, Zp2_batch_list = self._generate_batch_data_and_triples(E, self.batch_size)
+        # 这些batch data可以在过程中计算得到: Z_batch_list, Z_p_batch_list (算了一起生成吧)
+        
+        for i in range(len(label_lst)):
+            # 转换标签值为二分类标签值
+            pos_label = label_lst[i]                                        # 选定正样本的标签
+            file = open(self.logname, mode='a+') #  写入记录
+            print("Label: ", pos_label)
+            file.write("Label {}".format(pos_label))
+
+            # def label_reset_OVR(arr):
+            #     """ 依次将标签i设置为正样本, 其他为负样本 """
+            #     # global pos_label
+            #     return np.where(arr == pos_label, 1, 0)
+            
+            # y_batch_list = list(map(label_reset_OVR, Y_train))
+
+            Y_train_new = np.where(Y_train == pos_label, 1, 0)
+
+            y_batch_listA, y_batch_listB = self.y_update_OVR(Y_train_new, self.batch_size)
+            
+            # Y_train_new = np.where(Y_train == pos_label, 1, 0)              # 满足条件则为正样本1，否则为负样本0
+            # Y_test_new = np.where(Y_test == pos_label, 1, 0)
+            # print(Y_train_new)
+            self.fit_model_secure_distributed_input(X_batch_listA, X_batch_listB, y_batch_listA, y_batch_listB, 
+                                                E_batch_list, Z0_batch_list, Z1_batch_list, U0_batch_list, U1_batch_list,
+                                                instances_count)
+            
+            prob = self.predict_distributed_OVR(X_test1, X_test2)   # 第i个二分类模型在测试数据集上，每个样本取正标签的概率（用决策函数值作为概率值）
+            prob = np.where(prob > 0, prob, 0).flatten()
+            prob_lst.append(prob.tolist())
+            # print(prob_lst)
+        
+        # 多分类模型预测
+        print(np.shape(prob_lst))
+        y_predict = []                      # 存储多分类的预测标签值
+        prob_array = np.asarray(prob_lst).T   # (n_samples, n_classes)
+        print(prob_array.shape)
+        print(type(prob_array))
+        print(type(prob_array[0]))
+        print(type(prob_array[0][0]))
+
+        for i in range(len(Y_test)):
+            temp = list(prob_array[i])
+            index = temp.index(max(temp))
+            # print(index)
+            y_predict.append(label_lst[index])
+        # print(y_predict)
+        # 模型预测准确率
+        self.score = 0
+        for i in range(len(y_predict)):
+            if y_predict[i] == Y_test[i]:
+                self.score += 1
+            else:
+                pass
+
+        print("score: ", self.score)
+        self.total_num = len(y_predict)
+        print("len(y): ", self.total_num)
+        self.accuracy = float(self.score)/float(len(y_predict))
+        print("\nPredict precision: ", self.accuracy)
+
+
 
 def read_distributed_data():
     from sklearn.datasets import load_svmlight_file
     import os
+
+    global flag
+    flag = "Raw data"
 
     dataset_file_name = 'kits'  
     train_file_name = 'kits_train.txt' 
@@ -565,33 +746,39 @@ def read_distributed_data():
     # return X_train, Y_train, X_test, Y_test # matrix转array
     return X_train1, X_train2, Y_train, X_test1, X_test2, Y_test 
 
-def read_distributed_squeeze_data():
+def read_distributed_data_raw_or_sketch(dataset_name, raw_or_sketch, kernel_method, portion, sampling_k, ovr, countsketch_):
     ## countsketch
     from sklearn.datasets import load_svmlight_file
-    import os
+    from sklearn.preprocessing import MinMaxScaler, StandardScaler, normalize, Normalizer
+    mm = MinMaxScaler()
+    ss = StandardScaler()
 
-    dataset_file_name = 'kits'  
-    train_file_name = 'kits_train.txt' 
-    test_file_name = 'kits_test.txt'
+    # global flag
+    # flag = "Sketch data (k=1024)"
+
+    main_path = PATH_DATA
+    dataset_file_name = dataset_name  
+    train_file_name = dataset_name + '_train.txt' 
+    test_file_name = dataset_name + '_test.txt'
     # dataset_file_name = 'DailySports'  
     # train_file_name = 'DailySports_train.txt' 
     # test_file_name = 'DailySports_test.txt'
-    main_path = PATH_DATA
-    # main_path = '/Users/zbz/code/vscodemac_python/hetero_sshe_logistic_regression/data/'
+    
 
-    # dataset_file_name = 'a6a'
-    # train_file_name = 'a6a.txt'
-    # test_file_name = 'a6a.t'
-    # main_path = '/Users/zbz/data/'
+    """
+    读取数据集的 Label: Y_train, Y_test
+    """
+    print("loading dataset...")
     train_data = load_svmlight_file(os.path.join(main_path, dataset_file_name, train_file_name))
     test_data = load_svmlight_file(os.path.join(main_path, dataset_file_name, test_file_name))
-    # X_train = train_data[0]
-    Y_train = train_data[1].astype(int)
-    # X_test = test_data[0]
-    Y_test = test_data[1].astype(int)
-    # print(type(X_train)) # 1000 * 60
-    # print(Y_train[0]) # 1000 * 1
 
+    Y_train = train_data[1].astype(int)
+    Y_test = test_data[1].astype(int)
+
+
+    """
+    标签检查和重构
+    """
     ##### 判断标签是(1;-1)还是 (1;0), 将-1的标签全部转化成0标签
     # if -1 in Y_train:  
     #     Y_train[Y_train == -1] = 0
@@ -599,37 +786,79 @@ def read_distributed_squeeze_data():
     
     # 针对SprotsNews, 多分类修改成二分类
     print("processing dataset...")
-    Y_train[Y_train != 1] = 0
-    Y_test[Y_test != 1] = 0
-    # print(Y_train)
-    # print(Y_test)
+    if ovr == "bin":
+        """ 二分类数据集的标签处理为: 1 0 分类 """
+        if -1 in Y_train:
+            # 判断标签是(1;-1)还是 (1;0), 将-1的标签全部转化成0标签
+            Y_train[Y_train != 1] = 0
+            Y_test[Y_test != 1] = 0
 
-    # #a6a a7a
-    # X_train = X_train.todense().A
-    # X_train = np.hstack( (X_train, np.zeros(X_train.shape[0]).reshape(-1, 1)) )
-    # return ss.fit_transform(X_train), Y_train, ss.fit_transform(X_test.todense().A), Y_test # matrix转array
 
-    # #splice
-    # return ss.fit_transform(X_train.todense().A), Y_train, ss.fit_transform(X_test.todense().A), Y_test # matrix转array
-    # # return X_train.todense().A, Y_train, X_test.todense().A, Y_test # matrix转array
-    print("loading dataset...")
+    """
+    确定最终的目标数据集路径
+    """
+    if portion == "37": partition = 3/10
+    elif portion == "28": partition = 2/10
+    elif portion == "19": partition = 1/10
+    elif portion == "46": partition = 4/10
+    else: raise ValueError
 
-    dataset_file_name = 'kits/portion37_pminhash/sketch1024/countsketch/'
-    train_file_name1 = 'X1_squeeze_train37_Countsketch.txt'
-    train_file_name2 = 'X2_squeeze_train37_Countsketch.txt'
-    test_file_name1 = 'X1_squeeze_test37_Countsketch.txt'
-    test_file_name2 = 'X2_squeeze_test37_Countsketch.txt'
-    # main_path = '/Users/zbz/code/vscodemac_python/hetero_sshe_logistic_regression/data/'
-    main_path = PATH_DATA
-    X_train1 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name1), delimiter=',') #, dtype = float)
-    X_train2 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name2), delimiter=',') #, dtype = float)
-    X_test1 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name1), delimiter=',') #, dtype = float)
-    X_test2 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name2), delimiter=',') #, dtype = float)
-    # X = normalize(X,'l2')
-    # X_train = ss.fit_transform(X_train)
-    # print(X_train1.shape)         #查看特征形状
-    # print(type(X_train1), type(X_test1))
-    # print(X_test1.shape)         #查看测试特征形状
+    if raw_or_sketch == "sketch":
+
+        """ 获取需要读取的sketch的相对路径 """
+        portion_kernel_method = "portion" + portion + "_" + kernel_method
+        sketch_sample = "sketch" + sampling_k
+
+        # dataset_file_name = 'kits/portion37_pminhash/sketch1024/countsketch/'
+        # train_file_name1 = 'X1_squeeze_train37_Countsketch.txt'
+        # train_file_name2 = 'X2_squeeze_train37_Countsketch.txt'
+        # test_file_name1 = 'X1_squeeze_test37_Countsketch.txt'
+        # test_file_name2 = 'X2_squeeze_test37_Countsketch.txt'
+
+        if countsketch_:
+            """ sketch + countsketch """
+            dataset_file_name = os.path.join(dataset_name, portion_kernel_method, sketch_sample, "countsketch")
+            train_file_name1 = 'X1_squeeze_train37_Countsketch.txt'
+            train_file_name2 = 'X2_squeeze_train37_Countsketch.txt'
+            test_file_name1 = 'X1_squeeze_test37_Countsketch.txt'
+            test_file_name2 = 'X2_squeeze_test37_Countsketch.txt'
+
+        else:
+            """ sketch only """
+            dataset_file_name = os.path.join(dataset_name, portion_kernel_method, sketch_sample)
+            train_file_name1 = 'X1_train_samples.txt'
+            train_file_name2 = 'X2_train_samples.txt'
+            test_file_name1 = 'X1_test_samples.txt'
+            test_file_name2 = 'X2_test_samples.txt'
+
+        X_train1 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name1), delimiter=',') #, dtype = float)
+        X_train2 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name2), delimiter=',') #, dtype = float)
+        X_test1 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name1), delimiter=',') #, dtype = float)
+        X_test2 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name2), delimiter=',') #, dtype = float)
+
+        
+    elif raw_or_sketch == "raw":
+        """ 对于 Raw data, 直接读入原始数据, 然后按照比例 portion 分成两个部分, 作为两方数据 """
+        print("Try to read Raw data...")
+
+        X_train = train_data[0].todense().A
+        X_train = mm.fit_transform(X_train)
+        X_test = test_data[0].todense().A
+        X_test = mm.fit_transform(X_test)
+
+        # X_train
+        k = X_train.shape[1] # 总特征数
+        # partition = 3/10
+        k1 = np.floor(k * partition).astype(int) # X1的特征数
+        X_train1, X_train2 = X_train[:,0:k1], X_train[:,k1:]
+
+        # X_test
+        k = X_test.shape[1]
+        # partition = 3/10
+        k1 = np.floor(k * partition).astype(int)
+        X_test1, X_test2 = X_test[:,0:k1], X_test[:,k1:]
+
+    
     print("X_train1 type: ", type(X_train1)) # 1000 * 60
     print("X_train1 shape: ", X_train1.shape)
     print("X_train2 type: ", type(X_train2)) # 1000 * 60
@@ -638,26 +867,15 @@ def read_distributed_squeeze_data():
     print("X_test1 shape: ", X_test1.shape)
     print("X_test2 type: ", type(X_test2)) # 1000 * 60
     print("X_test2 shape: ", X_test2.shape)
-
-    # print("Constructing sparse matrix...") # 使用COO格式高效创建稀疏矩阵, 以线性时间复杂度转化为CSR格式用于高效的矩阵乘法或转置运算.
-    # X_train = lil_matrix(X_train)
-    # # X_train.tocsr()
-    # X_test = lil_matrix(X_test)
-    # # X_test.tocsr()
-    # print(type(X_train), type(X_test))
     
-    return X_train1, X_train2, Y_train, X_test1, X_test2, Y_test # matrix转array
+    return X_train1, X_train2, Y_train, X_test1, X_test2, Y_test
 
 
 def read_distributed_encoded_data():
     from sklearn.datasets import load_svmlight_file
-    import os
     from sklearn.preprocessing import MinMaxScaler, StandardScaler, normalize
     mm = MinMaxScaler()
     ss = StandardScaler()
-
-    global flag
-    flag = "Splice encoded data - splice/distrubuted/encoded/"
 
     dataset_file_name = 'splice'  
     train_file_name = 'splice_train.txt' 
@@ -686,14 +904,6 @@ def read_distributed_encoded_data():
     # print(Y_train)
     # print(Y_test)
 
-    # #a6a a7a
-    # X_train = X_train.todense().A
-    # X_train = np.hstack( (X_train, np.zeros(X_train.shape[0]).reshape(-1, 1)) )
-    # return ss.fit_transform(X_train), Y_train, ss.fit_transform(X_test.todense().A), Y_test # matrix转array
-
-    # #splice
-    # return ss.fit_transform(X_train.todense().A), Y_train, ss.fit_transform(X_test.todense().A), Y_test # matrix转array
-    # # return X_train.todense().A, Y_train, X_test.todense().A, Y_test # matrix转array
     print("loading dataset...")
 
     dataset_file_name = 'splice/distrubuted/encoded/'  
@@ -709,113 +919,84 @@ def read_distributed_encoded_data():
     X_test2 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name2), delimiter=',') #, dtype = float)
     # X = normalize(X,'l2')
     # X_train = ss.fit_transform(X_train)
-
-    print("X_train1 type: ", type(X_train1)) # 1000 * 60
-    print("X_train1 shape: ", X_train1.shape)
-    print("X_train2 type: ", type(X_train2)) # 1000 * 60
-    print("X_train2 shape: ", X_train2.shape)
-    print("X_test1 type: ", type(X_test1)) # 1000 * 60
-    print("X_test1 shape: ", X_test1.shape)
-    print("X_test2 type: ", type(X_test2)) # 1000 * 60
-    print("X_test2 shape: ", X_test2.shape)
-
-    # print("Constructing sparse matrix...") # 使用COO格式高效创建稀疏矩阵, 以线性时间复杂度转化为CSR格式用于高效的矩阵乘法或转置运算.
-    # X_train = lil_matrix(X_train)
-    # # X_train.tocsr()
-    # X_test = lil_matrix(X_test)
-    # # X_test.tocsr()
-    # print(type(X_train), type(X_test))
-    
-    return X_train1, X_train2, Y_train, X_test1, X_test2, Y_test # matrix转array
-
-
-def read_distributed_squeeze_data_splice():
-    ## countsketch
-    from sklearn.datasets import load_svmlight_file
-    import os
-    from sklearn.preprocessing import MinMaxScaler, StandardScaler, normalize
-    mm = MinMaxScaler()
-    ss = StandardScaler()
-
-    dataset_file_name = 'kits'  
-    train_file_name = 'kits_train.txt' 
-    test_file_name = 'kits_test.txt'
-    main_path = PATH_DATA
-    # main_path = '/Users/zbz/code/vscodemac_python/hetero_sshe_logistic_regression/data/'
-
-    # dataset_file_name = 'a6a'
-    # train_file_name = 'a6a.txt'
-    # test_file_name = 'a6a.t'
-    # main_path = '/Users/zbz/data/'
-    train_data = load_svmlight_file(os.path.join(main_path, dataset_file_name, train_file_name))
-    test_data = load_svmlight_file(os.path.join(main_path, dataset_file_name, test_file_name))
-    # X_train = train_data[0]
-    Y_train = train_data[1].astype(int)
-    # X_test = test_data[0]
-    Y_test = test_data[1].astype(int)
-    # print(type(X_train)) # 1000 * 60
-    # print(Y_train[0]) # 1000 * 1
-
-    # 判断标签是(1;-1)还是 (1;0), 将-1的标签全部转化成0标签
-    if -1 in Y_train:  
-        Y_train[Y_train == -1] = 0
-        Y_test[Y_test == -1] = 0
-    # print(Y_train)
-    # print(Y_test)
-
-    # #a6a a7a
-    # X_train = X_train.todense().A
-    # X_train = np.hstack( (X_train, np.zeros(X_train.shape[0]).reshape(-1, 1)) )
-    # return ss.fit_transform(X_train), Y_train, ss.fit_transform(X_test.todense().A), Y_test # matrix转array
-
-    # #splice
-    # return ss.fit_transform(X_train.todense().A), Y_train, ss.fit_transform(X_test.todense().A), Y_test # matrix转array
-    # # return X_train.todense().A, Y_train, X_test.todense().A, Y_test # matrix转array
-    print("loading dataset...")
-
-    dataset_file_name = 'splice/distrubuted/countsketch/'  
-    train_file_name1 = 'X1_squeeze_train37_Countsketch.txt'
-    train_file_name2 = 'X2_squeeze_train37_Countsketch.txt'
-    test_file_name1 = 'X1_squeeze_test37_Countsketch.txt'
-    test_file_name2 = 'X2_squeeze_test37_Countsketch.txt'
-    # main_path = '/Users/zbz/code/vscodemac_python/hetero_sshe_logistic_regression/data/'
-    main_path = PATH_DATA
-    X_train1 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name1), delimiter=',') #, dtype = float)
-    X_train2 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name2), delimiter=',') #, dtype = float)
-    X_test1 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name1), delimiter=',') #, dtype = float)
-    X_test2 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name2), delimiter=',') #, dtype = float)
-    # X = normalize(X,'l2')
-    # X_train = ss.fit_transform(X_train)
     print(X_train1.shape)         #查看特征形状
     print(type(X_train1), type(X_test1))
     print(X_test1.shape)         #查看测试特征形状
-
-    # print("Constructing sparse matrix...") # 使用COO格式高效创建稀疏矩阵, 以线性时间复杂度转化为CSR格式用于高效的矩阵乘法或转置运算.
-    # X_train = lil_matrix(X_train)
-    # # X_train.tocsr()
-    # X_test = lil_matrix(X_test)
-    # # X_test.tocsr()
-    # print(type(X_train), type(X_test))
     
     return X_train1, X_train2, Y_train, X_test1, X_test2, Y_test # matrix转array
 
 
 
-def logger_info(objectmodel):
-    global flag
-    # flag = "Raw data"
-    print("batch size: ", objectmodel.batch_size)
-    print("alpha: ", objectmodel.alpha)
-    print("max_iter: ", objectmodel.max_iter)
-    print("WAN_bandwidth: ", objectmodel.WAN_bandwidth)
-    print("mem_occupancy: ", objectmodel.mem_occupancy)
-    print("data source: " + flag)
+def logger_info(objectmodel, dataset_name, raw_or_sketch, kernel_method, portion, sampling_k, countsketch_,
+                X_train1_shape, X_train2_shape, X_test1_shape, X_test2_shape, Y_train_shape, Y_test_shape):
+
+    file = open(objectmodel.logname, mode='w+') #  写入记录
+    file.write("\n =================== # Dataset info # =================== ")
+    file.write("\nData source: {} - {}".format(dataset_name, raw_or_sketch))
+    file.write("\nFeature: {}".format(objectmodel.ovr)) # bin / ovr 二分类 或 多分类
+    file.write("\nData Portion: {}".format(portion))  # ratio
+
+    if raw_or_sketch == "sketch":
+        """ sketch data info """
+        file.write("\nSketching method: {}".format(kernel_method))
+        file.write("\nSampling k: {}".format(sampling_k))
+        if countsketch_: file.write("\nUsing Counsketch: c = {}".format(countsketch_))
+        else: file.write("\nUsing Counsketch: Just sketch.")
+    
+    file.write("\nTrain A shape: {}, Train B shape: {}, label shape: {}".format(X_train1_shape, X_train2_shape, Y_train_shape))
+    file.write("\nTest data shape: ({}, {}), label shape: {}".format(X_test1_shape[0], X_test1_shape[1]+X_test2_shape[1], Y_test_shape))
+
+    file.write("\n =================== # Training info # =================== ")
+    file.write("\nbatch size: {}".format(objectmodel.batch_size))
+    file.write("\nalpha: {}".format(objectmodel.alpha))
+    file.write("\nmax_iter: {}".format(objectmodel.max_iter))
+    file.write("\nWAN_bandwidth: {} Mbps".format(objectmodel.WAN_bandwidth))
+    file.write("\nmem_occupancy: {} Byte".format(objectmodel.mem_occupancy))
+    file.write("\n =================== #   Info End   # =================== \n\n")
+    
+    # file.close()
+    # print("batch size: ", objectmodel.batch_size)
+    # print("alpha: ", objectmodel.alpha)
+    # print("max_iter: ", objectmodel.max_iter)
+    # print("WAN_bandwidth: ", objectmodel.WAN_bandwidth)
+    # print("mem_occupancy: ", objectmodel.mem_occupancy)
+    # print("data source: " + flag)
+
+def logger_test_model(objectmodel):
+    file = open(objectmodel.logname, mode='a+') #  写入记录
+    file.write("\n# ================== #  Test Model  # ================== #")
+    file.write("\nscore: {}".format(objectmodel.score))
+    file.write("\nlen(y): {}".format(objectmodel.total_num))
+    file.write("\nPredict precision: {}".format(objectmodel.accuracy))
+    file.close()
+
 
 if __name__ == "__main__":
-    # print("Hi.")
-    # import sys
-    # sys.exit(0)
+
     ########## 读取数据 ##########
+    dataset_name = "kits"
+    portion = "37" # 19 / 28 / 37 / 46 / 55
+    raw_or_sketch = "raw" # "raw" / "sketch"
+    kernel_method = "pminhash" # 0bitcws / RFF / Poly
+    sampling_k = "1024"
+    countsketch_ = 4 # using countsketch and c = 4 / c = 8 ; not using it: c = 0
+
+    ovr = "bin" # bin 二分类 / ovr 多分类
+    
+
+    # dataset_name = "DailySports"
+    # portion = "37" # 19 / 28 / 37 / 46 / 55
+    # raw_or_sketch = "sketch" # "raw" / "sketch"
+    # kernel_method = "pminhash" # 0bitcws / RFF / Poly
+    # sampling_k = "1024"
+    # countsketch_ = 4
+
+    # ovr = "ovr" # bin 二分类 / ovr 多分类
+
+
+
+    Writing_to_Final_Logfile = False # 是否将本次实验结果写入此数据集的结果汇总中
+
     # 基础测试
     # X_data, y_data, X_test, y_test = read_data()
     # X_data, y_data, X_test, y_test = read_sampling_data()
@@ -827,12 +1008,11 @@ if __name__ == "__main__":
     # X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_encoded_data()
 
     # Raw data
-    X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_data()
-    # Sketch data
-    # X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_squeeze_data()
+    # X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_data()
 
-    # splice
-    # X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_squeeze_data_splice()
+    # Sketch data
+    X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_data_raw_or_sketch(dataset_name, raw_or_sketch, 
+                                                                    kernel_method, portion, sampling_k, ovr, countsketch_)
 
     # print(X_train1.shape, X_train2.shape, X_train1.shape[1], X_train2.shape[1], Y_train.shape, X_test1.shape, Y_test.shape)
 
@@ -867,7 +1047,9 @@ if __name__ == "__main__":
                     # splice 集中 0.9062068965517242
     # 纵向划分分布式
     SecureMLModel = SecureML(weight_vector = weight_vector, batch_size = 20, 
-                    max_iter = 200, alpha = 0.001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
+                    max_iter = 100, alpha = 0.0001, eps = 1e-5, ratio = 0.7, penalty = None, lambda_para = 1, 
+                    data_tag = None, ovr = ovr,
+                    sketch_tag = raw_or_sketch, countsketch_c = countsketch_, dataset_name = dataset_name, kernel_method = kernel_method, sampling_k = sampling_k)
                     # splice 分布式 0.9062068965517242
     # LogisticRegressionModel = LogisticRegression(weight_vector = weight_vector, batch_size = 20, 
     #                 max_iter = 600, alpha = 0.0001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
@@ -879,9 +1061,8 @@ if __name__ == "__main__":
     # 集中：
     # sparse:  14.546779870986938 s   Predict precision:  0.9062068965517242
 
-
-    logger_info(SecureMLModel)
-
+    logger_info(SecureMLModel, dataset_name, raw_or_sketch, kernel_method, portion, sampling_k, countsketch_,
+                X_train1.shape, X_train2.shape, X_test1.shape, X_test2.shape, Y_train.shape, Y_test.shape)
 
     ########## 训练 ##########
     import time
@@ -897,12 +1078,22 @@ if __name__ == "__main__":
 
     # 纵向分布保护隐私的分布式
     indice_littleside = X_train1.shape[1]
-    SecureMLModel.fit_model_secure_distributed_input(X_train1, X_train2, Y_train, X_train1.shape[0], (X_train1.shape[1]+X_train2.shape[1]), indice_littleside)
-    # SecureMLModel.fit_model_secure_2process(X_train1, X_train2, Y_train, X_train1.shape[0], indice_littleside)
 
+    if SecureMLModel.ovr == "bin":
+        SecureMLModel.Binary_Secure_Classifier(X_train1, X_train2, Y_train, X_train1.shape[0], (X_train1.shape[1]+X_train2.shape[1]), indice_littleside)
+        # SecureMLModel.fit_model_secure_2process(X_train1, X_train2, Y_train, X_train1.shape[0], indice_littleside)
+    elif SecureMLModel.ovr == "ovr":
+        SecureMLModel.OneVsRest_Secure_Classifier(X_train1, X_train2, X_test1, X_test2, Y_train, Y_test)
+    
     time_end = time.time()
-    print("SecureMLModel.train_time_account: ", SecureMLModel.train_time_account)
-    print('Total time cost: ', time_end - time_start + SecureMLModel.train_time_account,'s')
+    print("SecureMLModel comm_time account: ", SecureMLModel.train_time_account)
+    print('Total time cost: ' + str(time_end - time_start + SecureMLModel.train_time_account) + 's')
+
+    
+    file = open(SecureMLModel.logname, mode='a+') #  写入记录
+    file.write("\n# ================== #   Train Time   # ================== #")
+    file.write("\nSecureMLModel comm_time account: {}".format(SecureMLModel.train_time_account))
+    file.write("\nTotal time cost: {} s".format(time_end - time_start + SecureMLModel.train_time_account))
 
     # plt.plot(LogisticRegressionModel.loss_history)
     # plt.show()
@@ -911,4 +1102,12 @@ if __name__ == "__main__":
     # 理想集中和伪分布式
     # LogisticRegressionModel.predict(X_test, y_test)
     # 纵向划分分布式
-    SecureMLModel.predict_distributed(X_test1, X_test2, Y_test)
+    print("bin: ", SecureMLModel.ovr)
+    if SecureMLModel.ovr == "bin":
+        print("bin")
+        SecureMLModel.predict_distributed(X_test1, X_test2, Y_test)
+    elif SecureMLModel.ovr == "ovr":
+        pass
+    
+    logger_test_model(SecureMLModel)
+            

@@ -385,12 +385,14 @@ class LogisticRegression:
                 # print(type(self.za))
                 # print(type(self.zb))
 
-                encrypt_za = self.cipher.recursive_encrypt(self.za)
+                # encrypt_za = self.cipher.recursive_encrypt(self.za)
+                encrypt_zb = self.cipher.recursive_encrypt(self.zb)
                 # encrypt_zb = np.asarray(self.pool.map(self.cipher.recursive_encrypt, self.zb))
                 # print("type encrypt_zb: ", type(encrypt_zb))
 
                 # wx encrypt
-                self.encrypt_wx = self.zb + encrypt_za
+                self.encrypt_wx = self.za + encrypt_zb 
+                # self.encrypt_wx = self.zb + encrypt_za
                 # sigmoid
                 self.encrypted_sigmoid_wx = self._compute_sigmoid(self.encrypt_wx)
                 # error
@@ -687,10 +689,11 @@ class LogisticRegression:
             # Y_train_new = np.where(Y_train == pos_label, 1, 0)              # 满足条件则为正样本1，否则为负样本0
             # Y_test_new = np.where(Y_test == pos_label, 1, 0)
             # print(Y_train_new)
-            self.fit_model_secure_distributed_input(X_batch_listA, X_batch_listB, y_batch_list, instances_count)
+            self.fit_model_secure_distributed_input(X_batch_listA, X_batch_listB, y_batch_list, 
+                                                    instances_count)
             
             print(" fit_model done.")
-            # print(self.model_weights)
+            print(self.model_weights)
             prob = self.predict_distributed_OVR(X_test1, X_test2)   # 第i个二分类模型在测试数据集上，每个样本取正标签的概率（用决策函数值作为概率值）
             prob = np.where(prob > 0, prob, 0).flatten()
             prob_lst.append(prob.tolist())

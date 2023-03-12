@@ -75,15 +75,33 @@ import numpy as np
 # print(a*a+2*a*b+b*b)
 
  
-c = np.array([[1,2,0],[4,0,1],[0,5,0]])
-c[c!=0] = -1
-print(c)
-i = 1
-c = 2
-# raise NotImplementedError("Invalid rate.")
-while i <= 10:
-    print(i)
-    if c == 1 or i == 10:
-        print("hello")
-    i = i +1
+# c = np.array([[1,2,3],[2,3,4]])
+# c = np.array([[1,2,3],[2,3,4]])
+# c = c.shape
+# # print(c.shape)
+# print("shape:{}".format(c[0]))
 
+
+def test():
+    import argparse
+    # 创建解析步骤
+    parser = argparse.ArgumentParser(description='ababa')
+
+    # 添加参数步骤
+    parser.add_argument('integers', metavar='N', type=int, nargs='+', help='an integer for the accumulator')
+    parser.add_argument('--sum', dest='accumulate', action='store_const', const=sum, default=max, help='sum the integers')
+    # 解析参数步骤  
+    args = parser.parse_args()
+    print(args.accumulate(args.integers))
+
+import argparse
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="annotated data set for aligned")
+    parser.add_argument('-r1', '--src-data-root', dest='data_root1', required=True, default='/mnt/dms_data/Data_All/custom_alarm_smokeall_20190505/json/v20190610', type=str, metavar='STRING', help='src data path')
+    parser.add_argument('-r2', '--dst-data-root', dest='data_root2', required=True, default='/mnt/dms_data/Data_All/custom_alarm_smokeall_20190505/json/v20190505', type=str, metavar='STRING', help='tag data path')
+    parser.add_argument('-r3', '-a', dest='data_root3', required=True, type=str, metavar='STRING', choices=['raw', 'sketch'], help='tag data path')
+    args = parser.parse_args()
+    data_root1 = args.data_root1
+    data_root2 = args.data_root2
+    print('data_root1 path is %s' % data_root1)  # data_root1 path is /mnt/dms_data/Data_All/custom_alarm_smokeall_20190505/json/v20190610
+    print('data_root2 path is %s' % data_root2)  # data_root1 path is /mnt/dms_data/Data_All/custom_alarm_smokeall_20190505/json/v20190610
