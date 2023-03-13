@@ -821,7 +821,7 @@ def read_distributed_data_raw_or_sketch(dataset_name, raw_or_sketch, kernel_meth
 
         if countsketch_:
             """ sketch + countsketch """
-            dataset_file_name = os.path.join(dataset_name, portion_kernel_method, sketch_sample, "countsketch")
+            dataset_file_name = os.path.join(dataset_name, portion_kernel_method, sketch_sample, "countsketch"+"_"+str(countsketch_))
             train_file_name1 = 'X1_squeeze_train37_Countsketch.txt'
             train_file_name2 = 'X2_squeeze_train37_Countsketch.txt'
             test_file_name1 = 'X1_squeeze_test37_Countsketch.txt'
@@ -835,11 +835,13 @@ def read_distributed_data_raw_or_sketch(dataset_name, raw_or_sketch, kernel_meth
             test_file_name1 = 'X1_test_samples.txt'
             test_file_name2 = 'X2_test_samples.txt'
 
-        X_train1 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name1), delimiter=',') #, dtype = float)
+        X_train1 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name1), delimiter=',') #, dtype = float) # <class 'numpy.float64'>
         X_train2 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name2), delimiter=',') #, dtype = float)
         X_test1 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name1), delimiter=',') #, dtype = float)
         X_test2 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name2), delimiter=',') #, dtype = float)
 
+        print(X_train1) # [[0. 1. 0. ... 1. 0. 1.]]
+        print(type(X_train1[0][0])) # <class 'numpy.float64'>
         
     elif raw_or_sketch == "raw":
         """ 对于 Raw data, 直接读入原始数据, 然后按照比例 portion 分成两个部分, 作为两方数据 """
@@ -989,8 +991,8 @@ if __name__ == "__main__":
     portion = "37" # 19 / 28 / 37 / 46 / 55
     raw_or_sketch = "sketch" # "raw" / "sketch"
     kernel_method = "pminhash" # 0bitcws / RFF / Poly
-    sampling_k = "1024"
-    countsketch_ = 4
+    sampling_k = "512"
+    countsketch_ = 2
 
     ovr = "ovr" # bin 二分类 / ovr 多分类
 

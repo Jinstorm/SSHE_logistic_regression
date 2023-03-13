@@ -1,0 +1,28 @@
+
+ =================== # Dataset info # =================== 
+Data source: kits - raw
+Feature: bin
+Data Portion: 37
+Train A shape: (700, 8294), Train B shape: (700, 19354), label shape: (700,)
+Test data shape: (300, 27648), label shape: (300,)
+ =================== # Training info # =================== 
+batch size: 20
+alpha: 0.0001
+max_iter: 20
+WAN_bandwidth: 10 Mbps
+mem_occupancy: 4 Byte
+ =================== #   Info End   # =================== 
+
+Epoch 1, batch sum loss: 0.6953907559242634 Time: 14.869165897369385s
+Epoch 2, batch sum loss: 0.6952955690236813 Time: 14.752914905548096s
+Epoch 3, batch sum loss: 0.6951938629752352 Time: 14.50725245475769s
+Epoch 4, batch sum loss: 0.6951616370696735 Time: 14.875886917114258s
+Epoch 5, batch sum loss: 0.6951625462814073 Time: 14.015349626541138s
+
+# ================== #  Test Model  # ================== #
+score: 177
+len(y): 300
+Predict precision: 0.59
+# ================== #   Train Time   # ================== #
+SecureMLModel comm_time account: 283.60040283203756
+Total time cost: 515.4759037494723 s

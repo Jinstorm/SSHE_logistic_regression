@@ -824,7 +824,7 @@ def read_distributed_data_raw_or_sketch(dataset_name, raw_or_sketch, kernel_meth
 
         if countsketch_:
             """ sketch + countsketch """
-            dataset_file_name = os.path.join(dataset_name, portion_kernel_method, sketch_sample, "countsketch")
+            dataset_file_name = os.path.join(dataset_name, portion_kernel_method, sketch_sample, "countsketch"+"_"+str(countsketch_))
             train_file_name1 = 'X1_squeeze_train37_Countsketch.txt'
             train_file_name2 = 'X2_squeeze_train37_Countsketch.txt'
             test_file_name1 = 'X1_squeeze_test37_Countsketch.txt'

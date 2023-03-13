@@ -133,7 +133,7 @@ def Dis_samples_to_sketch(m, n, n1, k, b, c, samples1, samples2):
 
 PATH_DATA = '../data/'
 
-def sketch_to_countsketch(tag, b, division, dataset, portion_method, sampling_rate, sketching_method):
+def sketch_to_countsketch(tag, b, c, dataset, portion_method, portion, sampling_rate, sketching_method):
     """
     dataset结构:
     dataset_name/portion比例_近似方法/采样次数/4个数据集文件
@@ -164,6 +164,13 @@ def sketch_to_countsketch(tag, b, division, dataset, portion_method, sampling_ra
     # test_file_name2 = 'X2_encoded_test37.txt'
     # main_path = '/Users/zbz/code/vscodemac_python/hetero_sshe_logistic_regression/data/'
     main_path = PATH_DATA
+
+    if portion == "37": partition = 3/10
+    elif portion == "28": partition = 2/10
+    elif portion == "19": partition = 1/10
+    elif portion == "46": partition = 4/10
+    elif portion == "55": partition = 5/10
+    else: raise ValueError
     
     if tag == "train":
         X_train1 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name1), delimiter=',', dtype = int)
@@ -175,7 +182,6 @@ def sketch_to_countsketch(tag, b, division, dataset, portion_method, sampling_ra
         n1 = X_train1.shape[1]
         k = n
         b = 0
-        c = division
         print(c)
         # import sys
         # sys.exit()
@@ -184,12 +190,12 @@ def sketch_to_countsketch(tag, b, division, dataset, portion_method, sampling_ra
         print("Sketch train data shape: ", sketch.shape)
 
         k = sketch.shape[1]
-        partition = 3/10
+        # partition = 3/10
         k1 = np.floor(k * partition).astype(int)
         result_X_train1, result_X_train2 = sketch[:,0:k1], sketch[:,k1:]
 
         # 训练集
-        train_sketch_savepath = str(sketching_method) # "countsketch"
+        train_sketch_savepath = str(sketching_method) + "_" + str(c) # "countsketch"
         train_save_name1 = "X1_squeeze_train37_Countsketch.txt"
         train_save_name2 = "X2_squeeze_train37_Countsketch.txt"
         
@@ -225,13 +231,12 @@ def sketch_to_countsketch(tag, b, division, dataset, portion_method, sampling_ra
         n1 = X_test1.shape[1]
         k = n
         b = 0
-        c = division
 
         sketch = Dis_samples_to_sketch(m, n, n1, k, b, c, X_test1, X_test2).toarray()
         print("Sketch test data shape: ", sketch.shape)
 
         k = sketch.shape[1]
-        partition = 3/10
+        # partition = 3/10
         k1 = np.floor(k * partition).astype(int)
         result_X_test1, result_X_test2 = sketch[:,0:k1], sketch[:,k1:]
 
@@ -239,7 +244,7 @@ def sketch_to_countsketch(tag, b, division, dataset, portion_method, sampling_ra
         print(result_X_test2.shape[0], result_X_test2.shape[1])
 
         # 测试集
-        test_sketch_savepath = str(sketching_method) # "countsketch"
+        test_sketch_savepath = str(sketching_method) + "_" + str(c)  # "countsketch"
         test_save_name1 = "X1_squeeze_test37_Countsketch.txt"
         test_save_name2 = "X2_squeeze_test37_Countsketch.txt"
         
@@ -272,11 +277,13 @@ def sketch_to_countsketch(tag, b, division, dataset, portion_method, sampling_ra
 if __name__ == '__main__':
     # X_train1, X_train2, Y_train, X_test1, X_test2, Y_test = read_distributed_encoded_data()
     print("loading dataset...")
-    c = 4
-    dataset_name = "kits"
-    sampling_rate = 1024
+    
+    dataset_name = "DailySports" # DailySports / kits
+    sampling_rate = 512
+    c = 2
+    portion = "37"
     portion_method = "portion37_pminhash"
     sketching_method = "countsketch"
-    sketch_to_countsketch("train", 0, c, dataset_name, portion_method, sampling_rate, sketching_method)
-    sketch_to_countsketch("test", 0, c, dataset_name, portion_method, sampling_rate, sketching_method)
+    sketch_to_countsketch("train", 0, c, dataset_name, portion_method, portion, sampling_rate, sketching_method)
+    sketch_to_countsketch("test", 0, c, dataset_name, portion_method, portion, sampling_rate, sketching_method)
     

@@ -1,0 +1,177 @@
+nohup: 忽略输入
+loading dataset...
+processing dataset...
+X_train1 type:  <class 'numpy.ndarray'>
+X_train1 shape:  (4560, 614)
+X_train2 type:  <class 'numpy.ndarray'>
+X_train2 shape:  (4560, 1434)
+X_test1 type:  <class 'numpy.ndarray'>
+X_test1 shape:  (4560, 614)
+X_test2 type:  <class 'numpy.ndarray'>
+X_test2 shape:  (4560, 1434)
+数据集标签值集合:  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+Sharing raw data: [32mOK[0m
+Batch data generation: [32mOK[0m
+Label:  0
+Epoch 1, batch sum loss: 0.6943455569920786Epoch 2, batch sum loss: 0.6936046613141413Epoch 3, batch sum loss: 0.6933256459641137Epoch 4, batch sum loss: 0.6931382165200938Epoch 5, batch sum loss: 0.6930029517231937Epoch 6, batch sum loss: 0.6929008327971473Epoch 7, batch sum loss: 0.6928211913750071Epoch 8, batch sum loss: 0.6927574728268729Epoch 9, batch sum loss: 0.6927054080005647Epoch 10, batch sum loss: 0.6926621031111511Epoch 11, batch sum loss: 0.6926255161877694Epoch 12, batch sum loss: 0.6925941905957363Epoch 13, batch sum loss: 0.6925670523317776Epoch 14, batch sum loss: 0.692543305993559Epoch 15, batch sum loss: 0.6925223530779592Epoch 16, batch sum loss: 0.6925037205726385Epoch 17, batch sum loss: 0.6924870442804298Epoch 18, batch sum loss: 0.6924720414658234Epoch 19, batch sum loss: 0.6924584743314929Epoch 20, batch sum loss: 0.6924461553515276Epoch 21, batch sum loss: 0.6924349284306582Epoch 22, batch sum loss: 0.6924246670873524Epoch 23, batch sum loss: 0.6924152524259283self.model_weights:  [[0.003228347544791177]
+ [-0.007175107137300074]
+ [-0.002969942332128994]
+ ...
+ [0.005389689045841806]
+ [0.008651416763314046]
+ [-0.012598176050232723]]
+Label:  1
+Epoch 1, batch sum loss: 0.6942162267255644Epoch 2, batch sum loss: 0.6938283758350664Epoch 3, batch sum loss: 0.6936966522403365Epoch 4, batch sum loss: 0.6936073565709273Epoch 5, batch sum loss: 0.6935358384069539Epoch 6, batch sum loss: 0.6934758970314959Epoch 7, batch sum loss: 0.6934244482877252Epoch 8, batch sum loss: 0.6933795700909337Epoch 9, batch sum loss: 0.6933399320142694Epoch 10, batch sum loss: 0.6933045860485665Epoch 11, batch sum loss: 0.6932728185797854Epoch 12, batch sum loss: 0.6932440885544557Epoch 13, batch sum loss: 0.6932179538932937Epoch 14, batch sum loss: 0.6931940785594565Epoch 15, batch sum loss: 0.693172166427172Epoch 16, batch sum loss: 0.6931519678190308Epoch 17, batch sum loss: 0.6931333006812553Epoch 18, batch sum loss: 0.6931159738325076Epoch 19, batch sum loss: 0.693099856501907Epoch 20, batch sum loss: 0.693084822218296Epoch 21, batch sum loss: 0.6930707429527528Epoch 22, batch sum loss: 0.6930575519798992Epoch 23, batch sum loss: 0.693045159774461Epoch 24, batch sum loss: 0.6930334732770924Epoch 25, batch sum loss: 0.6930224605998326Epoch 26, batch sum loss: 0.6930120387453487Epoch 27, batch sum loss: 0.6930021747891187self.model_weights:  [[0.015314069838495925]
+ [-0.01818836689926684]
+ [0.0037347149336710572]
+ ...
+ [0.010748428729129955]
+ [0.0019066054665017873]
+ [-0.004780902789207175]]
+Label:  2
+Epoch 1, batch sum loss: 0.6937787862789043Epoch 2, batch sum loss: 0.6931931540281395Epoch 3, batch sum loss: 0.6929520157008656Epoch 4, batch sum loss: 0.6928000681414569Epoch 5, batch sum loss: 0.692695238980376Epoch 6, batch sum loss: 0.6926197934983503Epoch 7, batch sum loss: 0.6925636408059896Epoch 8, batch sum loss: 0.6925204259578288Epoch 9, batch sum loss: 0.6924862472800727Epoch 10, batch sum loss: 0.6924584566414687Epoch 11, batch sum loss: 0.6924353326220366Epoch 12, batch sum loss: 0.6924157452158265Epoch 13, batch sum loss: 0.692398830020791Epoch 14, batch sum loss: 0.6923840346001329Epoch 15, batch sum loss: 0.692371015370928Epoch 16, batch sum loss: 0.692359346935161Epoch 17, batch sum loss: 0.6923488860063794Epoch 18, batch sum loss: 0.6923394131307157self.model_weights:  [[0.00952111414517276]
+ [-0.012150584865594283]
+ [-0.0014724787906743586]
+ ...
+ [0.0021780489187221974]
+ [0.00010124605614691973]
+ [-0.002730719104874879]]
+Label:  3
+Epoch 1, batch sum loss: 0.6939637581737165Epoch 2, batch sum loss: 0.6931655474919981Epoch 3, batch sum loss: 0.6928043366440751Epoch 4, batch sum loss: 0.6926158074170494Epoch 5, batch sum loss: 0.6925064281112664Epoch 6, batch sum loss: 0.6924373758895679Epoch 7, batch sum loss: 0.6923908491016528Epoch 8, batch sum loss: 0.6923578855720577Epoch 9, batch sum loss: 0.6923336315576696Epoch 10, batch sum loss: 0.6923151977820695Epoch 11, batch sum loss: 0.6923008025218234Epoch 12, batch sum loss: 0.6922892620231472Epoch 13, batch sum loss: 0.6922798568101813self.model_weights:  [[-0.00236392579972744]
+ [-1.963652903214097e-05]
+ [0.003040069859707728]
+ ...
+ [0.004191072832327336]
+ [0.0018608940299600363]
+ [-0.004244459327310324]]
+Label:  4
+Epoch 1, batch sum loss: 0.6945141729561158Epoch 2, batch sum loss: 0.6940892570782412Epoch 3, batch sum loss: 0.6939171895396181Epoch 4, batch sum loss: 0.6938060185328485Epoch 5, batch sum loss: 0.693721174536091Epoch 6, batch sum loss: 0.6936519023151Epoch 7, batch sum loss: 0.6935934707724911Epoch 8, batch sum loss: 0.6935431485519592Epoch 9, batch sum loss: 0.693499232889077Epoch 10, batch sum loss: 0.6934604780561557Epoch 11, batch sum loss: 0.6934260531570912Epoch 12, batch sum loss: 0.6933952026837473Epoch 13, batch sum loss: 0.6933673968857847Epoch 14, batch sum loss: 0.6933421522798316Epoch 15, batch sum loss: 0.693319162802593Epoch 16, batch sum loss: 0.693298140569171Epoch 17, batch sum loss: 0.6932787932072623Epoch 18, batch sum loss: 0.6932609209115171Epoch 19, batch sum loss: 0.6932443700112472Epoch 20, batch sum loss: 0.6932290058032547Epoch 21, batch sum loss: 0.6932146051081233Epoch 22, batch sum loss: 0.6932012100059975Epoch 23, batch sum loss: 0.6931886143797488Epoch 24, batch sum loss: 0.6931767796279954Epoch 25, batch sum loss: 0.6931656225064818Epoch 26, batch sum loss: 0.6931550720514525Epoch 27, batch sum loss: 0.6931450703587633Epoch 28, batch sum loss: 0.6931355919952858self.model_weights:  [[0.04316162661416456]
+ [-0.04722010175464675]
+ [-0.00418891926528886]
+ ...
+ [-0.0025911001139320433]
+ [0.0016203803243115544]
+ [-0.00567886111093685]]
+Label:  5
+Epoch 1, batch sum loss: 0.6943506561701178Epoch 2, batch sum loss: 0.6942160827171063Epoch 3, batch sum loss: 0.6940975310597668Epoch 4, batch sum loss: 0.6939977901464643Epoch 5, batch sum loss: 0.693912281271797Epoch 6, batch sum loss: 0.6938380739208686Epoch 7, batch sum loss: 0.6937730520376915Epoch 8, batch sum loss: 0.6937156303001439Epoch 9, batch sum loss: 0.6936645512463989Epoch 10, batch sum loss: 0.6936188608008883Epoch 11, batch sum loss: 0.6935777290416187Epoch 12, batch sum loss: 0.6935404949238363Epoch 13, batch sum loss: 0.693506647579114Epoch 14, batch sum loss: 0.6934757443667475Epoch 15, batch sum loss: 0.6934474406709824Epoch 16, batch sum loss: 0.6934213754340308Epoch 17, batch sum loss: 0.6933973075569453Epoch 18, batch sum loss: 0.6933750329741926Epoch 19, batch sum loss: 0.6933543529134449Epoch 20, batch sum loss: 0.6933350748391981Epoch 21, batch sum loss: 0.6933171201767434Epoch 22, batch sum loss: 0.6933002083308464Epoch 23, batch sum loss: 0.6932844060941495Epoch 24, batch sum loss: 0.6932694912797365Epoch 25, batch sum loss: 0.6932554696008282Epoch 26, batch sum loss: 0.693242237315593Epoch 27, batch sum loss: 0.693229608854531Epoch 28, batch sum loss: 0.6932177810124225Epoch 29, batch sum loss: 0.6932064744679493Epoch 30, batch sum loss: 0.6931957487720724Epoch 31, batch sum loss: 0.693185480339383Epoch 32, batch sum loss: 0.6931757267921428self.model_weights:  [[-0.0027740669320337474]
+ [-0.002366516477195546]
+ [-0.010067313793115318]
+ ...
+ [-0.005442069552373141]
+ [0.005986767646390945]
+ [-0.011127355159260333]]
+Label:  6
+Epoch 1, batch sum loss: 0.6944031928937778Epoch 2, batch sum loss: 0.694185857493212Epoch 3, batch sum loss: 0.6940395615332089Epoch 4, batch sum loss: 0.6939275061923309Epoch 5, batch sum loss: 0.6938375859207702Epoch 6, batch sum loss: 0.6937634173276218Epoch 7, batch sum loss: 0.693701001116539Epoch 8, batch sum loss: 0.6936475316197153Epoch 9, batch sum loss: 0.6936011144095987Epoch 10, batch sum loss: 0.6935601716859345Epoch 11, batch sum loss: 0.6935239312162896Epoch 12, batch sum loss: 0.6934913616453899Epoch 13, batch sum loss: 0.6934618785961537Epoch 14, batch sum loss: 0.6934350493989826Epoch 15, batch sum loss: 0.6934105493283151Epoch 16, batch sum loss: 0.6933879603793469Epoch 17, batch sum loss: 0.693367036810616Epoch 18, batch sum loss: 0.6933476698020343Epoch 19, batch sum loss: 0.6933295087505409Epoch 20, batch sum loss: 0.6933126171662294Epoch 21, batch sum loss: 0.6932967022535192Epoch 22, batch sum loss: 0.693281853180055Epoch 23, batch sum loss: 0.6932676893454379Epoch 24, batch sum loss: 0.6932544564446269Epoch 25, batch sum loss: 0.6932418312955524Epoch 26, batch sum loss: 0.6932298210166966Epoch 27, batch sum loss: 0.6932185262932647Epoch 28, batch sum loss: 0.6932076804697935Epoch 29, batch sum loss: 0.6931973260104521Epoch 30, batch sum loss: 0.6931875173128453self.model_weights:  [[-0.008044956368394196]
+ [0.004344488988863304]
+ [-0.0016814733389765024]
+ ...
+ [0.0032034593168646097]
+ [0.003957660752348602]
+ [-0.0076581292087212205]]
+Label:  7
+Epoch 1, batch sum loss: 0.6941284376462573Epoch 2, batch sum loss: 0.6941151480403798Epoch 3, batch sum loss: 0.6940898718512291Epoch 4, batch sum loss: 0.694062499835551Epoch 5, batch sum loss: 0.694035378477365Epoch 6, batch sum loss: 0.6940088728084972Epoch 7, batch sum loss: 0.6939832351107307Epoch 8, batch sum loss: 0.6939585055144565Epoch 9, batch sum loss: 0.6939347442667763Epoch 10, batch sum loss: 0.6939119983995166Epoch 11, batch sum loss: 0.6938900901713857Epoch 12, batch sum loss: 0.6938691297294695Epoch 13, batch sum loss: 0.6938491170551938Epoch 14, batch sum loss: 0.69382979383535Epoch 15, batch sum loss: 0.693811358403365Epoch 16, batch sum loss: 0.6937936172915523Epoch 17, batch sum loss: 0.6937765535605079Epoch 18, batch sum loss: 0.6937603075763884Epoch 19, batch sum loss: 0.6937445971307294Epoch 20, batch sum loss: 0.6937295601961814Epoch 21, batch sum loss: 0.6937150711382243Epoch 22, batch sum loss: 0.6937011023359484Epoch 23, batch sum loss: 0.6936875822007539Epoch 24, batch sum loss: 0.6936747046454506Epoch 25, batch sum loss: 0.6936622095827761Epoch 26, batch sum loss: 0.6936502026376375Epoch 27, batch sum loss: 0.6936385723779295Epoch 28, batch sum loss: 0.6936273540924797Epoch 29, batch sum loss: 0.6936165388939528Epoch 30, batch sum loss: 0.6936059787447356Epoch 31, batch sum loss: 0.6935959798175044self.model_weights:  [[-0.017005578672979027]
+ [0.01359767431858927]
+ [-0.0054552225628867745]
+ ...
+ [0.0021566077484749258]
+ [-0.009939758805558085]
+ [0.006531853578053415]]
+Label:  8
+Epoch 1, batch sum loss: 0.6943681996390917Epoch 2, batch sum loss: 0.6942746320696068Epoch 3, batch sum loss: 0.6942019909568131Epoch 4, batch sum loss: 0.6941422271332449Epoch 5, batch sum loss: 0.694091830348843Epoch 6, batch sum loss: 0.6940484534459855Epoch 7, batch sum loss: 0.6940105148700452Epoch 8, batch sum loss: 0.6939769218872057Epoch 9, batch sum loss: 0.6939467754208227Epoch 10, batch sum loss: 0.6939194586603058Epoch 11, batch sum loss: 0.6938945327622565Epoch 12, batch sum loss: 0.6938715809328121Epoch 13, batch sum loss: 0.6938505267846634Epoch 14, batch sum loss: 0.6938308279200104Epoch 15, batch sum loss: 0.6938125118318064Epoch 16, batch sum loss: 0.6937952508170159Epoch 17, batch sum loss: 0.6937790328523228Epoch 18, batch sum loss: 0.6937638398308286Epoch 19, batch sum loss: 0.6937492783623777Epoch 20, batch sum loss: 0.6937356294033021Epoch 21, batch sum loss: 0.6937225665234682Epoch 22, batch sum loss: 0.6937101774865678Epoch 23, batch sum loss: 0.6936982521284535Epoch 24, batch sum loss: 0.6936868342824908Epoch 25, batch sum loss: 0.6936760233717235Epoch 26, batch sum loss: 0.6936655734364409Epoch 27, batch sum loss: 0.6936553894201227Epoch 28, batch sum loss: 0.6936457719428677self.model_weights:  [[-0.023103205021470785]
+ [0.018851527536753565]
+ [-0.005982835311442614]
+ ...
+ [0.00037788518238812685]
+ [-0.014553469489328563]
+ [0.010301805334165692]]
+Label:  9
+Epoch 1, batch sum loss: 0.6941248587402052Epoch 2, batch sum loss: 0.6940497354971226Epoch 3, batch sum loss: 0.6939812476803876Epoch 4, batch sum loss: 0.6939243153337804Epoch 5, batch sum loss: 0.6938757900569621Epoch 6, batch sum loss: 0.6938334296097918Epoch 7, batch sum loss: 0.6937959701319552Epoch 8, batch sum loss: 0.6937622992031288Epoch 9, batch sum loss: 0.6937317423375623Epoch 10, batch sum loss: 0.6937041127088578Epoch 11, batch sum loss: 0.6936785958076164Epoch 12, batch sum loss: 0.6936550338679186Epoch 13, batch sum loss: 0.6936333355163273Epoch 14, batch sum loss: 0.6936130347248518Epoch 15, batch sum loss: 0.693594210814569Epoch 16, batch sum loss: 0.6935765989651315Epoch 17, batch sum loss: 0.6935599357271334Epoch 18, batch sum loss: 0.6935442292262702Epoch 19, batch sum loss: 0.6935294058437477Epoch 20, batch sum loss: 0.6935153545748907Epoch 21, batch sum loss: 0.6935020849621759Epoch 22, batch sum loss: 0.693489444716405Epoch 23, batch sum loss: 0.6934773101830914Epoch 24, batch sum loss: 0.6934658134805887Epoch 25, batch sum loss: 0.6934547393535243Epoch 26, batch sum loss: 0.6934441925084552Epoch 27, batch sum loss: 0.6934340530287761Epoch 28, batch sum loss: 0.6934242156947457self.model_weights:  [[0.037921403301879764]
+ [-0.042150849010795355]
+ [0.0014983488945290446]
+ ...
+ [0.005667036049999297]
+ [0.009553467389196157]
+ [-0.013782902620732784]]
+Label:  10
+Epoch 1, batch sum loss: 0.6939736123038991Epoch 2, batch sum loss: 0.6939472635441309Epoch 3, batch sum loss: 0.6939207507234672Epoch 4, batch sum loss: 0.6938985090241586Epoch 5, batch sum loss: 0.6938788023889656Epoch 6, batch sum loss: 0.6938607726587227Epoch 7, batch sum loss: 0.6938438409733986Epoch 8, batch sum loss: 0.693827835623848Epoch 9, batch sum loss: 0.693812407989997Epoch 10, batch sum loss: 0.6937976680508667Epoch 11, batch sum loss: 0.693783260713027Epoch 12, batch sum loss: 0.6937693570285766Epoch 13, batch sum loss: 0.6937560269143016Epoch 14, batch sum loss: 0.6937429140430824Epoch 15, batch sum loss: 0.6937303545231801Epoch 16, batch sum loss: 0.6937180860843213Epoch 17, batch sum loss: 0.6937062393545997Epoch 18, batch sum loss: 0.6936946941768622Epoch 19, batch sum loss: 0.6936834144962399Epoch 20, batch sum loss: 0.6936724694939852Epoch 21, batch sum loss: 0.6936620469847825Epoch 22, batch sum loss: 0.6936516904380631Epoch 23, batch sum loss: 0.6936415452590357Epoch 24, batch sum loss: 0.6936320239046373self.model_weights:  [[0.00550758617464453]
+ [-0.009034573275130242]
+ [0.002578426501713693]
+ ...
+ [0.001584586687386036]
+ [0.005854572053067386]
+ [-0.009381550829857588]]
+Label:  11
+Epoch 1, batch sum loss: 0.6942053922662387Epoch 2, batch sum loss: 0.6940372652833118Epoch 3, batch sum loss: 0.6939218627858266Epoch 4, batch sum loss: 0.693832374523224Epoch 5, batch sum loss: 0.6937589525761602Epoch 6, batch sum loss: 0.6936962879430237Epoch 7, batch sum loss: 0.6936416480595127Epoch 8, batch sum loss: 0.693593197224401Epoch 9, batch sum loss: 0.69354940026918Epoch 10, batch sum loss: 0.6935095583886532Epoch 11, batch sum loss: 0.6934728014084776Epoch 12, batch sum loss: 0.6934389634488141Epoch 13, batch sum loss: 0.6934075475941665Epoch 14, batch sum loss: 0.6933782419601541Epoch 15, batch sum loss: 0.6933506998742486Epoch 16, batch sum loss: 0.6933249093835067Epoch 17, batch sum loss: 0.6933005804832134Epoch 18, batch sum loss: 0.6932774774519508Epoch 19, batch sum loss: 0.6932556875818964Epoch 20, batch sum loss: 0.693235057544528Epoch 21, batch sum loss: 0.6932154176636158Epoch 22, batch sum loss: 0.6931969368333529Epoch 23, batch sum loss: 0.6931793003254136Epoch 24, batch sum loss: 0.6931623196097747Epoch 25, batch sum loss: 0.6931461798786207Epoch 26, batch sum loss: 0.6931306360353827Epoch 27, batch sum loss: 0.6931161252248518Epoch 28, batch sum loss: 0.6931019775120043Epoch 29, batch sum loss: 0.6930884513366272Epoch 30, batch sum loss: 0.6930755065254651Epoch 31, batch sum loss: 0.6930631446425803Epoch 32, batch sum loss: 0.6930512140697506Epoch 33, batch sum loss: 0.6930395877021204Epoch 34, batch sum loss: 0.6930286217130496Epoch 35, batch sum loss: 0.6930181207529521Epoch 36, batch sum loss: 0.6930078705820591Epoch 37, batch sum loss: 0.6929979568644319self.model_weights:  [[-0.013907154207117856]
+ [0.011874001356773078]
+ [-0.011879019089974463]
+ ...
+ [0.0015353034250438213]
+ [-0.00014380214270204306]
+ [-0.0018893482629209757]]
+Label:  12
+Epoch 1, batch sum loss: 0.6946458969178223Epoch 2, batch sum loss: 0.6944113953626472Epoch 3, batch sum loss: 0.6942439467469468Epoch 4, batch sum loss: 0.6941089797926977Epoch 5, batch sum loss: 0.6939952284552203Epoch 6, batch sum loss: 0.6938966318863239Epoch 7, batch sum loss: 0.6938100519264887Epoch 8, batch sum loss: 0.693732904004896Epoch 9, batch sum loss: 0.6936641568680618Epoch 10, batch sum loss: 0.6936024225079558Epoch 11, batch sum loss: 0.6935463307302006Epoch 12, batch sum loss: 0.6934954438502576Epoch 13, batch sum loss: 0.6934489294460594Epoch 14, batch sum loss: 0.6934064550128576Epoch 15, batch sum loss: 0.6933673955002888Epoch 16, batch sum loss: 0.693331860676993Epoch 17, batch sum loss: 0.6932987503825224Epoch 18, batch sum loss: 0.6932683787623384Epoch 19, batch sum loss: 0.6932401948698027Epoch 20, batch sum loss: 0.6932141192987923Epoch 21, batch sum loss: 0.6931895724095705Epoch 22, batch sum loss: 0.6931671202833478Epoch 23, batch sum loss: 0.6931458889685381Epoch 24, batch sum loss: 0.6931261461229842Epoch 25, batch sum loss: 0.6931074741257884Epoch 26, batch sum loss: 0.6930900286316736Epoch 27, batch sum loss: 0.6930737871487584Epoch 28, batch sum loss: 0.6930582016958682Epoch 29, batch sum loss: 0.6930437636848412Epoch 30, batch sum loss: 0.693029953879832Epoch 31, batch sum loss: 0.6930168561918648Epoch 32, batch sum loss: 0.693004611834763Epoch 33, batch sum loss: 0.6929929530128259Epoch 34, batch sum loss: 0.6929818719123751Epoch 35, batch sum loss: 0.6929712912729513Epoch 36, batch sum loss: 0.6929613261010764self.model_weights:  [[-0.054523318889550865]
+ [0.04942954325815663]
+ [0.0037872660905122757]
+ ...
+ [-0.007099626702256501]
+ [0.00428352237213403]
+ [-0.009377296781167388]]
+Label:  13
+Epoch 1, batch sum loss: 0.6943824835801751Epoch 2, batch sum loss: 0.6941719331648052Epoch 3, batch sum loss: 0.6940301742370819Epoch 4, batch sum loss: 0.6939235337530936Epoch 5, batch sum loss: 0.6938362305841443Epoch 6, batch sum loss: 0.6937615670930244Epoch 7, batch sum loss: 0.6936960906291846Epoch 8, batch sum loss: 0.6936375030723392Epoch 9, batch sum loss: 0.6935845656598938Epoch 10, batch sum loss: 0.6935364145933026Epoch 11, batch sum loss: 0.693492180600368Epoch 12, batch sum loss: 0.6934515226560913Epoch 13, batch sum loss: 0.6934140053701616Epoch 14, batch sum loss: 0.6933789466951196Epoch 15, batch sum loss: 0.6933464193233089Epoch 16, batch sum loss: 0.6933162412436394Epoch 17, batch sum loss: 0.6932877452777032Epoch 18, batch sum loss: 0.6932610630184698Epoch 19, batch sum loss: 0.693236062094919Epoch 20, batch sum loss: 0.6932124546531424Epoch 21, batch sum loss: 0.6931900156788328Epoch 22, batch sum loss: 0.6931691097773307Epoch 23, batch sum loss: 0.6931491539999661Epoch 24, batch sum loss: 0.6931302179374051Epoch 25, batch sum loss: 0.6931123908460407Epoch 26, batch sum loss: 0.6930953918841795Epoch 27, batch sum loss: 0.6930792165840666Epoch 28, batch sum loss: 0.6930638443122286Epoch 29, batch sum loss: 0.6930491905633185Epoch 30, batch sum loss: 0.693035204389822Epoch 31, batch sum loss: 0.6930218486519503Epoch 32, batch sum loss: 0.693009047540572Epoch 33, batch sum loss: 0.6929969834874057Epoch 34, batch sum loss: 0.692985227998887Epoch 35, batch sum loss: 0.6929739384820016Epoch 36, batch sum loss: 0.692963189464088Epoch 37, batch sum loss: 0.6929529957080115Epoch 38, batch sum loss: 0.6929431505429562self.model_weights:  [[0.005506490007974207]
+ [-0.009784373745787889]
+ [0.0013234885409474373]
+ ...
+ [-0.010153862182050943]
+ [0.00459032878279686]
+ [-0.008868219796568155]]
+Label:  14
+Epoch 1, batch sum loss: 0.6942604761547757Epoch 2, batch sum loss: 0.6937399833033284Epoch 3, batch sum loss: 0.6934982191797191Epoch 4, batch sum loss: 0.6933494888116833Epoch 5, batch sum loss: 0.6932428318455055Epoch 6, batch sum loss: 0.693159360768849Epoch 7, batch sum loss: 0.6930908439985449Epoch 8, batch sum loss: 0.6930330059387788Epoch 9, batch sum loss: 0.6929831439308902Epoch 10, batch sum loss: 0.6929396774733311Epoch 11, batch sum loss: 0.6929012734112009Epoch 12, batch sum loss: 0.6928671793729143Epoch 13, batch sum loss: 0.6928363743871748Epoch 14, batch sum loss: 0.6928089901087299Epoch 15, batch sum loss: 0.6927840110848635Epoch 16, batch sum loss: 0.6927613511973486Epoch 17, batch sum loss: 0.6927404115729447Epoch 18, batch sum loss: 0.6927215769890864Epoch 19, batch sum loss: 0.6927040282255986Epoch 20, batch sum loss: 0.6926879617397532Epoch 21, batch sum loss: 0.692673068624691Epoch 22, batch sum loss: 0.6926590245616058Epoch 23, batch sum loss: 0.6926463591458837Epoch 24, batch sum loss: 0.6926342715364449Epoch 25, batch sum loss: 0.692623021151393Epoch 26, batch sum loss: 0.6926123093421864Epoch 27, batch sum loss: 0.6926025588323542self.model_weights:  [[-0.021223219111561775]
+ [0.018597492133267224]
+ [0.0007848325185477734]
+ ...
+ [-0.0008416486671194434]
+ [0.005050035542808473]
+ [-0.007675753673538566]]
+Label:  15
+Epoch 1, batch sum loss: 0.6944273358536585Epoch 2, batch sum loss: 0.6941007520630711Epoch 3, batch sum loss: 0.6938524731589258Epoch 4, batch sum loss: 0.6936627130555515Epoch 5, batch sum loss: 0.6935142419339342Epoch 6, batch sum loss: 0.6933952393118313Epoch 7, batch sum loss: 0.6932981316919258Epoch 8, batch sum loss: 0.6932172476405308Epoch 9, batch sum loss: 0.6931488391098782Epoch 10, batch sum loss: 0.6930904519877219Epoch 11, batch sum loss: 0.6930397751402263Epoch 12, batch sum loss: 0.6929955086593289Epoch 13, batch sum loss: 0.6929565719337Epoch 14, batch sum loss: 0.6929217885077407Epoch 15, batch sum loss: 0.6928906990729767Epoch 16, batch sum loss: 0.6928627515539338Epoch 17, batch sum loss: 0.6928375716929613Epoch 18, batch sum loss: 0.6928145110752891Epoch 19, batch sum loss: 0.6927934432529991Epoch 20, batch sum loss: 0.6927740189106123Epoch 21, batch sum loss: 0.6927561014285935Epoch 22, batch sum loss: 0.6927397041295503Epoch 23, batch sum loss: 0.692724252147777Epoch 24, batch sum loss: 0.692710064390591Epoch 25, batch sum loss: 0.6926967618091002Epoch 26, batch sum loss: 0.6926842019642266Epoch 27, batch sum loss: 0.6926726489711595Epoch 28, batch sum loss: 0.6926614986180755Epoch 29, batch sum loss: 0.6926514216314377Epoch 30, batch sum loss: 0.6926414592151012self.model_weights:  [[-0.001626337063498795]
+ [-0.0035997010418213904]
+ [0.0020416490733623505]
+ ...
+ [-0.02215636963956058]
+ [0.002723979181610048]
+ [-0.007950016064569354]]
+Label:  16
+Epoch 1, batch sum loss: 0.6944618071483832Epoch 2, batch sum loss: 0.6940243562233297Epoch 3, batch sum loss: 0.6937289966744381Epoch 4, batch sum loss: 0.6935124546589422Epoch 5, batch sum loss: 0.6933455784598019Epoch 6, batch sum loss: 0.6932130961645824Epoch 7, batch sum loss: 0.6931059695224259Epoch 8, batch sum loss: 0.693018274670121Epoch 9, batch sum loss: 0.6929450453959721Epoch 10, batch sum loss: 0.6928836965178272Epoch 11, batch sum loss: 0.6928319567707851Epoch 12, batch sum loss: 0.6927873524736328Epoch 13, batch sum loss: 0.6927491974169306Epoch 14, batch sum loss: 0.692716143179993Epoch 15, batch sum loss: 0.6926872265587644Epoch 16, batch sum loss: 0.6926618563427883Epoch 17, batch sum loss: 0.6926393053275368Epoch 18, batch sum loss: 0.6926192488280157Epoch 19, batch sum loss: 0.6926013032425281Epoch 20, batch sum loss: 0.6925854078186134Epoch 21, batch sum loss: 0.6925708890243002Epoch 22, batch sum loss: 0.6925576696570777Epoch 23, batch sum loss: 0.6925459699688348Epoch 24, batch sum loss: 0.6925350945302186Epoch 25, batch sum loss: 0.692524906533206Epoch 26, batch sum loss: 0.6925158744579804self.model_weights:  [[0.009539618855342269]
+ [-0.01290449034422636]
+ [0.0027309132274240255]
+ ...
+ [0.006572941434569657]
+ [-0.012486780877225101]
+ [0.009121899493038654]]
+Label:  17
+Epoch 1, batch sum loss: 0.6945038277057093Epoch 2, batch sum loss: 0.6942726064478677Epoch 3, batch sum loss: 0.6941476296753059Epoch 4, batch sum loss: 0.6940453989009913Epoch 5, batch sum loss: 0.6939574149729902Epoch 6, batch sum loss: 0.6938798344682925Epoch 7, batch sum loss: 0.6938112345832865Epoch 8, batch sum loss: 0.6937496482399106Epoch 9, batch sum loss: 0.6936942659368649Epoch 10, batch sum loss: 0.6936433559650383Epoch 11, batch sum loss: 0.6935971522505848Epoch 12, batch sum loss: 0.6935546887346189Epoch 13, batch sum loss: 0.6935152047111337Epoch 14, batch sum loss: 0.6934788425087393Epoch 15, batch sum loss: 0.6934447542603143Epoch 16, batch sum loss: 0.693413157181472Epoch 17, batch sum loss: 0.6933833277369815Epoch 18, batch sum loss: 0.6933556061216951Epoch 19, batch sum loss: 0.6933297562597847Epoch 20, batch sum loss: 0.6933054171653874Epoch 21, batch sum loss: 0.6932819263786402Epoch 22, batch sum loss: 0.6932605357229464Epoch 23, batch sum loss: 0.6932397602196532Epoch 24, batch sum loss: 0.6932202396877754Epoch 25, batch sum loss: 0.6932014742420819Epoch 26, batch sum loss: 0.6931839931715477Epoch 27, batch sum loss: 0.6931673289076687Epoch 28, batch sum loss: 0.6931513911565744Epoch 29, batch sum loss: 0.6931359669714945Epoch 30, batch sum loss: 0.6931216422821126Epoch 31, batch sum loss: 0.6931077517008972Epoch 32, batch sum loss: 0.6930943471302466Epoch 33, batch sum loss: 0.6930817141737586Epoch 34, batch sum loss: 0.6930697132182018Epoch 35, batch sum loss: 0.6930578330627502Epoch 36, batch sum loss: 0.6930467634149656Epoch 37, batch sum loss: 0.6930362117929441Epoch 38, batch sum loss: 0.6930257561482892Epoch 39, batch sum loss: 0.6930158509707733self.model_weights:  [[0.006722340942360461]
+ [-0.00628701678942889]
+ [0.01212526555173099]
+ ...
+ [0.014793396345339715]
+ [-0.014250500360503793]
+ [0.014685803558677435]]
+Label:  18
+Epoch 1, batch sum loss: 0.6944257529858722Epoch 2, batch sum loss: 0.6943377923483822Epoch 3, batch sum loss: 0.694265773206092Epoch 4, batch sum loss: 0.6942044940068978Epoch 5, batch sum loss: 0.6941497117648635Epoch 6, batch sum loss: 0.6940991018965312Epoch 7, batch sum loss: 0.6940524017910671Epoch 8, batch sum loss: 0.6940081613572923Epoch 9, batch sum loss: 0.6939666389928064Epoch 10, batch sum loss: 0.6939275418955944Epoch 11, batch sum loss: 0.6938904802835845Epoch 12, batch sum loss: 0.6938551250639895Epoch 13, batch sum loss: 0.6938216093853788Epoch 14, batch sum loss: 0.6937900611004565Epoch 15, batch sum loss: 0.693759589227831Epoch 16, batch sum loss: 0.6937307366194407Epoch 17, batch sum loss: 0.6937033535993222Epoch 18, batch sum loss: 0.6936769553055818Epoch 19, batch sum loss: 0.6936519714264773Epoch 20, batch sum loss: 0.6936280694629008Epoch 21, batch sum loss: 0.6936048993742572Epoch 22, batch sum loss: 0.6935830832737865Epoch 23, batch sum loss: 0.6935615802001319Epoch 24, batch sum loss: 0.6935412470042327Epoch 25, batch sum loss: 0.6935216341834249Epoch 26, batch sum loss: 0.6935028236048684Epoch 27, batch sum loss: 0.6934848780213158Epoch 28, batch sum loss: 0.6934674047205528Epoch 29, batch sum loss: 0.6934504925595709Epoch 30, batch sum loss: 0.6934345536522373Epoch 31, batch sum loss: 0.6934189458747172Epoch 32, batch sum loss: 0.6934038727859131Epoch 33, batch sum loss: 0.693389554023619Epoch 34, batch sum loss: 0.6933755943482931Epoch 35, batch sum loss: 0.6933618132492777Epoch 36, batch sum loss: 0.6933489270155596Epoch 37, batch sum loss: 0.6933359480092409Epoch 38, batch sum loss: 0.6933236944487722Epoch 39, batch sum loss: 0.6933119989590563Epoch 40, batch sum loss: 0.6933005321290254Epoch 41, batch sum loss: 0.6932892920809112Epoch 42, batch sum loss: 0.6932787019247467Epoch 43, batch sum loss: 0.6932682195745172Epoch 44, batch sum loss: 0.693258127344825Epoch 45, batch sum loss: 0.6932484417848336self.model_weights:  [[0.0010309823555871844]
+ [-0.0032078357180580497]
+ [-0.011517716338858008]
+ ...
+ [-0.01277360855601728]
+ [-0.0384008320979774]
+ [0.03622395871207118]]
+(19, 4560)
+(4560, 19)
+<class 'numpy.ndarray'>
+<class 'numpy.ndarray'>
+<class 'numpy.float64'>
+score:  4159
+len(y):  4560
+
+Predict precision:  0.912061403508772
+SecureMLModel comm_time account:  2528.476025371527
+Total time cost: 5309.968135623907s

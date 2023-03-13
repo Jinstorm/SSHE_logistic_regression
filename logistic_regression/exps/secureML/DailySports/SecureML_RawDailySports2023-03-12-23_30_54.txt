@@ -1,0 +1,42 @@
+
+ =================== # Dataset info # =================== 
+Data source: DailySports - raw
+Feature: ovr
+Data Portion: 37
+Train A shape: (4560, 1687), Train B shape: (4560, 3938), label shape: (4560,)
+Test data shape: (4560, 5625), label shape: (4560,)
+ =================== # Training info # =================== 
+batch size: 20
+alpha: 0.001
+max_iter: 100
+WAN_bandwidth: 10 Mbps
+mem_occupancy: 4 Byte
+ =================== #   Info End   # =================== 
+
+Epoch num: 20, last epoch loss: 0.6937918187903845 Epoch Total Time: 299.6373164653778s
+Label 0Epoch num: 12, last epoch loss: 0.6941800375959045 Epoch Total Time: 176.8835735321045s
+Label 1Epoch num: 24, last epoch loss: 0.6930568619859259 Epoch Total Time: 401.0235757827759s
+Label 2Epoch num: 31, last epoch loss: 0.6925909903947652 Epoch Total Time: 565.1565170288086s
+Label 3Epoch num: 32, last epoch loss: 0.6938307056455144 Epoch Total Time: 586.8979957103729s
+Label 4Epoch num: 10, last epoch loss: 0.6938247460259251 Epoch Total Time: 180.32625079154968s
+Label 5Epoch num: 3, last epoch loss: 0.6941303764886446 Epoch Total Time: 56.1497848033905s
+Label 6Epoch num: 3, last epoch loss: 0.6941278021256126 Epoch Total Time: 52.91023588180542s
+Label 7Epoch num: 6, last epoch loss: 0.6941006712563553 Epoch Total Time: 111.2883996963501s
+Label 8Epoch num: 14, last epoch loss: 0.6938489808971886 Epoch Total Time: 262.51603531837463s
+Label 9Epoch num: 2, last epoch loss: 0.694022731220969 Epoch Total Time: 37.31278967857361s
+Label 10Epoch num: 15, last epoch loss: 0.6937374561014237 Epoch Total Time: 264.7408854961395s
+Label 11Epoch num: 28, last epoch loss: 0.6934850146823708 Epoch Total Time: 537.0543248653412s
+Label 12Epoch num: 23, last epoch loss: 0.6937876321348023 Epoch Total Time: 448.82145833969116s
+Label 13Epoch num: 20, last epoch loss: 0.6936274620203999 Epoch Total Time: 375.32304215431213s
+Label 14Epoch num: 16, last epoch loss: 0.6934150474132095 Epoch Total Time: 360.46535325050354s
+Label 15Epoch num: 22, last epoch loss: 0.6929554855049738 Epoch Total Time: 523.3416104316711s
+Label 16Epoch num: 8, last epoch loss: 0.694196918024027 Epoch Total Time: 187.0941619873047s
+Label 17Epoch num: 13, last epoch loss: 0.6941638653494381 Epoch Total Time: 306.0941185951233s
+Label 18
+# ================== #  Test Model  # ================== #
+score: 2939
+len(y): 4560
+Predict precision: 0.6445175438596491
+# ================== #   Train Time   # ================== #
+SecureMLModel comm_time account: 3874.8693237304688
+Total time cost: 9820.434885978699 s

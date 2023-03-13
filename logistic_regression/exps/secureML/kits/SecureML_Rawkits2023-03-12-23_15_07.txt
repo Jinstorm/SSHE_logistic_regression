@@ -1,0 +1,39 @@
+
+ =================== # Dataset info # =================== 
+Data source: kits - raw
+Feature: bin
+Data Portion: 37
+Train A shape: (700, 8294), Train B shape: (700, 19354), label shape: (700,)
+Test data shape: (300, 27648), label shape: (300,)
+ =================== # Training info # =================== 
+batch size: 20
+alpha: 0.0001
+max_iter: 100
+WAN_bandwidth: 10 Mbps
+mem_occupancy: 4 Byte
+ =================== #   Info End   # =================== 
+
+Epoch 1, batch sum loss: 0.6952622685746092 Time: 12.568583011627197s
+Epoch 2, batch sum loss: 0.6952826324513732 Time: 12.772961616516113s
+Epoch 3, batch sum loss: 0.6952462787969561 Time: 13.40502119064331s
+Epoch 4, batch sum loss: 0.6951801628926978 Time: 13.447254657745361s
+Epoch 5, batch sum loss: 0.695129847185298 Time: 13.517408847808838s
+Epoch 6, batch sum loss: 0.6950872011176925 Time: 13.609602689743042s
+Epoch 7, batch sum loss: 0.6950588374928397 Time: 13.56262993812561s
+Epoch 8, batch sum loss: 0.6950240129198667 Time: 13.580745697021484s
+Epoch 9, batch sum loss: 0.6949774787156293 Time: 13.53693413734436s
+Epoch 10, batch sum loss: 0.6949291772979947 Time: 13.628009796142578s
+Epoch 11, batch sum loss: 0.6949069154010589 Time: 13.489542722702026s
+Epoch 12, batch sum loss: 0.6948635095739377 Time: 13.68476390838623s
+Epoch 13, batch sum loss: 0.6948371495839626 Time: 13.655761003494263s
+Epoch 14, batch sum loss: 0.6947923310728881 Time: 13.68345594406128s
+Epoch 15, batch sum loss: 0.694737889276087 Time: 13.518722772598267s
+Epoch 16, batch sum loss: 0.6947430437648705 Time: 13.51991868019104s
+
+# ================== #  Test Model  # ================== #
+score: 187
+len(y): 300
+Predict precision: 0.6233333333333333
+# ================== #   Train Time   # ================== #
+SecureMLModel comm_time account: 381.1005249023763
+Total time cost: 726.2163555622426 s

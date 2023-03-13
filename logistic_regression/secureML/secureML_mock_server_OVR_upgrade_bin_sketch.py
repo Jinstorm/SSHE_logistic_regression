@@ -821,7 +821,7 @@ def read_distributed_data_raw_or_sketch(dataset_name, raw_or_sketch, kernel_meth
 
         if countsketch_:
             """ sketch + countsketch """
-            dataset_file_name = os.path.join(dataset_name, portion_kernel_method, sketch_sample, "countsketch")
+            dataset_file_name = os.path.join(dataset_name, portion_kernel_method, sketch_sample, "countsketch"+"_"+str(countsketch_))
             train_file_name1 = 'X1_squeeze_train37_Countsketch.txt'
             train_file_name2 = 'X2_squeeze_train37_Countsketch.txt'
             test_file_name1 = 'X1_squeeze_test37_Countsketch.txt'
@@ -980,7 +980,7 @@ if __name__ == "__main__":
     portion = "37" # 19 / 28 / 37 / 46 / 55
     raw_or_sketch = "sketch" # "raw" / "sketch"
     kernel_method = "pminhash" # 0bitcws / RFF / Poly
-    sampling_k = "1024"
+    sampling_k = "512"
     countsketch_ = 4 # using countsketch and c = 4 / c = 8 ; not using it: c = 0
 
     ovr = "bin" # bin 二分类 / ovr 多分类
@@ -1049,7 +1049,7 @@ if __name__ == "__main__":
                     # splice 集中 0.9062068965517242
     # 纵向划分分布式
     SecureMLModel = SecureML(weight_vector = weight_vector, batch_size = 20, 
-                    max_iter = 100, alpha = 0.001, eps = 1e-5, ratio = 0.7, penalty = None, lambda_para = 1, 
+                    max_iter = 20, alpha = 0.001, eps = 1e-5, ratio = 0.7, penalty = None, lambda_para = 1, 
                     data_tag = None, ovr = ovr,
                     sketch_tag = raw_or_sketch, countsketch_c = countsketch_, dataset_name = dataset_name, kernel_method = kernel_method, sampling_k = sampling_k)
                     # splice 分布式 0.9062068965517242
