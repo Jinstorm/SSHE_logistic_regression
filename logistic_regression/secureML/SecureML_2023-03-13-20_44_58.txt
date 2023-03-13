@@ -1,0 +1,48 @@
+batch_size = 20, 
+max_iter = 20, alpha = 0.001, eps = 1e-6, ratio = 0.7
+kits raw 
+激活函数: sigmoid (exp)
+数据预处理: nope
+
+
+Time: 4.975493669509888s
+
+Iteration 1, batch sum loss: 0.6968346804733985Time: 4.75186562538147s
+
+Iteration 2, batch sum loss: 0.6964328948456595Time: 4.333069324493408s
+
+Iteration 3, batch sum loss: 0.6966650377028025Time: 4.073298215866089s
+
+Iteration 4, batch sum loss: 0.6968346805599452Time: 4.435851097106934s
+
+Iteration 5, batch sum loss: 0.6964507519885167Time: 5.549764394760132s
+
+Iteration 6, batch sum loss: 0.696584001744792Time: 7.669068813323975s
+
+Iteration 7, batch sum loss: 0.6963614662742309Time: 7.392194747924805s
+
+Iteration 8, batch sum loss: 0.6955846805599432Time: 6.745731592178345s
+
+Iteration 9, batch sum loss: 0.6957543234170881Time: 4.107511520385742s
+
+Iteration 10, batch sum loss: 0.6958882519885167Time: 4.182806015014648s
+
+Iteration 11, batch sum loss: 0.6954775377028024Time: 4.677682638168335s
+
+Iteration 12, batch sum loss: 0.6952900377028024Time: 4.13421368598938s
+
+Iteration 13, batch sum loss: 0.695486466274231Time: 4.593111991882324s
+
+Iteration 14, batch sum loss: 0.6952632519885167Time: 4.620970010757446s
+
+Iteration 15, batch sum loss: 0.6954418234170882Time: 4.369081735610962s
+
+Iteration 16, batch sum loss: 0.695361466274231Time: 4.61175799369812s
+
+Iteration 17, batch sum loss: 0.6955668234170882Time: 4.282690763473511s
+
+Iteration 18, batch sum loss: 0.6951203948456596Time: 4.129943370819092s
+
+Iteration 19, batch sum loss: 0.695861466274231Time: 4.131202697753906s
+
+Iteration 20, batch sum loss: 0.6952900377028024Predict precision: 0.6

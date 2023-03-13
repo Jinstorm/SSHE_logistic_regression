@@ -1,0 +1,35 @@
+Time: 5.394289016723633s
+
+Iteration 1, batch sum loss: 0.6952906584119358Time: 7.67476749420166s
+
+Iteration 2, batch sum loss: 0.6952518901429527Time: 7.697232484817505s
+
+Iteration 3, batch sum loss: 0.6952538972104814Time: 7.7076029777526855s
+
+Iteration 4, batch sum loss: 0.6951974907907371Time: 7.7605180740356445s
+
+Iteration 5, batch sum loss: 0.6951149627200576Time: 5.985795259475708s
+
+Iteration 6, batch sum loss: 0.6951040018145359Time: 4.481666326522827s
+
+Iteration 7, batch sum loss: 0.6950237660764375Time: 4.202003240585327s
+
+Iteration 8, batch sum loss: 0.6949896871794826Time: 4.051866292953491s
+
+Iteration 9, batch sum loss: 0.6949454735724273Time: 4.191076278686523s
+
+Iteration 10, batch sum loss: 0.6949163931724347Time: 4.283509016036987s
+
+Iteration 11, batch sum loss: 0.6948572905273701Time: 4.042753458023071s
+
+Iteration 12, batch sum loss: 0.6948821178122766Time: 4.046646595001221s
+
+Iteration 13, batch sum loss: 0.6948563029817487Time: 4.351325750350952s
+
+Iteration 14, batch sum loss: 0.6947840934389907Time: 5.349991321563721s
+
+Iteration 15, batch sum loss: 0.6947398975680497Time: 8.053664922714233s
+
+Iteration 16, batch sum loss: 0.6947408063713467Predict precision: 0.6233333333333333
+
+SecureML_mock_test.py kits 二分类 raw 

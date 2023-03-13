@@ -1,0 +1,3 @@
+Time: 3.880174398422241s
+Iteration 1, batch sum loss: 0.6931471805252726Time: 3.3496501445770264s
+Iteration 2, batch sum loss: 0.6931471805599447Predict precision: 0.4866666666666667

@@ -320,7 +320,7 @@ class SecureML:
 
             ## 判断是否停止
             self.is_converged = self.check_converge_by_loss(loss)
-            if self.is_converged or (self.n_iteration == self.max_iter):
+            if (self.n_iteration == self.max_iter):
                 if self.ratio is not None: 
                     self.model_weights = self.weightA + self.weightB
                     print("self.model_weights: ", self.model_weights)

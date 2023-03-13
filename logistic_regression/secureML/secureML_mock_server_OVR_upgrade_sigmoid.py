@@ -70,8 +70,11 @@ class SecureML:
         # 进程池
         # self.pool = Pool()
 
-    # def sigmoid_func(self, z):
-    #     return 1.0 / (1 + np.exp(-z))
+    def sigmoid_func(self, arr):
+        mask = np.logical_and(arr > -0.5, arr < 0.5)
+        arr[mask] = arr[mask]
+        arr[~mask] = 0
+        return arr
 
     def _compute_sigmoid(self, z):
         # return 1 / (1 + np.exp(-z))
@@ -385,8 +388,6 @@ class SecureML:
                 Y_predictA = self._compute_sigmoid(Y_predictA)
                 Y_predictB = self._compute_sigmoid_dual_distributed(Y_predictB)
 
-                # Y_pred = self.sigmoid_func((Y_predictA+Y_predictB).astype(float))
-                # Y_predictA, Y_predictB = self.secret_share_vector_plaintext(Y_pred)
 
                 # compute the difference
                 # print("Y_predictA shape: ", Y_predictA.shape)
@@ -495,7 +496,6 @@ class SecureML:
             z = np.dot(x_test, self.model_weights)
 
         y = self._compute_sigmoid(z)
-        # y = self.sigmoid_func(z.astype(float))
 
         self.score = 0
         for i in range(len(y)):
@@ -763,9 +763,6 @@ def read_distributed_data_raw_or_sketch(dataset_name, raw_or_sketch, kernel_meth
     ## countsketch
     from sklearn.datasets import load_svmlight_file
 
-    # global flag
-    # flag = "Sketch data (k=1024)"
-
     main_path = PATH_DATA
     dataset_file_name = dataset_name  
     train_file_name = dataset_name + '_train.txt' 
@@ -818,6 +815,7 @@ def read_distributed_data_raw_or_sketch(dataset_name, raw_or_sketch, kernel_meth
         """ 获取需要读取的sketch的相对路径 """
         portion_kernel_method = "portion" + portion + "_" + kernel_method
         sketch_sample = "sketch" + sampling_k
+        print("sketch_sample: ", sketch_sample)
 
         # dataset_file_name = 'kits/portion37_pminhash/sketch1024/countsketch/'
         # train_file_name1 = 'X1_squeeze_train37_Countsketch.txt'
@@ -841,11 +839,13 @@ def read_distributed_data_raw_or_sketch(dataset_name, raw_or_sketch, kernel_meth
             test_file_name1 = 'X1_test_samples.txt'
             test_file_name2 = 'X2_test_samples.txt'
 
-        X_train1 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name1), delimiter=',') #, dtype = float)
+        X_train1 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name1), delimiter=',') #, dtype = float) # <class 'numpy.float64'>
         X_train2 = np.loadtxt(os.path.join(main_path, dataset_file_name, train_file_name2), delimiter=',') #, dtype = float)
         X_test1 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name1), delimiter=',') #, dtype = float)
         X_test2 = np.loadtxt(os.path.join(main_path, dataset_file_name, test_file_name2), delimiter=',') #, dtype = float)
 
+        print(X_train1) # [[0. 1. 0. ... 1. 0. 1.]]
+        print(type(X_train1[0][0])) # <class 'numpy.float64'>
         
     elif raw_or_sketch == "raw":
         """ 对于 Raw data, 直接读入原始数据, 然后按照比例 portion 分成两个部分, 作为两方数据 """
@@ -976,30 +976,29 @@ def logger_test_model(objectmodel):
     file.write("\nscore: {}".format(objectmodel.score))
     file.write("\nlen(y): {}".format(objectmodel.total_num))
     file.write("\nPredict precision: {}".format(objectmodel.accuracy))
-    file.close()
 
 
 if __name__ == "__main__":
 
     ########## 读取数据 ##########
-    dataset_name = "kits"
-    portion = "37" # 19 / 28 / 37 / 46 / 55
-    raw_or_sketch = "sketch" # "raw" / "sketch"
-    kernel_method = "pminhash" # 0bitcws / RFF / Poly
-    sampling_k = "1024"
-    countsketch_ = 4 # using countsketch and c = 4 / c = 8 ; not using it: c = 0
-
-    ovr = "bin" # bin 二分类 / ovr 多分类
-    
-
-    # dataset_name = "DailySports"
+    # dataset_name = "kits"
     # portion = "37" # 19 / 28 / 37 / 46 / 55
     # raw_or_sketch = "sketch" # "raw" / "sketch"
     # kernel_method = "pminhash" # 0bitcws / RFF / Poly
     # sampling_k = "1024"
-    # countsketch_ = 4
+    # countsketch_ = 4 # using countsketch and c = 4 / c = 8 ; not using it: c = 0
 
-    # ovr = "ovr" # bin 二分类 / ovr 多分类
+    # ovr = "bin" # bin 二分类 / ovr 多分类
+    
+
+    dataset_name = "DailySports"
+    portion = "37" # 19 / 28 / 37 / 46 / 55
+    raw_or_sketch = "sketch" # "raw" / "sketch"
+    kernel_method = "pminhash" # 0bitcws / RFF / Poly
+    sampling_k = "512"
+    countsketch_ = 4
+
+    ovr = "ovr" # bin 二分类 / ovr 多分类
 
 
 
@@ -1055,7 +1054,7 @@ if __name__ == "__main__":
                     # splice 集中 0.9062068965517242
     # 纵向划分分布式
     SecureMLModel = SecureML(weight_vector = weight_vector, batch_size = 20, 
-                    max_iter = 40, alpha = 0.001, eps = 1e-5, ratio = 0.7, penalty = None, lambda_para = 1, 
+                    max_iter = 100, alpha = 0.001, eps = 1e-5, ratio = 0.7, penalty = None, lambda_para = 1, 
                     data_tag = None, ovr = ovr,
                     sketch_tag = raw_or_sketch, countsketch_c = countsketch_, dataset_name = dataset_name, kernel_method = kernel_method, sampling_k = sampling_k)
                     # splice 分布式 0.9062068965517242
@@ -1110,12 +1109,12 @@ if __name__ == "__main__":
     # 理想集中和伪分布式
     # LogisticRegressionModel.predict(X_test, y_test)
     # 纵向划分分布式
-    print("bin: ", SecureMLModel.ovr)
     if SecureMLModel.ovr == "bin":
-        print("bin")
         SecureMLModel.predict_distributed(X_test1, X_test2, Y_test)
     elif SecureMLModel.ovr == "ovr":
         pass
     
     logger_test_model(SecureMLModel)
-            
+        
+
+    

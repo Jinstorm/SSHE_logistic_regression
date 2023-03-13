@@ -56,6 +56,30 @@ class SecureML:
         # 进程池
         # self.pool = Pool()
 
+    # def sigmoid_func(self, z):
+    #     return 1.0 / (1 + np.exp(-z))
+    
+    def sigmoid_func(self, x):
+        y = x.copy()      # 对sigmoid函数优化，避免出现极大的数据溢出
+        y[x >= 0] = 1.0 / (1 + np.exp(-x[x >= 0]))
+        y[x < 0] = np.exp(x[x < 0]) / (1 + np.exp(x[x < 0]))
+        return y
+
+    # def sigmoid_func(self, arr):
+    #     mask = np.logical_and(arr > -0.5, arr < 0.5)
+    #     arr[mask] = arr[mask]
+    #     arr[~mask] = 0
+    #     return arr
+    
+    # def sigmoid_func(self, z):
+    #     if z <= -0.5: return 0
+    #     elif z > -0.5 and z < 0.5: return z
+    #     elif z >= 0.5: return 0
+        # z[z <= -0.5] = 0
+        # z[z > -0.5 and z < 0.5] = z
+        # z[z >= 0.5] = 0
+        # return z
+
     def _compute_sigmoid(self, z):
         # return 1 / (1 + np.exp(-z))
         # print(type(z))
@@ -236,9 +260,11 @@ class SecureML:
                 Y_predictB = np.dot(batch_dataB, batch_F) + np.dot(batch_E, self.weightB) + batch_Z1[:,j].reshape(-1, 1) + -1 * np.dot(batch_E, batch_F)
                 # print("shape: ", np.dot(batch_dataA, batch_F).shape, np.dot(batch_E, self.weightA).shape, batch_Z0[:,j].reshape(-1, 1).shape)
                 # print("shape: ", np.dot(batch_dataB, batch_F).shape, np.dot(batch_E, self.weightB).shape, batch_Z1[:,j].reshape(-1, 1).shape, np.dot(batch_E, batch_F).shape)
-                Y_predictA = self._compute_sigmoid(Y_predictA)
-                Y_predictB = self._compute_sigmoid_dual_distributed(Y_predictB)
+                # Y_predictA = self._compute_sigmoid(Y_predictA)
+                # Y_predictB = self._compute_sigmoid_dual_distributed(Y_predictB)
 
+                Y_pred = self.sigmoid_func((Y_predictA+Y_predictB).astype(float))
+                Y_predictA, Y_predictB = self.secret_share_vector_plaintext(Y_pred)
 
                 # compute the difference
                 # print("Y_predictA shape: ", Y_predictA.shape)
@@ -481,7 +507,8 @@ class SecureML:
             self.model_weights = self.model_weights.reshape(-1, 1)
             z = np.dot(x_test, self.model_weights)
 
-        y = self._compute_sigmoid(z)
+        # y = self._compute_sigmoid(z)
+        y = self.sigmoid_func(z.astype(float))
 
         score = 0
         for i in range(len(y)):
@@ -502,6 +529,9 @@ class SecureML:
 def read_distributed_data():
     from sklearn.datasets import load_svmlight_file
     import os
+    from sklearn.preprocessing import MinMaxScaler, StandardScaler, normalize
+    mm = MinMaxScaler()
+    ss = StandardScaler()
 
     dataset_file_name = 'kits'  
     train_file_name = 'kits_train.txt' 
@@ -515,7 +545,10 @@ def read_distributed_data():
     train_data = load_svmlight_file(os.path.join(main_path, dataset_file_name, train_file_name))
     test_data = load_svmlight_file(os.path.join(main_path, dataset_file_name, test_file_name))
     X_train = train_data[0].todense().A
+    # X_train = mm.fit_transform(X_train)
     X_test = test_data[0].todense().A
+    # X_test = mm.fit_transform(X_test)
+
     print("X_train type: ", type(X_train)) # 1000 * 60
     print("X_train shape: ", X_train.shape)
     print("X_test type: ", type(X_test)) # 1000 * 60
@@ -867,7 +900,7 @@ if __name__ == "__main__":
                     # splice 集中 0.9062068965517242
     # 纵向划分分布式
     SecureMLModel = SecureML(weight_vector = weight_vector, batch_size = 20, 
-                    max_iter = 200, alpha = 0.001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
+                    max_iter = 20, alpha = 0.001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)
                     # splice 分布式 0.9062068965517242
     # LogisticRegressionModel = LogisticRegression(weight_vector = weight_vector, batch_size = 20, 
     #                 max_iter = 600, alpha = 0.0001, eps = 1e-6, ratio = 0.7, penalty = None, lambda_para = 1, data_tag = None)

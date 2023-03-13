@@ -1,0 +1,48 @@
+
+ =================== # Dataset info # =================== 
+Data source: kits - sketch
+Feature: bin
+Data Portion: 37
+Sketching method: pminhash
+Sampling k: 1024
+Using Counsketch: c = 4
+Train A shape: (700, 1228), Train B shape: (700, 2868), label shape: (700,)
+Test data shape: (300, 4096), label shape: (300,)
+ =================== # Training info # =================== 
+batch size: 20
+alpha: 0.001
+max_iter: 20
+WAN_bandwidth: 10 Mbps
+mem_occupancy: 4 Byte
+ =================== #   Info End   # =================== 
+
+Epoch 1, batch sum loss: 0.6953502475807327 Time: 1.8614833354949951s
+Epoch 2, batch sum loss: 0.6952493406040839 Time: 1.5963776111602783s
+Epoch 3, batch sum loss: 0.6951624862607145 Time: 1.3276448249816895s
+Epoch 4, batch sum loss: 0.6950782659168764 Time: 1.2916347980499268s
+Epoch 5, batch sum loss: 0.6949964925166854 Time: 1.3246071338653564s
+Epoch 6, batch sum loss: 0.6949170126193287 Time: 1.3220593929290771s
+Epoch 7, batch sum loss: 0.6948396694896334 Time: 1.3789997100830078s
+Epoch 8, batch sum loss: 0.6947643395360616 Time: 1.4802379608154297s
+Epoch 9, batch sum loss: 0.6946909029793277 Time: 1.4506027698516846s
+Epoch 10, batch sum loss: 0.6946192541710521 Time: 1.4190104007720947s
+Epoch 11, batch sum loss: 0.6945493003280657 Time: 1.4200589656829834s
+Epoch 12, batch sum loss: 0.6944809535309165 Time: 1.3772897720336914s
+Epoch 13, batch sum loss: 0.6944141387459173 Time: 1.4024627208709717s
+Epoch 14, batch sum loss: 0.6943487768556824 Time: 1.379725456237793s
+Epoch 15, batch sum loss: 0.6942848147179924 Time: 1.3734419345855713s
+Epoch 16, batch sum loss: 0.6942221771958971 Time: 1.4021973609924316s
+Epoch 17, batch sum loss: 0.6941608280008982 Time: 1.3822569847106934s
+Epoch 18, batch sum loss: 0.6941006972781683 Time: 1.3520314693450928s
+Epoch 19, batch sum loss: 0.6940417486639802 Time: 1.4202964305877686s
+Epoch 20, batch sum loss: 0.693983935130945 Time: 1.3752129077911377s
+
+# ================== #  Test Model  # ================== #
+score: 208
+len(y): 300
+Predict precision: 0.6933333333333334
+# ================== #   Train Time   # ================== #
+SecureMLModel comm_time account: 61.85198974609972
+Total time cost: 108.96925449371935 s
+
+在1.5T服务器空闲下测得

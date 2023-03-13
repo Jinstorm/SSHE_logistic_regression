@@ -1,0 +1,68 @@
+
+ =================== # Dataset info # =================== 
+Data source: kits - sketch
+Feature: bin
+Data Portion: 37
+Sketching method: pminhash
+Sampling k: 1024
+Using Counsketch: c = 4
+Train A shape: (700, 1228), Train B shape: (700, 2868), label shape: (700,)
+Test data shape: (300, 4096), label shape: (300,)
+ =================== # Training info # =================== 
+batch size: 20
+alpha: 0.001
+max_iter: 40
+WAN_bandwidth: 10 Mbps
+mem_occupancy: 4 Byte
+ =================== #   Info End   # =================== 
+
+Epoch 1, batch sum loss: 0.695350447338552 Time: 1.272948980331421s
+Epoch 2, batch sum loss: 0.6952493466316007 Time: 1.3096873760223389s
+Epoch 3, batch sum loss: 0.6951624840764312 Time: 1.3161485195159912s
+Epoch 4, batch sum loss: 0.6950782586051493 Time: 1.3067021369934082s
+Epoch 5, batch sum loss: 0.6949965004417233 Time: 1.325916051864624s
+Epoch 6, batch sum loss: 0.6949170120529989 Time: 1.2732467651367188s
+Epoch 7, batch sum loss: 0.6948396704842028 Time: 1.296191692352295s
+Epoch 8, batch sum loss: 0.6947643402488777 Time: 1.333191156387329s
+Epoch 9, batch sum loss: 0.6946909008872966 Time: 1.3399097919464111s
+Epoch 10, batch sum loss: 0.6946192583159073 Time: 1.3457205295562744s
+Epoch 11, batch sum loss: 0.6945493005583713 Time: 1.3567488193511963s
+Epoch 12, batch sum loss: 0.694480956516714 Time: 1.368868350982666s
+Epoch 13, batch sum loss: 0.6944141358371435 Time: 1.3543658256530762s
+Epoch 14, batch sum loss: 0.6943487777355658 Time: 1.3563916683197021s
+Epoch 15, batch sum loss: 0.6942848144380322 Time: 1.3567910194396973s
+Epoch 16, batch sum loss: 0.6942221831544987 Time: 1.3597512245178223s
+Epoch 17, batch sum loss: 0.6941608285048848 Time: 1.3506178855895996s
+Epoch 18, batch sum loss: 0.6941007015188688 Time: 1.3172554969787598s
+Epoch 19, batch sum loss: 0.6940417471740635 Time: 1.396813154220581s
+Epoch 20, batch sum loss: 0.6939839364578771 Time: 1.3523807525634766s
+Epoch 21, batch sum loss: 0.693927215505818 Time: 1.379621982574463s
+Epoch 22, batch sum loss: 0.6938715519812422 Time: 1.3928537368774414s
+Epoch 23, batch sum loss: 0.6938169040392437 Time: 1.3437495231628418s
+Epoch 24, batch sum loss: 0.6937632431207118 Time: 1.3403689861297607s
+Epoch 25, batch sum loss: 0.6937105419657149 Time: 1.358060359954834s
+Epoch 26, batch sum loss: 0.6936587580473467 Time: 1.410325050354004s
+Epoch 27, batch sum loss: 0.6936078702169013 Time: 1.3543996810913086s
+Epoch 28, batch sum loss: 0.6935578583503462 Time: 1.3817801475524902s
+Epoch 29, batch sum loss: 0.6935086821692288 Time: 1.345921277999878s
+Epoch 30, batch sum loss: 0.6934603286827502 Time: 1.3603065013885498s
+Epoch 31, batch sum loss: 0.693412772685496 Time: 1.3570804595947266s
+Epoch 32, batch sum loss: 0.6933659902859437 Time: 1.3583405017852783s
+Epoch 33, batch sum loss: 0.69331995952721 Time: 1.365335464477539s
+Epoch 34, batch sum loss: 0.6932746611029525 Time: 1.3709397315979004s
+Epoch 35, batch sum loss: 0.6932300863982646 Time: 1.367494821548462s
+Epoch 36, batch sum loss: 0.6931861992359069 Time: 1.3635406494140625s
+Epoch 37, batch sum loss: 0.6931429987443363 Time: 1.3413288593292236s
+Epoch 38, batch sum loss: 0.6931004515581914 Time: 1.3655738830566406s
+Epoch 39, batch sum loss: 0.6930585580196207 Time: 1.3937184810638428s
+Epoch 40, batch sum loss: 0.6930172923664533 Time: 1.3714802265167236s
+
+# ================== #  Test Model  # ================== #
+score: 215
+len(y): 300
+Predict precision: 0.7166666666666667
+# ================== #   Train Time   # ================== #
+SecureMLModel comm_time account: 88.18743896485569
+Total time cost: 160.9987158775449 s
+
+在1.5T服务器空闲下测得
